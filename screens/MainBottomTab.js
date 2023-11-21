@@ -52,7 +52,7 @@ export default function MainBottomTab() {
         options={{
           tabBarButton: () => (
             <TouchableOpacity
-              className="bg-primary rounded-full h-16 w-16 flex items-center justify-center"
+              className="bg-primary shadow-md rounded-full h-16 w-16 flex items-center justify-center"
               onPress={() => navigation.navigate("AddScreen")}
             >
               <Ionicons name="add" color={"#fff"} size={34} />
