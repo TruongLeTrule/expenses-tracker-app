@@ -7,7 +7,7 @@ export default function LoginScreen({ navigation }) {
             <Image style={styles.Image} source={{
                 uri: "https://static.vecteezy.com/system/resources/previews/000/287/227/original/wallet-vector-icon.jpg",
             }} />
-            <Text style={styles.text}>Welcome</Text>
+            <Text style={styles.text}>Log In</Text>
             <View style={styles.sectionStyle}>
                 <Image source={{ uri: "https://th.bing.com/th/id/OIP.37SXOl1HMjafsfpow_NjhwHaFS?pid=ImgDet&rs=1" }}
                     style={styles.iconStyle} />
