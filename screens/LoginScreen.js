@@ -1,7 +1,30 @@
-import { Text, View, StyleSheet, Image, TextInput, Button } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { Text, View, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { auth } from "../firebase"
+import { AuthContext } from "../AuthContext";
 export default function LoginScreen({ navigation }) {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    // useEffect(() => {
+    //     const unsubscribe = auth.onAuthStateChanged(user => {
+    //         if (user) {
+    //             navigation.replace("MainBottomTab")
+    //         }
+    //     })
+    //     return unsubscribe
+    // }, [])
+    const handleLogin = () => {
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then(() => {
+                // const username = "Logged in with " + userCredentials.user.email
+                // Alert.alert(username)
+                navigation.replace("MainBottomTab")
+            })
+            .catch(() => Alert.alert("Invalid log in credentials"))
+    }
     return (
         <View style={styles.container}>
             <Image style={styles.Image} source={{
@@ -11,15 +34,26 @@ export default function LoginScreen({ navigation }) {
             <View style={styles.sectionStyle}>
                 <Image source={{ uri: "https://th.bing.com/th/id/OIP.37SXOl1HMjafsfpow_NjhwHaFS?pid=ImgDet&rs=1" }}
                     style={styles.iconStyle} />
-                <TextInput style={styles.textinput} placeholder="Email" />
+                <TextInput
+                    style={styles.textinput}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                />
             </View>
             <View style={styles.sectionStyle}>
                 <Image source={{ uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1" }}
                     style={[styles.iconStyle, { height: 35, width: 30, }]} />
-                <TextInput style={styles.textinput} placeholder="Password" />
+                <TextInput
+                    style={styles.textinput}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    secureTextEntry
+                />
             </View>
             <View style={styles.LogInButton}>
-                <Button title="LOG IN" color="darkgreen" />
+                <Button title="LOG IN" color="darkgreen" onPress={handleLogin} />
             </View>
             <Text style={{ ...styles.text, fontSize: 15 }}>OR</Text>
             <TouchableOpacity onPress={() => { navigation.navigate("SignUpScreen") }}>

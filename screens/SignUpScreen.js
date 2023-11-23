@@ -1,7 +1,29 @@
-import { Text, View, StyleSheet, Image, TextInput, Button } from "react-native";
+import { useState } from "react";
+import { Text, View, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { auth } from "../firebase";
 
 export default function LoginScreen({ navigation }) {
+    const [regEmail, setRegEmail] = useState("");
+    const [regPassword, setRegPassword] = useState("");
+    const [confirmPass, setConfirmPass] = useState("");
+
+    const handleSignIn = () => {
+        if (confirmPass === regPassword) {
+            auth
+                .createUserWithEmailAndPassword(regEmail, regPassword)
+                .then(() => {
+                    // const username = `Successfully created user ${userCredentials.user.email}`
+                    // Alert.alert(username)
+                    navigation.replace("MainBottomTab")
+                })
+                .catch(error => Alert.alert(error.message))
+        }
+        else {
+            Alert.alert("Retyped password is not the same as password")
+        }
+    }
+
     return (
         <View style={styles.container}>
             <Image style={styles.Image} source={{
@@ -11,20 +33,37 @@ export default function LoginScreen({ navigation }) {
             <View style={styles.sectionStyle}>
                 <Image source={{ uri: "https://th.bing.com/th/id/OIP.37SXOl1HMjafsfpow_NjhwHaFS?pid=ImgDet&rs=1" }}
                     style={styles.iconStyle} />
-                <TextInput style={styles.textinput} placeholder="Email" />
+                <TextInput
+                    style={styles.textinput}
+                    placeholder="Email"
+                    value={regEmail}
+                    onChangeText={text => setRegEmail(text)}
+                />
             </View>
             <View style={styles.sectionStyle}>
                 <Image source={{ uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1" }}
                     style={[styles.iconStyle, { height: 35, width: 30, }]} />
-                <TextInput style={styles.textinput} placeholder="Password" />
+                <TextInput
+                    style={styles.textinput}
+                    placeholder="Password"
+                    value={regPassword}
+                    onChangeText={text => setRegPassword(text)}
+                    secureTextEntry
+                />
             </View>
             <View style={styles.sectionStyle}>
                 <Image source={{ uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1" }}
                     style={[styles.iconStyle, { height: 35, width: 30, }]} />
-                <TextInput style={styles.textinput} placeholder="Confirm password" />
+                <TextInput
+                    style={styles.textinput}
+                    placeholder="Confirm password"
+                    value={confirmPass}
+                    onChangeText={text => setConfirmPass(text)}
+                    secureTextEntry
+                />
             </View>
             <View style={styles.LogInButton}>
-                <Button title="SIGN UP  " color="darkgreen" />
+                <Button title="SIGN UP  " color="darkgreen" onPress={handleSignIn} />
             </View>
             <Text style={{ ...styles.text, fontSize: 15 }}>Already have account ?</Text>
             <TouchableOpacity onPress={() => { navigation.navigate("LoginScreen") }}>
