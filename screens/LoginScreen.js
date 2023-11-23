@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { auth } from "../firebase"
-import { AuthContext } from "../AuthContext";
 export default function LoginScreen({ navigation }) {
 
     const [email, setEmail] = useState("");
