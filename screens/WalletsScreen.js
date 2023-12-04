@@ -1,11 +1,27 @@
 import { View, Text, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect } from "react";
 
 import DayOverall from "../components/WalletsScreen/DayOverall";
 import Expense from "../components/WalletsScreen/Expense";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
 
+import useFetch from "../hooks/useFetch";
+import useStore from "../hooks/useStore";
+
 export default function Wallets() {
+  const data = useFetch();
+  const expenses = useStore((state) => state.expenses);
+  const setExpenses = useStore((state) => state.setExpenses);
+
+  useEffect(() => {
+    if (data) {
+      setExpenses(data);
+      console.log(expenses);
+    }
+  }, [data, setExpenses]);
+
+  // temp
   const date = new Date();
 
   return (
@@ -62,7 +78,7 @@ export default function Wallets() {
 
           {/* Specific date show */}
           <WhiteBox mt={"mt-4"}>
-            <DayOverall inputDate={date} value={0} />
+            <DayOverall value={0} inputDate={date} />
             <Expense category="Food & drink" value={0} />
           </WhiteBox>
         </View>

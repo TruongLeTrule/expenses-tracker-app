@@ -12,7 +12,7 @@ export default function App() {
     <NavigationContainer>
       {/* Thay đổi tên stack screen để coi các phần khác */}
       <Stack.Navigator
-        initialRouteName="LoginSignStack"
+        initialRouteName="MainBottomTab"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LogSignStack" component={LogSignStack} />
