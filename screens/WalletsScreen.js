@@ -1,10 +1,12 @@
-import { View, Text, StatusBar, Button } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import TimeCard from "../components/TimeCard";
-import SpecificUse from "../components/SpecificUse";
+import TimeCard from "../components/WalletsScreen/TimeCard";
+import SpecificUse from "../components/WalletsScreen/SpecificUse";
 
 export default function Wallets() {
+  const date = new Date();
+
   return (
     <View>
       <StatusBar backgroundColor={"#3a833c"} />
@@ -34,18 +36,18 @@ export default function Wallets() {
 
         {/* Overall section */}
         <View className="bg-[#fff] w-full p-4 rounded-xl mt-4 shadow">
-          <View className="flex-row justify-between">
+          {/* <View className="flex-row justify-between">
             <Text className="text-xl ">Income</Text>
             <Text className="text-xl text-primary">0₫</Text>
-          </View>
+          </View> */}
           <View className="flex-row justify-between mt-1">
-            <Text className="text-xl">Expense</Text>
+            <Text className="text-xl">Total</Text>
             <Text className="text-xl text-danger-red">0₫</Text>
           </View>
-          <View className="flex-row justify-between border-t pt-2 mt-2">
+          {/* <View className="flex-row justify-between border-t pt-2 mt-2">
             <Text className="text-xl">Total</Text>
             <Text className="text-xl">0₫</Text>
-          </View>
+          </View> */}
         </View>
 
         <View className="items-center justify-center mt-5">
@@ -59,8 +61,8 @@ export default function Wallets() {
 
           {/* Specific card */}
           <View className="bg-[#fff] w-full p-4 rounded-xl mt-4 shadow">
-            <TimeCard />
-            <SpecificUse />
+            <TimeCard inputDate={date} value={0} />
+            <SpecificUse category="Food & drink" value={0} />
           </View>
         </View>
       </View>

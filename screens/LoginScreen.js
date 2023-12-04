@@ -98,7 +98,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 35,
+    paddingTop: 35,
     backgroundColor: "green",
   },
   Image: {
@@ -129,9 +129,6 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     color: "white",
   },
-  // text2: {
-  //   fontSize: 20,
-  // },
   LogInButton: {
     width: "75%",
     marginTop: 10,
@@ -157,8 +154,4 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "white",
   },
-  // flexHorizontal: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'center'
-  // },
 });
