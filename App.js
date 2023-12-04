@@ -11,17 +11,12 @@ export default function App() {
   return (
     <NavigationContainer>
       {/* Thay đổi tên stack screen để coi các phần khác */}
-      <Stack.Navigator initialRouteName="LoginSignStack">
-        <Stack.Screen
-          name="LogSignStack"
-          component={LogSignStack}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="MainBottomTab"
-          component={MainBottomTab}
-          options={{ headerShown: false }}
-        />
+      <Stack.Navigator
+        initialRouteName="LoginSignStack"
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="LogSignStack" component={LogSignStack} />
+        <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
         <Stack.Screen name="AddScreen" component={AddScreen} />
       </Stack.Navigator>
     </NavigationContainer>
