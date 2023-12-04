@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function DaySpecific({ category, value }) {
+export default function Expense({ category, value }) {
   return (
     <View className="flex-row justify-between items-center mt-4">
       <View className="flex-row justify-between items-center gap-4">

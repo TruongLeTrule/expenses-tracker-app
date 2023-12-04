@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function DayCard({ inputDate, value }) {
+export default function DayOverall({ inputDate, value }) {
   const monthNames = [
     "January",
     "February",
