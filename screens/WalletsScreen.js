@@ -1,26 +1,10 @@
 import { View, Text, StatusBar, Button } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { addDoc, collection } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
-import { useEffect } from "react";
 
 import TimeCard from "../components/TimeCard";
 import SpecificUse from "../components/SpecificUse";
-import { FIREBASE_DB } from "../firebaseConfig";
 
 export default function Wallets() {
-  const addWallet = async () => {
-    try {
-      await setDoc(doc(FIREBASE_DB, "cities", "LA"), {
-        name: "Los Angeles",
-        state: "CA",
-        country: "USA",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <View>
       <StatusBar backgroundColor={"#3a833c"} />
@@ -77,7 +61,6 @@ export default function Wallets() {
           <View className="bg-[#fff] w-full p-4 rounded-xl mt-4 shadow">
             <TimeCard />
             <SpecificUse />
-            <Button onPress={() => addWallet()} title="Test" />
           </View>
         </View>
       </View>

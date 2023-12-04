@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Text,
   View,
@@ -13,6 +13,7 @@ import { auth } from "../firebase";
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   // useEffect(() => {
   //     const unsubscribe = auth.onAuthStateChanged(user => {
   //         if (user) {
@@ -21,6 +22,7 @@ export default function LoginScreen({ navigation }) {
   //     })
   //     return unsubscribe
   // }, [])
+
   const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
@@ -31,6 +33,7 @@ export default function LoginScreen({ navigation }) {
       })
       .catch(() => Alert.alert("Invalid log in credentials"));
   };
+
   return (
     <View style={styles.container}>
       <Image

@@ -17,7 +17,11 @@ export default function App() {
       >
         <Stack.Screen name="LogSignStack" component={LogSignStack} />
         <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
-        <Stack.Screen name="AddScreen" component={AddScreen} />
+        <Stack.Screen
+          name="AddScreen"
+          component={AddScreen}
+          options={{ headerShown: true }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
