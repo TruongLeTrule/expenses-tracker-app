@@ -1,10 +1,28 @@
-import { View, Text, StatusBar } from "react-native";
-import React from "react";
+import { View, Text, StatusBar, Button } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { useEffect } from "react";
+
+import TimeCard from "../components/TimeCard";
+import SpecificUse from "../components/SpecificUse";
+import { FIREBASE_DB } from "../firebaseConfig";
 
 export default function Wallets() {
+  const addWallet = async () => {
+    try {
+      await setDoc(doc(FIREBASE_DB, "cities", "LA"), {
+        name: "Los Angeles",
+        state: "CA",
+        country: "USA",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <View className="">
+    <View>
       <StatusBar backgroundColor={"#3a833c"} />
       {/* Header */}
       <View className="bg-primary h-40 px-4 justify-center">
@@ -21,7 +39,7 @@ export default function Wallets() {
 
       {/* Body */}
       <View className="mt-5 px-4">
-        {/* Time row */}
+        {/* Current time show */}
         <View className="flex-row items-center justify-between px-8">
           <Ionicons name="chevron-back" size={28} color={"#4cb050"} />
           <View className="flex-row items-end gap-3">
@@ -30,7 +48,7 @@ export default function Wallets() {
           <Ionicons name="chevron-forward" size={28} color={"#4cb050"} />
         </View>
 
-        {/* Total card */}
+        {/* Overall section */}
         <View className="bg-[#fff] w-full p-4 rounded-xl mt-4 shadow">
           <View className="flex-row justify-between">
             <Text className="text-xl ">Income</Text>
@@ -57,30 +75,9 @@ export default function Wallets() {
 
           {/* Specific card */}
           <View className="bg-[#fff] w-full p-4 rounded-xl mt-4 shadow">
-            {/* All day */}
-            <View className="flex-row justify-between items-center">
-              <View className="flex-row justify-between items-center gap-x-5">
-                <Text className="font-bold text-3xl">6</Text>
-                <View>
-                  <Text className="font-bold text-xl">Friday</Text>
-                  <Text className="font-normal text-xl text-grey-text">
-                    October, 2023
-                  </Text>
-                </View>
-              </View>
-              <Text className="font-bold text-xl text-danger-red">0₫</Text>
-            </View>
-
-            {/* Specific info */}
-            <View className="flex-row justify-between items-center mt-4">
-              <View className="flex-row justify-between items-center gap-4">
-                <View className="rounded-full h-12 w-12 flex items-center justify-center bg-light-green">
-                  <Ionicons name="fast-food" size={27} />
-                </View>
-                <Text className="text-xl font-thin">Food & drink</Text>
-              </View>
-              <Text className="font-bold  text-xl text-danger-red">0₫</Text>
-            </View>
+            <TimeCard />
+            <SpecificUse />
+            <Button onPress={() => addWallet()} title="Test" />
           </View>
         </View>
       </View>
