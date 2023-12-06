@@ -1,28 +1,53 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { useEffect, useState } from "react";
+import { useStore } from "zustand";
 
 const useFetch = () => {
   const [data, setData] = useState(null);
 
-  async function getExpenses(db) {
+  // Get all expenses
+  async function getAllExpenses(db) {
     try {
-      console.log("Get expenses from db");
       const expensesArr = [];
-      const expenseCol = collection(db, "expense");
+
+      const expenseCol = collection(db, "expenses");
       const expenseSnapshot = await getDocs(expenseCol);
       expenseSnapshot.forEach((doc) =>
         expensesArr.push({ id: doc.id, ...doc.data() })
       );
-      setData(expensesArr);
+
+      setData({ ...data, allExpenses: expensesArr });
+      console.log(`Get ${expensesArr.length} expenses from db`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Get expenses sort by date
+  async function getSortDateExpenses(db) {
+    try {
+      const expensesArr = [];
+
+      const expenseRef = collection(db, "expenses");
+      const q = query(expenseRef, orderBy("date", "desc"));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        expensesArr.push({ id: doc.id, ...doc.data() });
+      });
+
+      setData({ ...data, sortDateExpenses: expensesArr });
+      console.log(`Get ${expensesArr.length} expenses sorted by date from db`);
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    getExpenses(db);
-  }, [db]);
+    getSortDateExpenses(db);
+    getAllExpenses(db);
+  }, []);
 
   return data;
 };

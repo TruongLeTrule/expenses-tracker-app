@@ -1,9 +1,13 @@
 import { create } from "zustand";
 
 const useAppStore = create((set) => ({
-  expenses: null,
-  setExpenses: (data) => {
-    set((state) => ({ expenses: data }));
+  allExpenses: null,
+  setAllExpenses: (data) => {
+    set((state) => ({ allExpenses: data }));
+  },
+  sortDateExpenses: null,
+  setSortDateExpenses: (data) => {
+    set((state) => ({ sortDateExpenses: data }));
   },
 }));
 

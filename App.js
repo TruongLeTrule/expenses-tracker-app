@@ -10,7 +10,6 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      {/* Thay đổi tên stack screen để coi các phần khác */}
       <Stack.Navigator
         initialRouteName="MainBottomTab"
         screenOptions={{ headerShown: false }}
