@@ -1,11 +1,10 @@
 import { View, Text, StatusBar, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { db } from "../firebase";
-import { getAllExpenses } from "../hooks/useFetch";
+import useFetch from "../hooks/useFetch";
 import useStore from "../hooks/useStore";
 
 import Header from "../components/WalletsScreen/Header";
@@ -18,24 +17,15 @@ import EditModal from "../components/WalletsScreen/EditModal";
 import { commafy } from "../components/formatCurrency";
 
 export default function Wallets() {
-  const [isLoading, setIsLoading] = useState(true);
+  const { getAllExpenses } = useFetch();
 
   const sortDateExpenses = useStore((state) => state.sortDateExpenses);
-  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
-  const setAllExpenses = useStore((state) => state.setAllExpenses);
   const total = useStore((state) => state.total);
-  const setTotal = useStore((state) => state.setTotal);
   const setModalVisible = useStore((state) => state.setModalVisible);
+  const isLoading = useStore((state) => state.isLoading);
 
   useEffect(() => {
-    async function fetchData() {
-      const dbAllExpenses = await getAllExpenses(db);
-      setAllExpenses(dbAllExpenses);
-      setSortDateExpenses(dbAllExpenses);
-      setTotal(dbAllExpenses);
-      setIsLoading(false);
-    }
-    fetchData();
+    getAllExpenses();
   }, []);
 
   if (isLoading) {

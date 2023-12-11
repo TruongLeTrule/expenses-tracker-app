@@ -1,10 +1,13 @@
 import { create } from "zustand";
 
 const useAppStore = create((set) => ({
+  // All expenses array
   allExpenses: null,
   setAllExpenses: (data) => {
     set((state) => ({ allExpenses: data }));
   },
+
+  // Object which key is date
   sortDateExpenses: null,
   setSortDateExpenses: (data) => {
     // Create an array containing expenses group by date
@@ -48,6 +51,8 @@ const useAppStore = create((set) => ({
     };
     set((state) => ({ sortDateExpenses: groupExpensesByDate(data) }));
   },
+
+  // Total value of expenses
   total: 0,
   setTotal: (data) => {
     // Get total
@@ -55,9 +60,17 @@ const useAppStore = create((set) => ({
       expenses.reduce((result, expense) => result + expense.value, 0);
     set((state) => ({ total: getTotal(data) }));
   },
+
+  // Modal in Wallets Screen
   modalVisible: false,
   setModalVisible: () => {
     set((state) => ({ modalVisible: !state.modalVisible }));
+  },
+
+  // Loading state
+  isLoading: false,
+  setIsLoading: () => {
+    set((state) => ({ isLoading: !state.isLoading }));
   },
 }));
 
