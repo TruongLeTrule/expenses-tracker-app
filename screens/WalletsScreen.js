@@ -14,6 +14,7 @@ import DayOverall from "../components/WalletsScreen/DayOverall";
 import Expense from "../components/WalletsScreen/Expense";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
 import Overall from "../components/WalletsScreen/Overall";
+import EditModal from "../components/WalletsScreen/EditModal";
 import { commafy } from "../components/formatCurrency";
 
 export default function Wallets() {
@@ -24,6 +25,7 @@ export default function Wallets() {
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const total = useStore((state) => state.total);
   const setTotal = useStore((state) => state.setTotal);
+  const setModalVisible = useStore((state) => state.setModalVisible);
 
   useEffect(() => {
     async function fetchData() {
@@ -50,7 +52,7 @@ export default function Wallets() {
       <StatusBar backgroundColor={"#3a833c"} />
 
       {/* Header */}
-      <Header total={total} />
+      <Header total={commafy(total)} />
 
       {/* Body */}
       <View className="mt-5 px-4" style={{ flex: 1 }}>
@@ -86,6 +88,7 @@ export default function Wallets() {
                       key={expense.id}
                       category={expense.category}
                       value={commafy(expense.value)}
+                      handlePress={setModalVisible}
                     />
                   ))}
                 </WhiteBox>
@@ -94,6 +97,8 @@ export default function Wallets() {
           </SafeAreaView>
         </View>
       </View>
+
+      <EditModal />
     </View>
   );
 }

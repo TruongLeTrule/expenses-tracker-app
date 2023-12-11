@@ -29,7 +29,7 @@ export default function MainBottomTab() {
       }}
     >
       <Tab.Screen
-        name="Wallets"
+        name="WalletsScreen"
         component={WalletsScreen}
         options={{
           tabBarIcon: ({ color }) => (

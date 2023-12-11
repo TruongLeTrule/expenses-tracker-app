@@ -1,8 +1,7 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function Expense({ category, value }) {
+export default function Expense({ category, value, handlePress }) {
   const icons = {
     food: "fast-food",
     drink: "wine",
@@ -26,7 +25,10 @@ export default function Expense({ category, value }) {
   };
 
   return (
-    <View className="flex-row justify-between items-center mt-4">
+    <Pressable
+      className="flex-row justify-between items-center mt-4"
+      onPress={handlePress}
+    >
       <View className="flex-row justify-between items-center gap-4">
         <View className="rounded-full h-12 w-12 flex items-center justify-center bg-light-green">
           <Ionicons name={icons[category]} size={27} />
@@ -34,6 +36,6 @@ export default function Expense({ category, value }) {
         <Text className="text-xl font-thin">{titles[category]}</Text>
       </View>
       <Text className="font-bold  text-xl text-danger-red">-{value}₫</Text>
-    </View>
+    </Pressable>
   );
 }

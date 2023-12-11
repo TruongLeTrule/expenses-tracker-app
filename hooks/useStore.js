@@ -55,6 +55,10 @@ const useAppStore = create((set) => ({
       expenses.reduce((result, expense) => result + expense.value, 0);
     set((state) => ({ total: getTotal(data) }));
   },
+  modalVisible: false,
+  setModalVisible: () => {
+    set((state) => ({ modalVisible: !state.modalVisible }));
+  },
 }));
 
 export default useAppStore;
