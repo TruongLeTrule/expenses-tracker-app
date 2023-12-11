@@ -1,7 +1,8 @@
 import { View, Text } from "react-native";
 import React from "react";
+import { commafy } from "../formatCurrency";
 
-export default function DayOverall({ inputDate, value }) {
+export default function DayOverall({ inputDate, expenses }) {
   const monthNames = [
     "January",
     "February",
@@ -16,6 +17,7 @@ export default function DayOverall({ inputDate, value }) {
     "November",
     "December",
   ];
+
   const weekday = [
     "Sunday",
     "Monday",
@@ -33,6 +35,10 @@ export default function DayOverall({ inputDate, value }) {
     year: inputDate.getFullYear(),
   };
 
+  // Get day total
+  const getDayTotal = (expenses) =>
+    expenses.reduce((result, expense) => result + expense.value, 0);
+
   return (
     <View className="flex-row justify-between items-center">
       <View className="flex-row justify-between items-center gap-x-5">
@@ -44,7 +50,9 @@ export default function DayOverall({ inputDate, value }) {
           </Text>
         </View>
       </View>
-      <Text className="font-bold text-xl text-danger-red">{value}₫</Text>
+      <Text className="font-bold text-xl text-danger-red">
+        -{commafy(getDayTotal(expenses))}₫
+      </Text>
     </View>
   );
 }
