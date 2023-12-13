@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import useFetch from "../hooks/useFetch";
-import useStore from "../hooks/useStore";
+import useFetch from "../data/fetchData";
+import useStore from "../data/useStore";
 
 import Header from "../components/WalletsScreen/Header";
 import FilterSection from "../components/WalletsScreen/FilterSection";
@@ -21,13 +21,23 @@ export default function Wallets() {
 
   const sortDateExpenses = useStore((state) => state.sortDateExpenses);
   const total = useStore((state) => state.total);
-  const setModalVisible = useStore((state) => state.setModalVisible);
   const isLoading = useStore((state) => state.isLoading);
+  const allExpenses = useStore((state) => state.allExpenses);
+  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
+  const setTotal = useStore((state) => state.setTotal);
 
   useEffect(() => {
     getAllExpenses();
   }, []);
 
+  useEffect(() => {
+    if (allExpenses) {
+      setSortDateExpenses(allExpenses);
+      setTotal(allExpenses);
+    }
+  }, [allExpenses]);
+
+  // Render loading circle if haven't got data yet
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -74,12 +84,7 @@ export default function Wallets() {
                 <WhiteBox mt={"mt-4"}>
                   <DayOverall inputDate={item.title} expenses={item.data} />
                   {item.data.map((expense) => (
-                    <Expense
-                      key={expense.id}
-                      category={expense.category}
-                      value={commafy(expense.value)}
-                      handlePress={setModalVisible}
-                    />
+                    <Expense key={expense.id} expense={expense} />
                   ))}
                 </WhiteBox>
               )}

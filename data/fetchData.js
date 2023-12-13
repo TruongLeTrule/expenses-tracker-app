@@ -6,12 +6,12 @@ const useFetch = () => {
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setTotal = useStore((state) => state.setTotal);
-  const setIsLoading = useStore((state) => state.setIsLoading);
+  const toggleIsLoading = useStore((state) => state.toggleIsLoading);
 
   // Get all expenses sorted by date
   async function getAllExpenses(db) {
     try {
-      setIsLoading();
+      toggleIsLoading();
       const expensesArr = [];
 
       const expenseRef = collection(db, "expenses");
@@ -24,9 +24,7 @@ const useFetch = () => {
 
       console.log(`Get ${expensesArr.length} expenses sorted by date from db`);
       setAllExpenses(expensesArr);
-      setSortDateExpenses(expensesArr);
-      setTotal(expensesArr);
-      setIsLoading();
+      toggleIsLoading();
     } catch (error) {
       console.log(error);
     }

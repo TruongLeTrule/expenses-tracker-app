@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const useAppStore = create((set) => ({
+const useStore = create((set) => ({
   // All expenses array
   allExpenses: null,
   setAllExpenses: (data) => {
@@ -61,17 +61,27 @@ const useAppStore = create((set) => ({
     set((state) => ({ total: getTotal(data) }));
   },
 
-  // Modal in Wallets Screen
-  modalVisible: false,
-  setModalVisible: () => {
-    set((state) => ({ modalVisible: !state.modalVisible }));
+  // Modal state
+  editModalVisible: false,
+  toggleEditModalVisible: () => {
+    set((state) => ({ editModalVisible: !state.editModalVisible }));
+  },
+  categoryModalVisible: false,
+  toggleCategoryModalVisible: () => {
+    set((state) => ({ categoryModalVisible: !state.categoryModalVisible }));
   },
 
   // Loading state
   isLoading: false,
-  setIsLoading: () => {
+  toggleIsLoading: () => {
     set((state) => ({ isLoading: !state.isLoading }));
+  },
+
+  // Editing expense
+  editingExpense: null,
+  setEditingExpense: (expense) => {
+    set((state) => ({ editingExpense: expense }));
   },
 }));
 
-export default useAppStore;
+export default useStore;
