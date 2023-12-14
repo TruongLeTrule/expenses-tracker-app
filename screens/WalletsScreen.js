@@ -12,7 +12,6 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
-  useAnimatedReaction,
 } from "react-native-reanimated";
 
 import useFetch from "../data/fetchData";
@@ -37,9 +36,9 @@ export default function Wallets() {
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setTotal = useStore((state) => state.setTotal);
 
-  const [chevronType, setChevronType] = useState("chevron-down");
+  const [chevronType, setChevronType] = useState("chevron-up");
 
-  const height = useSharedValue(0);
+  const height = useSharedValue(420);
 
   const handleListVisible = () => {
     if (height.value === 420) {

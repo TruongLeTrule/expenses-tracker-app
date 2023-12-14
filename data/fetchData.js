@@ -1,15 +1,20 @@
-import { collection, getDocs, query, orderBy, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import useStore from "./useStore";
 
 const useFetch = () => {
-  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
-  const setTotal = useStore((state) => state.setTotal);
   const toggleIsLoading = useStore((state) => state.toggleIsLoading);
 
   // Get all expenses sorted by date
-  async function getAllExpenses(db) {
+  async function getAllExpenses() {
     try {
       toggleIsLoading();
       const expensesArr = [];
@@ -30,7 +35,18 @@ const useFetch = () => {
     }
   }
 
-  return { getAllExpenses: () => getAllExpenses(db) };
+  // Update expense
+  async function updateExpense(id, newExpense) {
+    try {
+      const docRef = doc(db, "expenses", id);
+      await updateDoc(docRef, newExpense);
+      console.log("updated on db");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return { getAllExpenses: getAllExpenses, updateExpense: updateExpense };
 };
 
 export default useFetch;

@@ -11,11 +11,15 @@ import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+import useFetch from "../../data/fetchData";
 import useStore from "../../data/useStore";
+
 import { icons, titles } from "../template";
 import CategoryModal from "../CategoryModal";
 
 const EditModal = () => {
+  const { updateExpense } = useFetch();
+
   const editModalVisible = useStore((state) => state.editModalVisible);
   const toggleEditModalVisible = useStore(
     (state) => state.toggleEditModalVisible
@@ -79,6 +83,13 @@ const EditModal = () => {
     toggleEditModalVisible();
 
     console.log("update expenses");
+
+    updateExpense(editingExpense.id, {
+      value: value,
+      category: category,
+      date: date,
+      note: note,
+    });
   };
 
   return (
