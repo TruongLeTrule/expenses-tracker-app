@@ -1,8 +1,19 @@
-import { View, Text, StatusBar, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, {
+  useSharedValue,
+  withTiming,
+  Easing,
+  useAnimatedReaction,
+} from "react-native-reanimated";
 
 import useFetch from "../data/fetchData";
 import useStore from "../data/useStore";
@@ -25,6 +36,27 @@ export default function Wallets() {
   const allExpenses = useStore((state) => state.allExpenses);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setTotal = useStore((state) => state.setTotal);
+
+  const [chevronType, setChevronType] = useState("chevron-down");
+
+  const height = useSharedValue(0);
+
+  const handleListVisible = () => {
+    if (height.value === 420) {
+      height.value = withTiming(height.value - 420, {
+        duration: 340,
+        easing: Easing.inOut(Easing.quad),
+      });
+      setChevronType("chevron-down");
+    }
+    if (height.value === 0) {
+      height.value = withTiming(height.value + 420, {
+        duration: 340,
+        easing: Easing.inOut(Easing.quad),
+      });
+      setChevronType("chevron-up");
+    }
+  };
 
   useEffect(() => {
     getAllExpenses();
@@ -67,15 +99,18 @@ export default function Wallets() {
         {/* Each day section */}
         <View className="items-center justify-center mt-5" style={{ flex: 1 }}>
           {/* All transactions show btn */}
-          <View className="flex-row items-end gap-1">
+          <TouchableOpacity
+            className="flex-row items-end gap-1"
+            onPress={handleListVisible}
+          >
             <Text className="text-lg text-primary font-normal">
               All transactions
             </Text>
-            <Ionicons name="chevron-down" size={20} color={"#4cb050"} />
-          </View>
+            <Ionicons name={chevronType} size={20} color={"#4cb050"} />
+          </TouchableOpacity>
 
           {/* Specific date show */}
-          <SafeAreaView style={{ flex: 1 }} className="w-full mb-4">
+          <Animated.View style={{ height }} className="w-full mb-4">
             <FlatList
               data={sortDateExpenses}
               extraData={sortDateExpenses}
@@ -89,7 +124,7 @@ export default function Wallets() {
                 </WhiteBox>
               )}
             />
-          </SafeAreaView>
+          </Animated.View>
         </View>
       </View>
 
