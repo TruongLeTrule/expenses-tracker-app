@@ -12,6 +12,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 
 import useFetch from "../data/fetchData";
@@ -38,24 +39,28 @@ export default function Wallets() {
 
   const [chevronType, setChevronType] = useState("chevron-up");
 
-  const height = useSharedValue(420);
+  const height = useSharedValue(100);
 
   const handleListVisible = () => {
-    if (height.value === 420) {
-      height.value = withTiming(height.value - 420, {
+    if (height.value === 100) {
+      height.value = withTiming(height.value - 100, {
         duration: 340,
         easing: Easing.inOut(Easing.quad),
       });
       setChevronType("chevron-down");
     }
     if (height.value === 0) {
-      height.value = withTiming(height.value + 420, {
+      height.value = withTiming(height.value + 100, {
         duration: 340,
         easing: Easing.inOut(Easing.quad),
       });
       setChevronType("chevron-up");
     }
   };
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    height: `${height.value}%`,
+  }));
 
   useEffect(() => {
     getAllExpenses();
@@ -96,7 +101,10 @@ export default function Wallets() {
         </WhiteBox>
 
         {/* Each day section */}
-        <View className="items-center justify-center mt-5" style={{ flex: 1 }}>
+        <View
+          className="items-center justify-center flex-1"
+          style={{ marginTop: 40 }}
+        >
           {/* All transactions show btn */}
           <TouchableOpacity
             className="flex-row items-end gap-1"
@@ -109,7 +117,7 @@ export default function Wallets() {
           </TouchableOpacity>
 
           {/* Specific date show */}
-          <Animated.View style={{ height }} className="w-full mb-4">
+          <Animated.View style={animatedStyle} className="w-full mb-4">
             <FlatList
               data={sortDateExpenses}
               extraData={sortDateExpenses}

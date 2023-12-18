@@ -4,16 +4,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import WalletsScreen from "./WalletsScreen";
 import BudgetsScreen from "./BudgetsScreen";
+import AddScreen from "./AddScreen";
 import ReportsScreen from "./ReportsScreen";
 import MoreScreen from "./MoreScreen";
-import AddScreen from "./AddScreen";
-import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainBottomTab() {
-  const navigation = useNavigation();
-
   return (
     <Tab.Navigator
       initialRouteName="Wallets"
@@ -51,10 +48,7 @@ export default function MainBottomTab() {
         component={AddScreen}
         options={{
           tabBarButton: () => (
-            <TouchableOpacity
-              className="bg-primary shadow-md rounded-full h-16 w-16 flex items-center justify-center"
-              onPress={() => navigation.navigate("AddScreen")}
-            >
+            <TouchableOpacity className="bg-primary shadow-md rounded-full h-16 w-16 flex items-center justify-center">
               <Ionicons name="add" color={"#fff"} size={34} />
             </TouchableOpacity>
           ),

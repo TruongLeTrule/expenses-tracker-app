@@ -70,6 +70,10 @@ const useStore = create((set) => ({
   toggleCategoryModalVisible: () => {
     set((state) => ({ categoryModalVisible: !state.categoryModalVisible }));
   },
+  addModalVisible: false,
+  toggleAddModalVisible: () => {
+    set((state) => ({ addModalVisible: !state.addModalVisible }));
+  },
 
   // Loading state
   isLoading: false,

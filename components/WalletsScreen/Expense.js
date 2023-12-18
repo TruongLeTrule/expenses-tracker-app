@@ -21,11 +21,11 @@ export default function Expense({ expense }) {
       className="flex-row justify-between items-center mt-4"
       onPress={handlePress}
     >
-      <View className="flex-row justify-between items-center gap-4">
+      <View className="flex-1 flex-row justify-between items-center gap-4">
         <View className="rounded-full h-12 w-12 flex items-center justify-center bg-light-green">
           <Ionicons name={icons[expense.category]} size={27} />
         </View>
-        <View>
+        <View className="flex-1">
           <Text className="text-xl font-normal">
             {titles[expense.category]}
           </Text>
