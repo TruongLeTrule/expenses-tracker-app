@@ -9,29 +9,35 @@ import {
   Alert,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+
 import { auth } from "../firebase";
-export default function LoginScreen({ navigation }) {
+import useLocal from "../data/localData";
+import useStore from "../data/useStore";
+
+export default function LoginScreen() {
+  const navigation = useNavigation();
+
+  const { setLocalUID } = useLocal();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // useEffect(() => {
-  //     const unsubscribe = auth.onAuthStateChanged(user => {
-  //         if (user) {
-  //             navigation.replace("MainBottomTab")
-  //         }
-  //     })
-  //     return unsubscribe
-  // }, [])
+  const setUID = useStore((state) => state.setUID);
 
   const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        // const username = "Logged in with " + userCredentials.user.email
-        // Alert.alert(username)
-        navigation.replace("MainBottomTab");
+      .then((userCredentials) => {
+        const uid = userCredentials.user.uid;
+
+        setLocalUID(uid);
+        setUID(uid);
+
+        console.log("Save uid into storage");
+        Alert.alert(`Welcome back ${userCredentials.user.email}`);
       })
-      .catch(() => Alert.alert("Invalid log in credentials"));
+      .catch(() => Alert.alert("Invalid email or password!"));
   };
 
   return (
@@ -42,69 +48,79 @@ export default function LoginScreen({ navigation }) {
           uri: "https://static.vecteezy.com/system/resources/previews/000/287/227/original/wallet-vector-icon.jpg",
         }}
       />
-      <Text style={styles.text}>Log In</Text>
-      <View style={styles.sectionStyle}>
-        <Image
-          source={{
-            uri: "https://th.bing.com/th/id/OIP.37SXOl1HMjafsfpow_NjhwHaFS?pid=ImgDet&rs=1",
-          }}
-          style={styles.iconStyle}
-        />
-        <TextInput
-          style={styles.textinput}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
+
+      {/* Input group */}
+      <View style={{ marginTop: 10 }}>
+        <View style={styles.sectionStyle}>
+          <Image
+            source={{
+              uri: "https://th.bing.com/th/id/OIP.37SXOl1HMjafsfpow_NjhwHaFS?pid=ImgDet&rs=1",
+            }}
+            style={styles.iconStyle}
+          />
+          <TextInput
+            style={styles.textinput}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+        </View>
+        <View style={styles.sectionStyle}>
+          <Image
+            source={{
+              uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1",
+            }}
+            style={[styles.iconStyle, { height: 35, width: 30 }]}
+          />
+          <TextInput
+            style={styles.textinput}
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+        </View>
       </View>
-      <View style={styles.sectionStyle}>
-        <Image
-          source={{
-            uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1",
-          }}
-          style={[styles.iconStyle, { height: 35, width: 30 }]}
-        />
-        <TextInput
-          style={styles.textinput}
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
-      </View>
+
+      {/* Submit btn */}
       <View style={styles.LogInButton}>
         <Button title="LOG IN" color="darkgreen" onPress={handleLogin} />
       </View>
-      <Text style={{ ...styles.text, fontSize: 15 }}>OR</Text>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("SignUpScreen");
-        }}
-      >
-        <Text
-          style={{
-            ...styles.text,
-            fontSize: 15,
-            fontStyle: "italic",
-            textDecorationLine: "underline",
+
+      {/* Navigate group */}
+      <View style={{ marginTop: 25 }}>
+        <Text style={{ ...styles.text, fontSize: 20 }}>OR</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SignUpScreen");
           }}
         >
-          Create account
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              ...styles.text,
+              fontSize: 22,
+              fontWeight: "bold",
+              textDecorationLine: "underline",
+              marginTop: 10,
+            }}
+          >
+            Create account
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 35,
+    justifyContent: "center",
     backgroundColor: "green",
   },
   Image: {
     width: 120,
     height: 120,
-    marginTop: 100,
     marginBottom: 20,
     borderRadius: 60,
     marginLeft: "auto",
@@ -123,15 +139,13 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 30,
     fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 10,
     marginLeft: "auto",
     marginRight: "auto",
     color: "white",
   },
   LogInButton: {
     width: "75%",
-    marginTop: 10,
+    marginTop: 15,
     marginLeft: "auto",
     marginRight: "auto",
   },

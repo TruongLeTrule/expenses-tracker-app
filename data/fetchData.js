@@ -11,12 +11,14 @@ import useStore from "./useStore";
 
 const useFetch = () => {
   const setAllExpenses = useStore((state) => state.setAllExpenses);
-  const toggleIsLoading = useStore((state) => state.toggleIsLoading);
+  const setIsLoadingInWalletScreen = useStore(
+    (state) => state.setIsLoadingInWalletScreen
+  );
 
   // Get all expenses sorted by date
   async function getAllExpenses() {
     try {
-      toggleIsLoading();
+      setIsLoadingInWalletScreen(true);
       const expensesArr = [];
 
       const expenseRef = collection(db, "expenses");
@@ -29,7 +31,7 @@ const useFetch = () => {
 
       console.log(`Get ${expensesArr.length} expenses sorted by date from db`);
       setAllExpenses(expensesArr);
-      toggleIsLoading();
+      setIsLoadingInWalletScreen(false);
     } catch (error) {
       console.log(error);
     }

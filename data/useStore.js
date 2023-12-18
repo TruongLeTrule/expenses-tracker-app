@@ -1,6 +1,12 @@
 import { create } from "zustand";
 
 const useStore = create((set) => ({
+  // User info
+  uid: null,
+  setUID: (data) => {
+    set((state) => ({ uid: data }));
+  },
+
   // All expenses array
   allExpenses: null,
   setAllExpenses: (data) => {
@@ -76,9 +82,9 @@ const useStore = create((set) => ({
   },
 
   // Loading state
-  isLoading: false,
-  toggleIsLoading: () => {
-    set((state) => ({ isLoading: !state.isLoading }));
+  isLoadingInWalletScreen: false,
+  setIsLoadingInWalletScreen: (data) => {
+    set((state) => ({ isLoadingInWalletScreen: data }));
   },
 
   // Editing expense

@@ -32,7 +32,9 @@ export default function Wallets() {
 
   const sortDateExpenses = useStore((state) => state.sortDateExpenses);
   const total = useStore((state) => state.total);
-  const isLoading = useStore((state) => state.isLoading);
+  const isLoadingInWalletScreen = useStore(
+    (state) => state.isLoadingInWalletScreen
+  );
   const allExpenses = useStore((state) => state.allExpenses);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setTotal = useStore((state) => state.setTotal);
@@ -74,7 +76,7 @@ export default function Wallets() {
   }, [allExpenses]);
 
   // Render loading circle if haven't got data yet
-  if (isLoading) {
+  if (isLoadingInWalletScreen) {
     return (
       <View className="flex-1 items-center justify-center">
         <StatusBar backgroundColor={"#3a833c"} />
@@ -101,38 +103,46 @@ export default function Wallets() {
         </WhiteBox>
 
         {/* Each day section */}
-        <View
-          className="items-center justify-center flex-1"
-          style={{ marginTop: 40 }}
-        >
-          {/* All transactions show btn */}
-          <TouchableOpacity
-            className="flex-row items-end gap-1"
-            onPress={handleListVisible}
+        {sortDateExpenses ? (
+          <View
+            className="items-center justify-center flex-1"
+            style={{ marginTop: 40, marginBottom: 20 }}
           >
-            <Text className="text-lg text-primary font-normal">
-              All transactions
-            </Text>
-            <Ionicons name={chevronType} size={20} color={"#4cb050"} />
-          </TouchableOpacity>
+            {/* All transactions show btn */}
+            <TouchableOpacity
+              className="flex-row items-end gap-1"
+              onPress={handleListVisible}
+            >
+              <Text className="text-lg text-primary font-normal">
+                All transactions
+              </Text>
+              <Ionicons name={chevronType} size={20} color={"#4cb050"} />
+            </TouchableOpacity>
 
-          {/* Specific date show */}
-          <Animated.View style={animatedStyle} className="w-full mb-4">
-            <FlatList
-              data={sortDateExpenses}
-              extraData={sortDateExpenses}
-              keyExtractor={(item) => item.title}
-              renderItem={({ item }) => (
-                <WhiteBox mt={"mt-4"}>
-                  <DayOverall inputDate={item.title} expenses={item.data} />
-                  {item.data.map((expense) => (
-                    <Expense key={expense.id} expense={expense} />
-                  ))}
-                </WhiteBox>
-              )}
-            />
-          </Animated.View>
-        </View>
+            {/* Specific date show */}
+            <Animated.View style={animatedStyle} className="w-full mb-4">
+              <FlatList
+                data={sortDateExpenses}
+                extraData={sortDateExpenses}
+                keyExtractor={(item) => item.title}
+                renderItem={({ item }) => (
+                  <WhiteBox mt={"mt-4"}>
+                    <DayOverall inputDate={item.title} expenses={item.data} />
+                    {item.data.map((expense) => (
+                      <Expense key={expense.id} expense={expense} />
+                    ))}
+                  </WhiteBox>
+                )}
+              />
+            </Animated.View>
+          </View>
+        ) : (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-lg">
+              You have not create any transaction yet
+            </Text>
+          </View>
+        )}
       </View>
 
       <EditModal />
