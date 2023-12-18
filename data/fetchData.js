@@ -5,6 +5,7 @@ import {
   orderBy,
   updateDoc,
   doc,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import useStore from "./useStore";
@@ -16,13 +17,17 @@ const useFetch = () => {
   );
 
   // Get all expenses sorted by date
-  async function getAllExpenses() {
+  async function getAllExpenses(uid) {
     try {
       setIsLoadingInWalletScreen(true);
       const expensesArr = [];
 
       const expenseRef = collection(db, "expenses");
-      const q = query(expenseRef, orderBy("date", "desc"));
+      const q = query(
+        expenseRef,
+        orderBy("date", "desc"),
+        where("uid", "==", uid)
+      );
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {

@@ -38,6 +38,7 @@ export default function Wallets() {
   const allExpenses = useStore((state) => state.allExpenses);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setTotal = useStore((state) => state.setTotal);
+  const uid = useStore((state) => state.uid);
 
   const [chevronType, setChevronType] = useState("chevron-up");
 
@@ -65,7 +66,7 @@ export default function Wallets() {
   }));
 
   useEffect(() => {
-    getAllExpenses();
+    getAllExpenses(uid);
   }, []);
 
   useEffect(() => {
