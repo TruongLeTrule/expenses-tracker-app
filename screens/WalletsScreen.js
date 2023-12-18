@@ -91,7 +91,7 @@ export default function Wallets() {
       <StatusBar backgroundColor={"#3a833c"} />
 
       {/* Header */}
-      <Header total={commafy(total)} />
+      <Header total={total} />
 
       {/* Body */}
       <View className="mt-5 px-4" style={{ flex: 1 }}>
@@ -100,7 +100,7 @@ export default function Wallets() {
 
         {/* Overall section */}
         <WhiteBox mt={"mt-4"}>
-          <Overall value={commafy(total)} />
+          <Overall total={total} />
         </WhiteBox>
 
         {/* Each day section */}

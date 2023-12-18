@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import WhiteBox from "./WhiteBox";
+import { commafy } from "../formatCurrency";
 
 const Header = ({ total }) => {
   return (
@@ -13,8 +14,11 @@ const Header = ({ total }) => {
           </View>
           <Text className="text-2xl text-grey-text font-normal">Cash</Text>
         </View>
-        <Text className="text-4xl text-danger-red font-bold mt-2">
-          -{total}₫
+        <Text
+          className="text-4xl text-danger-red font-bold mt-2"
+          numberOfLines={1}
+        >
+          {total ? `-${commafy(total)}` : 0}₫
         </Text>
       </WhiteBox>
     </View>

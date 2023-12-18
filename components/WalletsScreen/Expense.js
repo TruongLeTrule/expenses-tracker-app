@@ -36,9 +36,11 @@ export default function Expense({ expense }) {
           ) : null}
         </View>
       </View>
-      <Text className="font-bold  text-xl text-danger-red">
-        -{commafy(expense.value)}₫
-      </Text>
+      <View className="flex-1 items-end">
+        <Text className="font-bold text-xl text-danger-red" numberOfLines={1}>
+          -{commafy(expense.value)}₫
+        </Text>
+      </View>
     </Pressable>
   );
 }

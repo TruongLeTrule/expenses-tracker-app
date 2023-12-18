@@ -84,12 +84,16 @@ const EditModal = () => {
 
     console.log("update expenses");
 
-    updateExpense(editingExpense.id, {
-      value: value,
-      category: category,
-      date: date,
-      note: note,
-    });
+    if (
+      JSON.stringify(newExpenses[objIndex]) !== JSON.stringify(editingExpense)
+    ) {
+      updateExpense(editingExpense.id, {
+        value: value,
+        category: category,
+        date: date,
+        note: note,
+      });
+    }
   };
 
   return (

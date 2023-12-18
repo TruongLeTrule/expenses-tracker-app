@@ -1,7 +1,9 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const Overall = ({ value }) => {
+import { commafy } from "../formatCurrency";
+
+const Overall = ({ total }) => {
   return (
     //  <View className="flex-row justify-between">
     //         <Text className="text-xl ">Income</Text>
@@ -13,7 +15,9 @@ const Overall = ({ value }) => {
     //       </View>
     <View className="flex-row justify-between">
       <Text className="text-xl">Total</Text>
-      <Text className="text-xl text-danger-red font-bold">-{value}₫</Text>
+      <Text className="text-xl text-danger-red font-bold" numberOfLines={1}>
+        {total ? `-${commafy(total)}` : 0}₫
+      </Text>
     </View>
   );
 };

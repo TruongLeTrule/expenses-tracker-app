@@ -6,6 +6,7 @@ import { ActivityIndicator, View } from "react-native";
 
 import LogSignStack from "./screens/LogSignStack";
 import MainBottomTab from "./screens/MainBottomTab";
+import AddScreen from "./screens/AddScreen";
 
 import useStore from "./data/useStore";
 import useLocal from "./data/localData";
@@ -51,7 +52,14 @@ export default function App() {
         {!uid ? (
           <Stack.Screen name="LogSignStack" component={LogSignStack} />
         ) : (
-          <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
+          <>
+            <Stack.Group>
+              <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
+            </Stack.Group>
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+              <Stack.Screen name="AddModal" component={AddScreen} />
+            </Stack.Group>
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

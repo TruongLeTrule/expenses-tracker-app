@@ -7,10 +7,19 @@ import BudgetsScreen from "./BudgetsScreen";
 import AddScreen from "./AddScreen";
 import ReportsScreen from "./ReportsScreen";
 import MoreScreen from "./MoreScreen";
+import { useNavigation } from "@react-navigation/native";
+
+import useStore from "../data/useStore";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainBottomTab() {
+  const navigation = useNavigation();
+
+  const toggleCategoryModalVisible = useStore(
+    (state) => state.toggleCategoryModalVisible
+  );
+
   return (
     <Tab.Navigator
       initialRouteName="Wallets"
@@ -48,7 +57,13 @@ export default function MainBottomTab() {
         component={AddScreen}
         options={{
           tabBarButton: () => (
-            <TouchableOpacity className="bg-primary shadow-md rounded-full h-16 w-16 flex items-center justify-center">
+            <TouchableOpacity
+              className="bg-primary shadow-md rounded-full h-16 w-16 flex items-center justify-center"
+              onPress={() => {
+                navigation.navigate("AddModal");
+                toggleCategoryModalVisible();
+              }}
+            >
               <Ionicons name="add" color={"#fff"} size={34} />
             </TouchableOpacity>
           ),

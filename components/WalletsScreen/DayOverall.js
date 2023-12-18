@@ -50,9 +50,11 @@ export default function DayOverall({ inputDate, expenses }) {
           </Text>
         </View>
       </View>
-      <Text className="font-bold text-xl text-danger-red">
-        -{commafy(getDayTotal(expenses))}₫
-      </Text>
+      <View className="flex-1 items-end">
+        <Text className="font-bold text-xl text-danger-red" numberOfLines={1}>
+          -{commafy(getDayTotal(expenses))}₫
+        </Text>
+      </View>
     </View>
   );
 }

@@ -6,6 +6,7 @@ import {
   updateDoc,
   doc,
   where,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import useStore from "./useStore";
@@ -17,7 +18,7 @@ const useFetch = () => {
   );
 
   // Get all expenses sorted by date
-  async function getAllExpenses(uid) {
+  const getAllExpenses = async (uid) => {
     try {
       setIsLoadingInWalletScreen(true);
       const expensesArr = [];
@@ -40,10 +41,18 @@ const useFetch = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  // Create new expense
+  const addExpense = async (expense) => {
+    const expenseRef = doc(collection(db, "expenses"));
+    await setDoc(expenseRef, expense);
+    console.log("add expense to db");
+    return expenseRef;
+  };
 
   // Update expense
-  async function updateExpense(id, newExpense) {
+  const updateExpense = async (id, newExpense) => {
     try {
       const docRef = doc(db, "expenses", id);
       await updateDoc(docRef, newExpense);
@@ -51,9 +60,13 @@ const useFetch = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  return { getAllExpenses: getAllExpenses, updateExpense: updateExpense };
+  return {
+    getAllExpenses: getAllExpenses,
+    updateExpense: updateExpense,
+    addExpense: addExpense,
+  };
 };
 
 export default useFetch;
