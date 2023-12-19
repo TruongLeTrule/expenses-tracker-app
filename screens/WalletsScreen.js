@@ -141,7 +141,7 @@ export default function Wallets() {
         ) : (
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg">
-              You have not create any transaction yet
+              You have not created any transaction yet
             </Text>
           </View>
         )}

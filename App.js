@@ -38,9 +38,13 @@ export default function App() {
     }
 
     if (localExpenses) {
-      setAllExpenses(localExpenses);
-      setSortDateExpenses(localExpenses);
-      console.log(`${localExpenses.length} expenses in storage`);
+      if (localExpenses.length) {
+        setAllExpenses(localExpenses);
+        setSortDateExpenses(localExpenses);
+        console.log(`${localExpenses.length} expenses in storage`);
+      } else {
+        console.log("No expenses in storage");
+      }
     } else {
       console.log("No expenses in storage");
     }

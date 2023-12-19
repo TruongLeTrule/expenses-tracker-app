@@ -7,6 +7,7 @@ import {
   doc,
   where,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 import { db } from "../firebase";
@@ -73,10 +74,21 @@ const useFetch = () => {
     }
   };
 
+  // Delete expense
+  const deleteExpense = async (id) => {
+    try {
+      await deleteDoc(doc(db, "expenses", id));
+      console.log("Delete expense on db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getAllExpenses: getAllExpenses,
     updateExpense: updateExpense,
     addExpense: addExpense,
+    deleteExpense: deleteExpense,
   };
 };
 
