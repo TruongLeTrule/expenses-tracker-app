@@ -13,12 +13,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 import useFetch from "../../data/fetchData";
 import useStore from "../../data/useStore";
+import useLocal from "../../data/localData";
 
 import { icons, titles } from "../template";
 import CategoryModal from "../CategoryModal";
 
 const EditModal = () => {
-  const { updateExpense } = useFetch();
+  const { updateExpense, deleteExpense } = useFetch();
+  const { setLocalExpenses } = useLocal();
 
   const editModalVisible = useStore((state) => state.editModalVisible);
   const toggleEditModalVisible = useStore(
@@ -38,6 +40,9 @@ const EditModal = () => {
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [datePickerType, setDatePickerType] = useState("date");
 
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  // Get current editing expense value
   useEffect(() => {
     if (editingExpense) {
       setValue(editingExpense.value);
@@ -47,14 +52,17 @@ const EditModal = () => {
     }
   }, [editModalVisible]);
 
+  // Handle date or time press
   const handleDatePickerChange = (event, date) => {
     setDatePickerVisible(false);
+    // Set date if there is any change
     if (event.type === "set") {
       setDate(date);
     }
   };
 
-  const handleSubmit = () => {
+  // Handle save button press
+  const handleSaveBtnPress = () => {
     const newExpenses = [...allExpenses];
 
     //Find index of specific object using findIndex method.
@@ -93,13 +101,30 @@ const EditModal = () => {
         date: date,
         note: note,
       });
+      setLocalExpenses([...newExpenses]);
     }
+  };
+
+  // Handle delete button press
+  const handleDeleteBtnPress = () => {
+    toggleEditModalVisible();
+    setAlertVisible(false);
+
+    const newExpenses = allExpenses.filter(
+      (expense) => expense.id !== editingExpense.id
+    );
+    setAllExpenses(newExpenses);
+    setLocalExpenses(newExpenses);
+    console.log("delete expense");
+    deleteExpense(editingExpense.id);
   };
 
   return (
     <Modal
       isVisible={editModalVisible}
       onBackdropPress={toggleEditModalVisible}
+      onSwipeComplete={toggleEditModalVisible}
+      swipeDirection="down"
       className="flex-1 m-0 justify-end"
     >
       <View className="bg-[#d1d1d1] rounded-t-xl h-3/4">
@@ -110,9 +135,41 @@ const EditModal = () => {
               <Ionicons name="chevron-down" size={35} color={"#4cb050"} />
             </Pressable>
             <Text className="text-2xl font-bold">Edit transaction</Text>
-            <Pressable>
+            <TouchableOpacity onPress={() => setAlertVisible(true)}>
               <Ionicons name="trash-outline" size={30} color={"#eb3700"} />
-            </Pressable>
+            </TouchableOpacity>
+
+            {/* Delete confirm alert */}
+            <Modal
+              isVisible={alertVisible}
+              onBackdropPress={() => setAlertVisible(false)}
+              animationIn={"fadeIn"}
+              animationOut={"fadeOut"}
+              className="flex-1 justify-center items-center"
+            >
+              <View className="bg-[#fff] justify-center items-center w-4/6 rounded-lg p-6">
+                {/* Title */}
+                <Text className="text-lg font-bold">
+                  Are you sure to delete?
+                </Text>
+                {/* Cancel button */}
+                <View className="flex-row justify-between w-4/5 mt-5">
+                  <TouchableOpacity
+                    className="bg-[#d1d1d1] rounded-lg p-2"
+                    onPress={() => setAlertVisible(false)}
+                  >
+                    <Text className="text-[#fff] font-bold">Cancel</Text>
+                  </TouchableOpacity>
+                  {/* Confirm button */}
+                  <TouchableOpacity
+                    className="bg-[#eb3700] rounded-lg p-2"
+                    onPress={handleDeleteBtnPress}
+                  >
+                    <Text className="text-[#fff] font-bold">Delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </View>
 
           {/* Body */}
@@ -217,11 +274,11 @@ const EditModal = () => {
             </View>
           </View>
 
-          {/* Submit */}
+          {/* Save Button */}
           <View className="items-center mt-8">
             <TouchableOpacity
               className="w-36 h-14 rounded-full bg-primary flex-row justify-center items-center"
-              onPress={handleSubmit}
+              onPress={handleSaveBtnPress}
             >
               <Ionicons name={"save"} size={30} color={"#fff"} />
               <Text className="font-bold text-2xl text-[#fff] ml-2">Save</Text>

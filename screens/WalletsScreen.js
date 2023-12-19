@@ -25,7 +25,6 @@ import Expense from "../components/WalletsScreen/Expense";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
 import Overall from "../components/WalletsScreen/Overall";
 import EditModal from "../components/WalletsScreen/EditModal";
-import { commafy } from "../components/formatCurrency";
 
 export default function Wallets() {
   const { getAllExpenses } = useFetch();
@@ -66,7 +65,9 @@ export default function Wallets() {
   }));
 
   useEffect(() => {
-    getAllExpenses(uid);
+    if (!allExpenses) {
+      getAllExpenses(uid);
+    }
   }, []);
 
   useEffect(() => {
@@ -140,7 +141,7 @@ export default function Wallets() {
         ) : (
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg">
-              You have not create any transaction yet
+              You have not created any transaction yet
             </Text>
           </View>
         )}

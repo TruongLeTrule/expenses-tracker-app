@@ -6,12 +6,17 @@ import {
   updateDoc,
   doc,
   where,
-  setDoc,
+  addDoc,
+  deleteDoc,
 } from "firebase/firestore";
+
 import { db } from "../firebase";
 import useStore from "./useStore";
+import useLocal from "./localData";
 
 const useFetch = () => {
+  const { setLocalExpenses } = useLocal();
+
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setIsLoadingInWalletScreen = useStore(
     (state) => state.setIsLoadingInWalletScreen
@@ -21,6 +26,7 @@ const useFetch = () => {
   const getAllExpenses = async (uid) => {
     try {
       setIsLoadingInWalletScreen(true);
+
       const expensesArr = [];
 
       const expenseRef = collection(db, "expenses");
@@ -37,6 +43,8 @@ const useFetch = () => {
 
       console.log(`Get ${expensesArr.length} expenses sorted by date from db`);
       setAllExpenses(expensesArr);
+      setLocalExpenses(expensesArr);
+
       setIsLoadingInWalletScreen(false);
     } catch (error) {
       console.log(error);
@@ -45,18 +53,32 @@ const useFetch = () => {
 
   // Create new expense
   const addExpense = async (expense) => {
-    const expenseRef = doc(collection(db, "expenses"));
-    await setDoc(expenseRef, expense);
-    console.log("add expense to db");
-    return expenseRef;
+    try {
+      const docRef = await addDoc(collection(db, "expenses"), expense);
+      console.log("Add new doc to db");
+      return docRef.id;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Update expense
   const updateExpense = async (id, newExpense) => {
     try {
+      console.log(id, newExpense);
       const docRef = doc(db, "expenses", id);
       await updateDoc(docRef, newExpense);
       console.log("updated on db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete expense
+  const deleteExpense = async (id) => {
+    try {
+      await deleteDoc(doc(db, "expenses", id));
+      console.log("Delete expense on db");
     } catch (error) {
       console.log(error);
     }
@@ -66,6 +88,7 @@ const useFetch = () => {
     getAllExpenses: getAllExpenses,
     updateExpense: updateExpense,
     addExpense: addExpense,
+    deleteExpense: deleteExpense,
   };
 };
 

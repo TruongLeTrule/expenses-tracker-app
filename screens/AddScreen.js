@@ -13,6 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 import useStore from "../data/useStore";
 import useFetch from "../data/fetchData";
+import useLocal from "../data/localData";
 
 import { icons, titles } from "../components/template";
 import CategoryModal from "../components/CategoryModal";
@@ -20,6 +21,7 @@ import CategoryModal from "../components/CategoryModal";
 const AddScreen = () => {
   const navigation = useNavigation();
 
+  const { setLocalExpenses } = useLocal();
   const { addExpense } = useFetch();
 
   const toggleCategoryModalVisible = useStore(
@@ -43,7 +45,7 @@ const AddScreen = () => {
     }
   };
 
-  // Handle submit
+  // Handle add expense button press
   const handleSubmit = async () => {
     // Get id created on db
     const createdExpense = {
@@ -70,6 +72,10 @@ const AddScreen = () => {
     });
 
     setAllExpenses([...newExpenses]);
+    setLocalExpenses([...newExpenses]);
+
+    console.log(createdExpense);
+
     navigation.navigate("MainBottomTab");
     console.log("created new transaction");
   };
