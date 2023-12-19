@@ -19,7 +19,6 @@ import useFetch from "../data/fetchData";
 import useStore from "../data/useStore";
 
 import Header from "../components/WalletsScreen/Header";
-import FilterSection from "../components/WalletsScreen/FilterSection";
 import DayOverall from "../components/WalletsScreen/DayOverall";
 import Expense from "../components/WalletsScreen/Expense";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
@@ -96,9 +95,6 @@ export default function Wallets() {
 
       {/* Body */}
       <View className="mt-5 px-4" style={{ flex: 1 }}>
-        {/* Filter section */}
-        <FilterSection />
-
         {/* Overall section */}
         <WhiteBox mt={"mt-4"}>
           <Overall total={total} />
