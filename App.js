@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
+import { BudgetProvider } from "./components/BudgetsScreen/BudgetContext";
 
 import LogSignStack from "./screens/LogSignStack";
 import MainBottomTab from "./screens/MainBottomTab";
@@ -65,21 +66,23 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!uid ? (
-          <Stack.Screen name="LogSignStack" component={LogSignStack} />
-        ) : (
-          <>
-            <Stack.Group>
-              <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
-            </Stack.Group>
-            <Stack.Group screenOptions={{ presentation: "modal" }}>
-              <Stack.Screen name="AddModal" component={AddScreen} />
-            </Stack.Group>
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <BudgetProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {!uid ? (
+            <Stack.Screen name="LogSignStack" component={LogSignStack} />
+          ) : (
+            <>
+              <Stack.Group>
+                <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
+              </Stack.Group>
+              <Stack.Group screenOptions={{ presentation: "modal" }}>
+                <Stack.Screen name="AddModal" component={AddScreen} />
+              </Stack.Group>
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </BudgetProvider>
   );
 }
