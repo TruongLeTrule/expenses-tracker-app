@@ -13,12 +13,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 import useFetch from "../../data/fetchData";
 import useStore from "../../data/useStore";
+import useLocal from "../../data/localData";
 
 import { icons, titles } from "../template";
 import CategoryModal from "../CategoryModal";
 
 const EditModal = () => {
   const { updateExpense } = useFetch();
+  const { setLocalExpenses } = useLocal();
 
   const editModalVisible = useStore((state) => state.editModalVisible);
   const toggleEditModalVisible = useStore(
@@ -38,6 +40,7 @@ const EditModal = () => {
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [datePickerType, setDatePickerType] = useState("date");
 
+  // Get current editing expense value
   useEffect(() => {
     if (editingExpense) {
       setValue(editingExpense.value);
@@ -47,13 +50,16 @@ const EditModal = () => {
     }
   }, [editModalVisible]);
 
+  // Handle date or time press
   const handleDatePickerChange = (event, date) => {
     setDatePickerVisible(false);
+    // Set date if there is any change
     if (event.type === "set") {
       setDate(date);
     }
   };
 
+  // Handle edit button press
   const handleSubmit = () => {
     const newExpenses = [...allExpenses];
 
@@ -93,6 +99,7 @@ const EditModal = () => {
         date: date,
         note: note,
       });
+      setLocalExpenses([...newExpenses]);
     }
   };
 

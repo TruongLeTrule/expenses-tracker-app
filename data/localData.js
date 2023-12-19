@@ -5,6 +5,7 @@ const useLocal = () => {
   const getLocalUID = async () => {
     try {
       const uid = await AsyncStorage.getItem("uid");
+      console.log("Get uid from local");
       return uid;
     } catch (error) {
       console.log(error);
@@ -15,6 +16,7 @@ const useLocal = () => {
   const setLocalUID = async (uid) => {
     try {
       await AsyncStorage.setItem("uid", uid);
+      console.log("Set uid to local");
     } catch (error) {
       console.log(error);
     }
@@ -24,6 +26,29 @@ const useLocal = () => {
   const removeLocalUID = async () => {
     try {
       await AsyncStorage.removeItem("uid");
+      console.log("Remove uid from local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Set expenses to local storage
+  const setLocalExpenses = async (expenses) => {
+    try {
+      const jsonValue = JSON.stringify(expenses);
+      await AsyncStorage.setItem("expenses", jsonValue);
+      console.log("Set expenses in local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Get expenses from local storage
+  const getLocalExpenses = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("expenses");
+      console.log("Get expenses from local");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (error) {
       console.log(error);
     }
@@ -33,6 +58,8 @@ const useLocal = () => {
     getLocalUID: getLocalUID,
     setLocalUID: setLocalUID,
     removeLocalUID: removeLocalUID,
+    setLocalExpenses: setLocalExpenses,
+    getLocalExpenses: getLocalExpenses,
   };
 };
 

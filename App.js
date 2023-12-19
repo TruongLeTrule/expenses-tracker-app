@@ -14,23 +14,37 @@ import useLocal from "./data/localData";
 const Stack = createStackNavigator();
 
 export default function App() {
-  const { getLocalUID } = useLocal();
+  const { getLocalUID, getLocalExpenses } = useLocal();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const uid = useStore((state) => state.uid);
   const setUID = useStore((state) => state.setUID);
+  const setAllExpenses = useStore((state) => state.setAllExpenses);
+  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
 
   // Get data from local storage
   const getDataFromLocal = async () => {
     setIsLoading(true);
-    const savedUID = await getLocalUID();
-    if (savedUID) {
-      setUID(savedUID);
-      console.log(`User: ${savedUID} logged in`);
+
+    const localUID = await getLocalUID();
+    const localExpenses = await getLocalExpenses();
+
+    if (localUID) {
+      setUID(localUID);
+      console.log(`User: ${localUID} logged in`);
     } else {
       console.log("No uid in storage");
     }
+
+    if (localExpenses) {
+      setAllExpenses(localExpenses);
+      setSortDateExpenses(localExpenses);
+      console.log(`${localExpenses.length} expenses in storage`);
+    } else {
+      console.log("No expenses in storage");
+    }
+
     setIsLoading(false);
   };
 
