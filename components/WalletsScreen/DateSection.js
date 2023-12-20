@@ -44,10 +44,13 @@ const DateSection = ({ setFilterModalVisible }) => {
 
   // Handle filter by date
   const handleFilterByDate = () => {
-    if (startDate < endDate) {
+    if (startDate.setHours(0, 0, 0, 0) < endDate.setHours(23, 59, 59, 999)) {
       const filteredExpenses = allExpenses.filter((expense) => {
         const currExpenseDate = new Date(expense.date.seconds * 1000);
-        return currExpenseDate <= endDate && currExpenseDate >= startDate;
+        return (
+          currExpenseDate <= endDate.setHours(23, 59, 59, 999) &&
+          currExpenseDate >= startDate.setHours(0, 0, 0, 0)
+        );
       });
       setFilteredExpenses(filteredExpenses);
       console.log("Filter expenses by date");
