@@ -54,12 +54,23 @@ const useLocal = () => {
     }
   };
 
+  // Remove expenses from localStorage
+  const removeLocalExpenses = async () => {
+    try {
+      await AsyncStorage.removeItem("expenses");
+      console.log("Remove expenses from local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getLocalUID: getLocalUID,
     setLocalUID: setLocalUID,
     removeLocalUID: removeLocalUID,
     setLocalExpenses: setLocalExpenses,
     getLocalExpenses: getLocalExpenses,
+    removeLocalExpenses: removeLocalExpenses,
   };
 };
 

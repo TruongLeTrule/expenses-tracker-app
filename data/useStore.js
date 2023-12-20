@@ -13,6 +13,12 @@ const useStore = create((set) => ({
     set((state) => ({ allExpenses: data }));
   },
 
+  // Filtered expenses array
+  filteredExpenses: null,
+  setFilteredExpenses: (data) => {
+    set((state) => ({ filteredExpenses: data }));
+  },
+
   // Object which key is date
   sortDateExpenses: null,
   setSortDateExpenses: (data) => {
