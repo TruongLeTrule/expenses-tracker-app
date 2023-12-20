@@ -6,7 +6,7 @@ import Modal from "react-native-modal";
 
 import useStore from "../../data/useStore";
 
-const DateSection = () => {
+const DateSection = ({ setFilterModalVisible }) => {
   const allExpenses = useStore((state) => state.allExpenses);
   const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
 
@@ -56,19 +56,20 @@ const DateSection = () => {
     }
 
     setDatePickModal(false);
+    setFilterModalVisible(false);
     setStartDate(new Date());
     setEndDate(new Date());
   };
 
   return (
     <View className="flex-row items-center justify-center">
-      <Pressable
+      <TouchableOpacity
         className="flex-row justify-center items-center"
         onPress={() => setDatePickModal(true)}
       >
         <Text className="text-lg font-bold mr-2">By date</Text>
         <Ionicons name="calendar" size={25} />
-      </Pressable>
+      </TouchableOpacity>
 
       {/* Pick date modal */}
       <Modal

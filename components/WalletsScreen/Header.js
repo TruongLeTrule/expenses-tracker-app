@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
@@ -6,9 +6,12 @@ import WhiteBox from "./WhiteBox";
 import { commafy } from "../formatCurrency";
 import DateSection from "./DateSection";
 import { useState } from "react";
+import useStore from "../../data/useStore";
 
 const Header = ({ total }) => {
-  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
+
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
 
   return (
     <View className="bg-primary h-40 px-4 justify-center">
@@ -30,20 +33,20 @@ const Header = ({ total }) => {
             </Text>
           </View>
 
-          {/* Settings button */}
+          {/* Filter button */}
           <Pressable
             className="rounded-full h-11 w-11 flex items-center justify-center"
-            onPress={() => setSettingsModalVisible(true)}
+            onPress={() => setFilterModalVisible(true)}
           >
             <Ionicons name="filter" size={40} color={"#4cb050"} />
           </Pressable>
         </View>
       </WhiteBox>
 
-      {/* Settings modal */}
+      {/* Filter modal */}
       <Modal
-        isVisible={settingsModalVisible}
-        onBackdropPress={() => setSettingsModalVisible(false)}
+        isVisible={filterModalVisible}
+        onBackdropPress={() => setFilterModalVisible(false)}
         animationIn={"fadeIn"}
         animationOut={"fadeOut"}
         className="flex-1 justify-center items-center"
@@ -58,16 +61,19 @@ const Header = ({ total }) => {
           {/* Settings group */}
           <View className="mt-6">
             {/* Filter by date */}
-            <DateSection />
+            <DateSection setFilterModalVisible={setFilterModalVisible} />
 
             {/* Show all */}
-            <Pressable
+            <TouchableOpacity
               className="flex-row justify-center items-center mt-5"
-              // onPress={() => setDatePickModal(true)}
+              onPress={() => {
+                setFilteredExpenses(null);
+                setFilterModalVisible(false);
+              }}
             >
               <Text className="text-lg font-bold mr-2">Show all</Text>
               <Ionicons name="eye" size={25} />
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
