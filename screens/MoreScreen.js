@@ -5,7 +5,7 @@ import useStore from "../data/useStore";
 import useLocal from "../data/localData";
 
 export default function MoreScreen() {
-  const { removeLocalUID, removeLocalExpenses, getLocalExpenses } = useLocal();
+  const { removeLocalUID, removeLocalExpenses } = useLocal();
 
   const setUID = useStore((state) => state.setUID);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
