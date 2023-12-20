@@ -28,10 +28,11 @@ const Header = ({ total }) => {
               <Text className="text-2xl text-grey-text font-normal">Cash</Text>
             </View>
             <Text
-              className="text-4xl text-danger-red font-bold mt-2"
+              className="text-4xl font-bold mt-2"
+              style={{ color: total < 0 ? "#f04433" : "#4cb050" }}
               numberOfLines={1}
             >
-              {total ? `-${commafy(total)}` : 0}₫
+              {commafy(total)}₫
             </Text>
           </View>
 

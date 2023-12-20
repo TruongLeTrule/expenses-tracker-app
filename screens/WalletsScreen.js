@@ -26,16 +26,21 @@ import Overall from "../components/WalletsScreen/Overall";
 import EditModal from "../components/WalletsScreen/EditModal";
 
 export default function Wallets() {
-  const { getAllExpenses } = useFetch();
+  const { getAllExpenses, getAllIncomes } = useFetch();
 
-  const sortDateExpenses = useStore((state) => state.sortDateExpenses);
-  const total = useStore((state) => state.total);
   const isLoadingInWalletScreen = useStore(
     (state) => state.isLoadingInWalletScreen
   );
   const allExpenses = useStore((state) => state.allExpenses);
+  const allIncomes = useStore((state) => state.allIncomes);
   const filteredExpenses = useStore((state) => state.filteredExpenses);
+  const sortDateExpenses = useStore((state) => state.sortDateExpenses);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
+  const totalExpense = useStore((state) => state.totalExpense);
+  const setTotalExpense = useStore((state) => state.setTotalExpense);
+  const totalIncome = useStore((state) => state.totalIncome);
+  const setTotalIncome = useStore((state) => state.setTotalIncome);
+  const total = useStore((state) => state.total);
   const setTotal = useStore((state) => state.setTotal);
   const uid = useStore((state) => state.uid);
 
@@ -67,6 +72,9 @@ export default function Wallets() {
     if (!allExpenses) {
       getAllExpenses(uid);
     }
+    if (!allIncomes) {
+      getAllIncomes(uid);
+    }
   }, []);
 
   // Set expenses grouped by date again when all expenses
@@ -81,12 +89,26 @@ export default function Wallets() {
     }
   }, [allExpenses, filteredExpenses]);
 
-  // Set total when all expenses have been changed
+  // Set total expense when all expenses have been changed
   useEffect(() => {
     if (allExpenses) {
-      setTotal(allExpenses);
+      setTotalExpense(allExpenses);
     }
   }, [allExpenses]);
+
+  // Set total income when all expenses have been changed
+  useEffect(() => {
+    if (allIncomes) {
+      setTotalIncome(allIncomes);
+    }
+  }, [allIncomes]);
+
+  // Set total if income or expense have been changed
+  useEffect(() => {
+    if (totalIncome && totalExpense) {
+      setTotal(totalIncome - totalExpense);
+    }
+  }, [totalExpense, totalExpense]);
 
   // Render loading circle if haven't got data yet
   if (isLoadingInWalletScreen) {
@@ -109,7 +131,11 @@ export default function Wallets() {
       <View className="mt-5 px-4" style={{ flex: 1 }}>
         {/* Overall section */}
         <WhiteBox mt={"mt-4"}>
-          <Overall total={total} />
+          <Overall
+            totalExpense={totalExpense}
+            totalIncome={totalIncome}
+            total={total}
+          />
         </WhiteBox>
 
         {/* Each day section */}

@@ -13,13 +13,19 @@ const useStore = create((set) => ({
     set((state) => ({ allExpenses: data }));
   },
 
+  // All incomes array
+  allIncomes: null,
+  setAllIncomes: (data) => {
+    set((state) => ({ allIncomes: data }));
+  },
+
   // Filtered expenses array
   filteredExpenses: null,
   setFilteredExpenses: (data) => {
     set((state) => ({ filteredExpenses: data }));
   },
 
-  // Object which key is date
+  // Expense object which key is date
   sortDateExpenses: null,
   setSortDateExpenses: (data) => {
     // Create an array containing expenses group by date
@@ -66,13 +72,28 @@ const useStore = create((set) => ({
     set((state) => ({ sortDateExpenses: groupExpensesByDate(data) }));
   },
 
-  // Total value of expenses
+  // Total value of expenses,
+  totalExpense: 0,
+  setTotalExpense: (data) => {
+    // Get total expense, data is an array of expenses
+    const getTotalExpense = (expenses) =>
+      expenses.reduce((result, expense) => result + expense.value, 0);
+    set((state) => ({ totalExpense: getTotalExpense(data) }));
+  },
+
+  // Total value of incomes, data is an array of incomes
+  totalIncome: 0,
+  setTotalIncome: (data) => {
+    // Get total income
+    const getTotalIncome = (incomes) =>
+      incomes.reduce((result, income) => result + income.value, 0);
+    set((state) => ({ totalIncome: getTotalIncome(data) }));
+  },
+
+  // Total value calculation of income and expense
   total: 0,
   setTotal: (data) => {
-    // Get total
-    const getTotal = (expenses) =>
-      expenses.reduce((result, expense) => result + expense.value, 0);
-    set((state) => ({ total: getTotal(data) }));
+    set((state) => ({ total: data }));
   },
 
   // Modal state

@@ -64,6 +64,17 @@ const useLocal = () => {
     }
   };
 
+  // Set incomes to local storage
+  const setLocalIncomes = async (incomes) => {
+    try {
+      const jsonValue = JSON.stringify(incomes);
+      await AsyncStorage.setItem("income", jsonValue);
+      console.log("Set income in local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getLocalUID: getLocalUID,
     setLocalUID: setLocalUID,
@@ -71,6 +82,7 @@ const useLocal = () => {
     setLocalExpenses: setLocalExpenses,
     getLocalExpenses: getLocalExpenses,
     removeLocalExpenses: removeLocalExpenses,
+    setLocalIncomes: setLocalIncomes,
   };
 };
 
