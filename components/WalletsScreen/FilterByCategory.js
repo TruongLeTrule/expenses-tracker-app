@@ -29,8 +29,6 @@ const FilterByCategory = () => {
         (expense) => expense.category === category
       );
       setFilteredExpenses(newExpenses);
-    } else {
-      Alert.alert("Error", "There is no expenses to filter");
     }
 
     console.log("Filter expenses by category: ");

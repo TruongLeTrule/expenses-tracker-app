@@ -63,8 +63,6 @@ const FilterByDate = () => {
       } else {
         Alert.alert("Error", "Invalid date, please try again");
       }
-    } else {
-      Alert.alert("Error", "There is no expenses to filter");
     }
 
     setDatePickModal(false);
