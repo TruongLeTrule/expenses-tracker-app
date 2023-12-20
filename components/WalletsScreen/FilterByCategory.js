@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import Modal from "react-native-modal";
@@ -8,8 +8,9 @@ import useStore from "../../data/useStore";
 import CategoryModal from "../CategoryModal";
 import { titles, icons } from "../template";
 
-const FilterByCategory = ({ setFilterModalVisible }) => {
+const FilterByCategory = () => {
   const allExpenses = useStore((state) => state.allExpenses);
+  const filteredExpenses = useStore((state) => state.filteredExpenses);
   const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
   const toggleCategoryModalVisible = useStore(
     (state) => state.toggleCategoryModalVisible
@@ -20,14 +21,20 @@ const FilterByCategory = ({ setFilterModalVisible }) => {
 
   //   Handle apply change
   const handleApplyChange = () => {
-    const newExpenses = allExpenses.filter(
-      (expense) => expense.category === category
-    );
-    setFilteredExpenses(newExpenses);
+    if (allExpenses) {
+      // If there are already filtered expenses, use it to filter
+      const chosenExpenses = filteredExpenses ? filteredExpenses : allExpenses;
+
+      const newExpenses = chosenExpenses.filter(
+        (expense) => expense.category === category
+      );
+      setFilteredExpenses(newExpenses);
+    } else {
+      Alert.alert("Error", "There is no expenses to filter");
+    }
 
     console.log("Filter expenses by category: ");
     setCategoryPickVisible(false);
-    setFilterModalVisible(false);
   };
 
   return (

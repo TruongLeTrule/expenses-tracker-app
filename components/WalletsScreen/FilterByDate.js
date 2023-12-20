@@ -6,7 +6,7 @@ import Modal from "react-native-modal";
 
 import useStore from "../../data/useStore";
 
-const FilterByDate = ({ setFilterModalVisible }) => {
+const FilterByDate = () => {
   const allExpenses = useStore((state) => state.allExpenses);
   const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
 
@@ -44,22 +44,30 @@ const FilterByDate = ({ setFilterModalVisible }) => {
 
   // Handle apply change
   const handleApplyChange = () => {
-    if (startDate.setHours(0, 0, 0, 0) < endDate.setHours(23, 59, 59, 999)) {
-      const filteredExpenses = allExpenses.filter((expense) => {
-        const currExpenseDate = new Date(expense.date.seconds * 1000);
-        return (
-          currExpenseDate <= endDate.setHours(23, 59, 59, 999) &&
-          currExpenseDate >= startDate.setHours(0, 0, 0, 0)
-        );
-      });
-      setFilteredExpenses(filteredExpenses);
-      console.log("Filter expenses by date");
+    if (allExpenses) {
+      if (startDate.setHours(0, 0, 0, 0) < endDate.setHours(23, 59, 59, 999)) {
+        // If there are already filtered expenses, use it to filter
+        const chosenExpenses = filteredExpenses
+          ? filteredExpenses
+          : allExpenses;
+
+        const filteredExpenses = chosenExpenses.filter((expense) => {
+          const currExpenseDate = new Date(expense.date.seconds * 1000);
+          return (
+            currExpenseDate <= endDate.setHours(23, 59, 59, 999) &&
+            currExpenseDate >= startDate.setHours(0, 0, 0, 0)
+          );
+        });
+        setFilteredExpenses(filteredExpenses);
+        console.log("Filter expenses by date");
+      } else {
+        Alert.alert("Error", "Invalid date, please try again");
+      }
     } else {
-      Alert.alert("Error", "Invalid date, please try again");
+      Alert.alert("Error", "There is no expenses to filter");
     }
 
     setDatePickModal(false);
-    setFilterModalVisible(false);
     setStartDate(new Date());
     setEndDate(new Date());
   };

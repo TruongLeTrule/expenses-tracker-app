@@ -63,10 +63,10 @@ const Header = ({ total }) => {
           {/* Settings group */}
           <View className="mt-6">
             {/* Filter by date */}
-            <FilterByDate setFilterModalVisible={setFilterModalVisible} />
+            <FilterByDate />
 
             {/* Filter by category */}
-            <FilterByCategory setFilterModalVisible={setFilterModalVisible} />
+            <FilterByCategory />
 
             {/* Show all */}
             <TouchableOpacity
