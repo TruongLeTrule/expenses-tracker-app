@@ -6,7 +6,7 @@ import Modal from "react-native-modal";
 
 import useStore from "../../data/useStore";
 
-const DateSection = ({ setFilterModalVisible }) => {
+const FilterByDate = ({ setFilterModalVisible }) => {
   const allExpenses = useStore((state) => state.allExpenses);
   const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
 
@@ -42,8 +42,8 @@ const DateSection = ({ setFilterModalVisible }) => {
     }
   };
 
-  // Handle filter by date
-  const handleFilterByDate = () => {
+  // Handle apply change
+  const handleApplyChange = () => {
     if (startDate.setHours(0, 0, 0, 0) < endDate.setHours(23, 59, 59, 999)) {
       const filteredExpenses = allExpenses.filter((expense) => {
         const currExpenseDate = new Date(expense.date.seconds * 1000);
@@ -103,7 +103,7 @@ const DateSection = ({ setFilterModalVisible }) => {
           {/* Apply filter button */}
           <TouchableOpacity
             className="bg-primary rounded-lg p-2 justify-center items-center w-14 mt-4"
-            onPress={handleFilterByDate}
+            onPress={handleApplyChange}
           >
             <Text className="text-[#fff] font-bold text-normal">Apply</Text>
           </TouchableOpacity>
@@ -121,4 +121,4 @@ const DateSection = ({ setFilterModalVisible }) => {
   );
 };
 
-export default DateSection;
+export default FilterByDate;

@@ -1,12 +1,14 @@
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import { useState } from "react";
+
+import useStore from "../../data/useStore";
 
 import WhiteBox from "./WhiteBox";
+import FilterByDate from "./FilterByDate";
+import FilterByCategory from "./FilterByCategory";
 import { commafy } from "../formatCurrency";
-import DateSection from "./DateSection";
-import { useState } from "react";
-import useStore from "../../data/useStore";
 
 const Header = ({ total }) => {
   const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
@@ -61,7 +63,10 @@ const Header = ({ total }) => {
           {/* Settings group */}
           <View className="mt-6">
             {/* Filter by date */}
-            <DateSection setFilterModalVisible={setFilterModalVisible} />
+            <FilterByDate setFilterModalVisible={setFilterModalVisible} />
+
+            {/* Filter by category */}
+            <FilterByCategory setFilterModalVisible={setFilterModalVisible} />
 
             {/* Show all */}
             <TouchableOpacity
