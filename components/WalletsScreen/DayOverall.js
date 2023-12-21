@@ -58,11 +58,11 @@ export default function DayOverall({ inputDate, transactions }) {
       <View className="flex-1 items-end">
         {total >= 0 ? (
           <Text className="font-bold text-xl text-primary" numberOfLines={1}>
-            {commafy(total)}₫
+            {commafy(Number(total))}₫
           </Text>
         ) : (
           <Text className="font-bold text-xl text-danger-red" numberOfLines={1}>
-            {commafy(total)}₫
+            {commafy(Number(total))}₫
           </Text>
         )}
       </View>

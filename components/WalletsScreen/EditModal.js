@@ -257,7 +257,10 @@ const EditModal = () => {
                 color={"#6d6d6d"}
               />
             </TouchableOpacity>
-            <CategoryModal setCategory={setCategory} />
+            <CategoryModal
+              setCategory={setCategory}
+              type={editingTransaction?.type}
+            />
 
             {/* Date input */}
             <View className="flex-row justify-between items-center mt-4 pt-4 border-t border-grey-text">

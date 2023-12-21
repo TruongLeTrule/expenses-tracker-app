@@ -4,10 +4,10 @@ import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
 
 import useStore from "../data/useStore";
-import { icons, titles, categories } from "./template";
+import { icons, titles, expenseCategories, incomeCategories } from "./template";
 import { FlatList } from "react-native-gesture-handler";
 
-const CategoryModal = ({ setCategory }) => {
+const CategoryModal = ({ setCategory, type }) => {
   const categoryModalVisible = useStore((state) => state.categoryModalVisible);
   const toggleCategoryModalVisible = useStore(
     (state) => state.toggleCategoryModalVisible
@@ -37,7 +37,7 @@ const CategoryModal = ({ setCategory }) => {
         {/* Body */}
         <View className="pb-28">
           <FlatList
-            data={categories}
+            data={type === "out" ? expenseCategories : incomeCategories}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <View className="px-6">
