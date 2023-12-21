@@ -19,7 +19,6 @@ import useFetch from "../data/fetchData";
 import useStore from "../data/useStore";
 
 import Header from "../components/WalletsScreen/Header";
-import FilterSection from "../components/WalletsScreen/FilterSection";
 import DayOverall from "../components/WalletsScreen/DayOverall";
 import Expense from "../components/WalletsScreen/Expense";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
@@ -35,14 +34,14 @@ export default function Wallets() {
     (state) => state.isLoadingInWalletScreen
   );
   const allExpenses = useStore((state) => state.allExpenses);
+  const filteredExpenses = useStore((state) => state.filteredExpenses);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setTotal = useStore((state) => state.setTotal);
   const uid = useStore((state) => state.uid);
 
+  // Toggle list visible feature
   const [chevronType, setChevronType] = useState("chevron-up");
-
   const height = useSharedValue(100);
-
   const handleListVisible = () => {
     if (height.value === 100) {
       height.value = withTiming(height.value - 100, {
@@ -59,20 +58,32 @@ export default function Wallets() {
       setChevronType("chevron-up");
     }
   };
-
   const animatedStyle = useAnimatedStyle(() => ({
     height: `${height.value}%`,
   }));
 
+  // If the is no expense in local, get expense from db
   useEffect(() => {
     if (!allExpenses) {
       getAllExpenses(uid);
     }
   }, []);
 
+  // Set expenses grouped by date again when all expenses
+  // or filtered expenses have been changed
   useEffect(() => {
     if (allExpenses) {
-      setSortDateExpenses(allExpenses);
+      if (filteredExpenses) {
+        setSortDateExpenses(filteredExpenses);
+      } else {
+        setSortDateExpenses(allExpenses);
+      }
+    }
+  }, [allExpenses, filteredExpenses]);
+
+  // Set total when all expenses have been changed
+  useEffect(() => {
+    if (allExpenses) {
       setTotal(allExpenses);
     }
   }, [allExpenses]);
@@ -96,9 +107,6 @@ export default function Wallets() {
 
       {/* Body */}
       <View className="mt-5 px-4" style={{ flex: 1 }}>
-        {/* Filter section */}
-        <FilterSection />
-
         {/* Overall section */}
         <WhiteBox mt={"mt-4"}>
           <Overall total={total} />
