@@ -5,7 +5,8 @@ import useStore from "../data/useStore";
 import useLocal from "../data/localData";
 
 export default function MoreScreen() {
-  const { removeLocalUID, removeLocalExpenses } = useLocal();
+  const { removeLocalUID, removeLocalExpenses, removeLocalIncomes } =
+    useLocal();
 
   const setUID = useStore((state) => state.setUID);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
@@ -17,6 +18,7 @@ export default function MoreScreen() {
     setFilteredExpenses(null);
     await removeLocalUID();
     await removeLocalExpenses();
+    await removeLocalIncomes();
   };
 
   return (

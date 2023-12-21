@@ -108,7 +108,7 @@ export default function Wallets() {
     if (totalIncome && totalExpense) {
       setTotal(totalIncome - totalExpense);
     }
-  }, [totalExpense, totalExpense]);
+  }, [totalExpense, totalIncome]);
 
   // Render loading circle if haven't got data yet
   if (isLoadingInWalletScreen) {

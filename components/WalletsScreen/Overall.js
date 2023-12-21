@@ -9,7 +9,7 @@ const Overall = ({ totalExpense, totalIncome, total }) => {
       <View className="flex-row justify-between">
         <Text className="text-xl ">Income</Text>
         <Text className="text-xl text-primary" numberOfLines={1}>
-          {totalExpense ? commafy(totalExpense) : 0}₫
+          {totalIncome ? commafy(totalIncome) : 0}₫
         </Text>
       </View>
       <View className="flex-row justify-between mt-1">
@@ -21,7 +21,7 @@ const Overall = ({ totalExpense, totalIncome, total }) => {
       <View className="flex-row justify-between border-t pt-2 mt-2">
         <Text className="text-xl">Total</Text>
         <Text className="text-xl" numberOfLines={1}>
-          {commafy(totalExpense)}₫
+          {commafy(total)}₫
         </Text>
       </View>
     </View>
