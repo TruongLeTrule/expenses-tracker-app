@@ -9,12 +9,13 @@ export default function Transaction({ transaction }) {
   const toggleEditModalVisible = useStore(
     (state) => state.toggleEditModalVisible
   );
-  const setEditingExpense = useStore((state) => state.setEditingExpense);
+  const setEditingTransaction = useStore(
+    (state) => state.setEditingTransaction
+  );
 
   const handlePress = () => {
-    setEditingExpense({ ...transaction });
+    setEditingTransaction({ ...transaction });
     toggleEditModalVisible();
-    console.log(transaction);
   };
 
   return (

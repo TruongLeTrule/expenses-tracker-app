@@ -19,19 +19,22 @@ import { icons, titles } from "../template";
 import CategoryModal from "../CategoryModal";
 
 const EditModal = () => {
-  const { updateExpense, deleteExpense } = useFetch();
-  const { setLocalExpenses } = useLocal();
+  const { updateExpense, deleteExpense, updateIncome, deleteIncome } =
+    useFetch();
+  const { setLocalExpenses, setLocalIncomes } = useLocal();
 
   const editModalVisible = useStore((state) => state.editModalVisible);
   const toggleEditModalVisible = useStore(
     (state) => state.toggleEditModalVisible
   );
-  const editingExpense = useStore((state) => state.editingExpense);
+  const editingTransaction = useStore((state) => state.editingTransaction);
   const toggleCategoryModalVisible = useStore(
     (state) => state.toggleCategoryModalVisible
   );
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const allExpenses = useStore((state) => state.allExpenses);
+  const setAllIncomes = useStore((state) => state.setAllIncomes);
+  const allIncomes = useStore((state) => state.allIncomes);
 
   const [value, setValue] = useState("");
   const [category, setCategory] = useState("");
@@ -39,16 +42,15 @@ const EditModal = () => {
   const [date, setDate] = useState(new Date());
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [datePickerType, setDatePickerType] = useState("date");
-
   const [alertVisible, setAlertVisible] = useState(false);
 
   // Get current editing expense value
   useEffect(() => {
-    if (editingExpense) {
-      setValue(editingExpense.value);
-      setCategory(editingExpense.category);
-      setNote(editingExpense.note);
-      setDate(new Date(editingExpense.date.seconds * 1000));
+    if (editingTransaction) {
+      setValue(editingTransaction.value);
+      setCategory(editingTransaction.category);
+      setNote(editingTransaction.note);
+      setDate(new Date(editingTransaction.date.seconds * 1000));
     }
   }, [editModalVisible]);
 
@@ -63,36 +65,75 @@ const EditModal = () => {
 
   // Handle save button press
   const handleSaveBtnPress = () => {
-    const newExpenses = [...allExpenses];
+    // Update expense
+    if (editingTransaction.type === "out") {
+      const newExpenses = [...allExpenses];
 
-    //Find index of specific object using findIndex method.
-    const objIndex = allExpenses.findIndex(
-      (obj) => obj.id == editingExpense.id
-    );
+      //Find index of specific object using findIndex method.
+      const objIndex = allExpenses.findIndex(
+        (obj) => obj.id == editingTransaction.id
+      );
 
-    //Update object's name property.
-    newExpenses[objIndex].value = value;
-    newExpenses[objIndex].category = category;
-    newExpenses[objIndex].note = note;
-    newExpenses[objIndex].date.seconds = date.getTime() / 1000;
+      //Update object's name property.
+      newExpenses[objIndex].value = value;
+      newExpenses[objIndex].category = category;
+      newExpenses[objIndex].note = note;
+      newExpenses[objIndex].date.seconds = date.getTime() / 1000;
 
-    setAllExpenses([...newExpenses]);
+      setAllExpenses([...newExpenses]);
 
-    toggleEditModalVisible();
+      toggleEditModalVisible();
 
-    console.log("update expenses");
+      console.log("update expenses");
 
-    // If expense has been changed, update it on db and local
-    if (
-      JSON.stringify(newExpenses[objIndex]) !== JSON.stringify(editingExpense)
-    ) {
-      updateExpense(editingExpense.id, {
-        value: value,
-        category: category,
-        date: date,
-        note: note,
-      });
-      setLocalExpenses([...newExpenses]);
+      // If expense has been changed, update it on db and local
+      if (
+        JSON.stringify(newExpenses[objIndex]) !==
+        JSON.stringify(editingTransaction)
+      ) {
+        updateExpense(editingTransaction.id, {
+          value: value,
+          category: category,
+          date: date,
+          note: note,
+        });
+        setLocalExpenses([...newExpenses]);
+      }
+    }
+    // Update income
+    if (editingTransaction.type === "in") {
+      const newIncomes = [...allIncomes];
+
+      //Find index of specific object using findIndex method.
+      const objIndex = allIncomes.findIndex(
+        (obj) => obj.id == editingTransaction.id
+      );
+
+      //Update object's name property.
+      newIncomes[objIndex].value = value;
+      newIncomes[objIndex].category = category;
+      newIncomes[objIndex].note = note;
+      newIncomes[objIndex].date.seconds = date.getTime() / 1000;
+
+      setAllIncomes([...newIncomes]);
+
+      toggleEditModalVisible();
+
+      console.log("update incomes");
+
+      // If income has been changed, update it on db and local
+      if (
+        JSON.stringify(newIncomes[objIndex]) !==
+        JSON.stringify(editingTransaction)
+      ) {
+        updateIncome(editingTransaction.id, {
+          value: value,
+          category: category,
+          date: date,
+          note: note,
+        });
+        setLocalIncomes([...newIncomes]);
+      }
     }
   };
 
@@ -101,13 +142,25 @@ const EditModal = () => {
     toggleEditModalVisible();
     setAlertVisible(false);
 
-    const newExpenses = allExpenses.filter(
-      (expense) => expense.id !== editingExpense.id
-    );
-    setAllExpenses(newExpenses);
-    setLocalExpenses(newExpenses);
-    console.log("delete expense");
-    deleteExpense(editingExpense.id);
+    if (editingTransaction.type === "out") {
+      const newExpenses = allExpenses.filter(
+        (expense) => expense.id !== editingTransaction.id
+      );
+      setAllExpenses(newExpenses);
+      setLocalExpenses(newExpenses);
+      console.log("delete expense");
+      deleteExpense(editingTransaction.id);
+    }
+
+    if (editingTransaction.type === "in") {
+      const newIncomes = allIncomes.filter(
+        (income) => income.id !== editingTransaction.id
+      );
+      setAllIncomes(newIncomes);
+      setLocalIncomes(newIncomes);
+      console.log("delete income");
+      deleteIncome(editingTransaction.id);
+    }
   };
 
   return (

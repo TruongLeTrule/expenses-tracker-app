@@ -116,10 +116,10 @@ const useStore = create((set) => ({
     set((state) => ({ isLoadingInWalletScreen: data }));
   },
 
-  // Editing expense
-  editingExpense: null,
-  setEditingExpense: (expense) => {
-    set((state) => ({ editingExpense: expense }));
+  // Editing transaction
+  editingTransaction: null,
+  setEditingTransaction: (transaction) => {
+    set((state) => ({ editingTransaction: transaction }));
   },
 }));
 

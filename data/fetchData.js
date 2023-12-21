@@ -52,7 +52,7 @@ const useFetch = () => {
   const addExpense = async (expense) => {
     try {
       const docRef = await addDoc(collection(db, "expenses"), expense);
-      console.log("Add new doc to db");
+      console.log("Add new expense to db");
       return docRef.id;
     } catch (error) {
       console.log(error);
@@ -65,7 +65,7 @@ const useFetch = () => {
       console.log(id, newExpense);
       const docRef = doc(db, "expenses", id);
       await updateDoc(docRef, newExpense);
-      console.log("updated on db");
+      console.log("update expense on db");
     } catch (error) {
       console.log(error);
     }
@@ -102,12 +102,48 @@ const useFetch = () => {
     }
   };
 
+  // Create new income from db
+  const addIncome = async (income) => {
+    try {
+      const docRef = await addDoc(collection(db, "income"), income);
+      console.log("Add new income to db");
+      return docRef.id;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Update income from db
+  const updateIncome = async (id, newIncome) => {
+    try {
+      console.log(id, newIncome);
+      const docRef = doc(db, "income", id);
+      await updateDoc(docRef, newIncome);
+      console.log("update income on db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete income from db
+  const deleteIncome = async (id) => {
+    try {
+      await deleteDoc(doc(db, "income", id));
+      console.log("Delete income on db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getAllExpenses: getAllExpenses,
     updateExpense: updateExpense,
     addExpense: addExpense,
     deleteExpense: deleteExpense,
     getAllIncomes: getAllIncomes,
+    addIncome: addIncome,
+    updateIncome: updateIncome,
+    deleteIncome: deleteIncome,
   };
 };
 
