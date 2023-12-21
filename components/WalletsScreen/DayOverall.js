@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { commafy } from "../formatCurrency";
 
-export default function DayOverall({ inputDate, expenses }) {
+export default function DayOverall({ inputDate, transactions }) {
   const monthNames = [
     "January",
     "February",
@@ -36,8 +36,13 @@ export default function DayOverall({ inputDate, expenses }) {
   };
 
   // Get day total
-  const getDayTotal = (expenses) =>
-    expenses.reduce((result, expense) => result + expense.value, 0);
+  const total = transactions.reduce((result, expense) => {
+    if (expense.type === "out") {
+      return result - expense.value;
+    } else {
+      return result + expense.value;
+    }
+  }, 0);
 
   return (
     <View className="flex-row justify-between items-center">
@@ -51,9 +56,15 @@ export default function DayOverall({ inputDate, expenses }) {
         </View>
       </View>
       <View className="flex-1 items-end">
-        <Text className="font-bold text-xl text-danger-red" numberOfLines={1}>
-          -{commafy(getDayTotal(expenses))}₫
-        </Text>
+        {total >= 0 ? (
+          <Text className="font-bold text-xl text-primary" numberOfLines={1}>
+            {commafy(total)}₫
+          </Text>
+        ) : (
+          <Text className="font-bold text-xl text-danger-red" numberOfLines={1}>
+            {commafy(total)}₫
+          </Text>
+        )}
       </View>
     </View>
   );

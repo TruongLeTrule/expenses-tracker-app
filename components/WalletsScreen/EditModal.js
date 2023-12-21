@@ -76,22 +76,13 @@ const EditModal = () => {
     newExpenses[objIndex].note = note;
     newExpenses[objIndex].date.seconds = date.getTime() / 1000;
 
-    // Sort array by date
-    newExpenses.sort(function (a, b) {
-      // Convert the date strings to Date objects
-      let dateA = a.date.seconds;
-      let dateB = b.date.seconds;
-
-      // Subtract the dates to get a value that is either negative, positive, or zero
-      return dateB - dateA;
-    });
-
     setAllExpenses([...newExpenses]);
 
     toggleEditModalVisible();
 
     console.log("update expenses");
 
+    // If expense has been changed, update it on db and local
     if (
       JSON.stringify(newExpenses[objIndex]) !== JSON.stringify(editingExpense)
     ) {

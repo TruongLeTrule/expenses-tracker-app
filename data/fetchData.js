@@ -31,11 +31,7 @@ const useFetch = () => {
       const expensesArr = [];
 
       const expenseRef = collection(db, "expenses");
-      const q = query(
-        expenseRef,
-        orderBy("date", "desc"),
-        where("uid", "==", uid)
-      );
+      const q = query(expenseRef, where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {
@@ -91,11 +87,7 @@ const useFetch = () => {
       const incomesArr = [];
 
       const incomeRef = collection(db, "income");
-      const q = query(
-        incomeRef,
-        orderBy("date", "desc"),
-        where("uid", "==", uid)
-      );
+      const q = query(incomeRef, where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {

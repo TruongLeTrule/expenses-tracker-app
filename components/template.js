@@ -7,6 +7,7 @@ const icons = {
   relax: "game-controller",
   healthCare: "heart-circle",
   other: "basketball",
+  salary: "cash",
 };
 
 const titles = {
@@ -18,6 +19,7 @@ const titles = {
   relax: "Relax",
   healthCare: "Health Care",
   other: "Other",
+  salary: "Salary",
 };
 
 const categories = [

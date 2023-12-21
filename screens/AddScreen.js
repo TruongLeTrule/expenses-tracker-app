@@ -53,29 +53,17 @@ const AddScreen = () => {
       category: category,
       note: note,
       date: { seconds: date.getTime() / 1000 },
+      type: "out",
       uid: uid,
     };
-
     const id = await addExpense({ ...createdExpense, date: date });
     createdExpense.id = id;
 
     const newExpenses = [...allExpenses, createdExpense];
-
-    // Sort array by date
-    newExpenses.sort(function (a, b) {
-      // Convert the date strings to Date objects
-      let dateA = a.date.seconds;
-      let dateB = b.date.seconds;
-
-      // Subtract the dates to get a value that is either negative, positive, or zero
-      return dateB - dateA;
-    });
-
     setAllExpenses([...newExpenses]);
     setLocalExpenses([...newExpenses]);
 
     console.log(createdExpense);
-
     navigation.navigate("MainBottomTab");
     console.log("created new transaction");
   };
