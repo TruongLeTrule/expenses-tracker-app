@@ -59,7 +59,7 @@ function BarChartExpenses({ selectedDate }) {
           }
           break;
         case "relax":
-          dat[5] = {
+          data[5] = {
             ...data[5], value: data[5].value + expense.value, topLabelComponent: () => {
               return <Text style={styles.barChartTopLabel}>{data[5].value.toLocaleString()}</Text>
             }
@@ -86,7 +86,7 @@ function BarChartExpenses({ selectedDate }) {
 
   return (
     <View style={styles.barChartContainer}>
-      <Text style={{ padding: 20, fontSize: 20, fontWeight: 'bold' }}>Monthly Expense Bar Chart</Text>
+      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold' }}>Monthly Expense Bar Chart (VND)</Text>
       <BarChart
         xAxisLength={250}
         data={data}
