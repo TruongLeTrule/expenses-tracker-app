@@ -126,6 +126,7 @@ const EditModal = () => {
       onSwipeComplete={toggleEditModalVisible}
       swipeDirection="down"
       className="flex-1 m-0 justify-end"
+      onBackButtonPress={toggleEditModalVisible}
     >
       <View className="bg-[#d1d1d1] rounded-t-xl h-3/4">
         <KeyboardAwareScrollView>
