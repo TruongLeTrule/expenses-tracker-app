@@ -15,14 +15,15 @@ import useStore from "./useStore";
 import useLocal from "./localData";
 
 const useFetch = () => {
-  const { setLocalExpenses } = useLocal();
+  const { setLocalExpenses, setLocalIncomes } = useLocal();
 
   const setAllExpenses = useStore((state) => state.setAllExpenses);
+  const setAllIncomes = useStore((state) => state.setAllIncomes);
   const setIsLoadingInWalletScreen = useStore(
     (state) => state.setIsLoadingInWalletScreen
   );
 
-  // Get all expenses sorted by date
+  // Get all expenses from db
   const getAllExpenses = async (uid) => {
     try {
       setIsLoadingInWalletScreen(true);
@@ -30,18 +31,14 @@ const useFetch = () => {
       const expensesArr = [];
 
       const expenseRef = collection(db, "expenses");
-      const q = query(
-        expenseRef,
-        orderBy("date", "desc"),
-        where("uid", "==", uid)
-      );
+      const q = query(expenseRef, where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {
         expensesArr.push({ id: doc.id, ...doc.data() });
       });
 
-      console.log(`Get ${expensesArr.length} expenses sorted by date from db`);
+      console.log(`Get ${expensesArr.length} expenses from db`);
       setAllExpenses(expensesArr);
       setLocalExpenses(expensesArr);
 
@@ -51,34 +48,88 @@ const useFetch = () => {
     }
   };
 
-  // Create new expense
+  // Create new expense from db
   const addExpense = async (expense) => {
     try {
       const docRef = await addDoc(collection(db, "expenses"), expense);
-      console.log("Add new doc to db");
+      console.log("Add new expense to db");
       return docRef.id;
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Update expense
+  // Update expense from db
   const updateExpense = async (id, newExpense) => {
     try {
       console.log(id, newExpense);
       const docRef = doc(db, "expenses", id);
       await updateDoc(docRef, newExpense);
-      console.log("updated on db");
+      console.log("update expense on db");
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Delete expense
+  // Delete expense from db
   const deleteExpense = async (id) => {
     try {
       await deleteDoc(doc(db, "expenses", id));
       console.log("Delete expense on db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Get all incomes from db
+  const getAllIncomes = async (uid) => {
+    try {
+      const incomesArr = [];
+
+      const incomeRef = collection(db, "income");
+      const q = query(incomeRef, where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        incomesArr.push({ id: doc.id, ...doc.data() });
+      });
+
+      console.log(`Get ${incomesArr.length} incomes from db`);
+      setAllIncomes(incomesArr);
+      setLocalIncomes(incomesArr);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Create new income from db
+  const addIncome = async (income) => {
+    try {
+      const docRef = await addDoc(collection(db, "income"), income);
+      console.log("Add new income to db");
+      return docRef.id;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Update income from db
+  const updateIncome = async (id, newIncome) => {
+    try {
+      console.log(id, newIncome);
+      const docRef = doc(db, "income", id);
+      await updateDoc(docRef, newIncome);
+      console.log("update income on db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete income from db
+  const deleteIncome = async (id) => {
+    try {
+      await deleteDoc(doc(db, "income", id));
+      console.log("Delete income on db");
     } catch (error) {
       console.log(error);
     }
@@ -89,6 +140,10 @@ const useFetch = () => {
     updateExpense: updateExpense,
     addExpense: addExpense,
     deleteExpense: deleteExpense,
+    getAllIncomes: getAllIncomes,
+    addIncome: addIncome,
+    updateIncome: updateIncome,
+    deleteIncome: deleteIncome,
   };
 };
 

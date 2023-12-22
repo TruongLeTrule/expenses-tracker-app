@@ -1,18 +1,34 @@
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
-import React from "react";
 import Modal from "react-native-modal";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 import useStore from "../data/useStore";
-import { icons, titles, categories } from "./template";
+import { icons, titles, expenseCategories, incomeCategories } from "./template";
 import { FlatList } from "react-native-gesture-handler";
 
-const CategoryModal = ({ setCategory }) => {
+const CategoryModal = ({ setCategory, type, filter }) => {
   const categoryModalVisible = useStore((state) => state.categoryModalVisible);
   const toggleCategoryModalVisible = useStore(
     (state) => state.toggleCategoryModalVisible
   );
 
+  const [renderCategories, setRenderCategories] = useState([]);
+
+  // Set render categories when modal is opened
+  useEffect(() => {
+    if (type === "out") {
+      setRenderCategories(
+        filter ? ["all", ...expenseCategories] : expenseCategories
+      );
+    } else if (type === "in") {
+      setRenderCategories(
+        filter ? ["all", ...incomeCategories] : incomeCategories
+      );
+    }
+  }, [categoryModalVisible]);
+
+  // Set category
   const handlePress = (category) => {
     setCategory(category);
     toggleCategoryModalVisible();
@@ -37,8 +53,9 @@ const CategoryModal = ({ setCategory }) => {
 
         {/* Body */}
         <View className="pb-28">
-          <FlatList showsVerticalScrollIndicator={false}
-            data={categories}
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={renderCategories}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <View className="px-6">

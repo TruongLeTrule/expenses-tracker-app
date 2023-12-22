@@ -15,13 +15,14 @@ import useLocal from "./data/localData";
 const Stack = createStackNavigator();
 
 export default function App() {
-  const { getLocalUID, getLocalExpenses } = useLocal();
+  const { getLocalUID, getLocalExpenses, getLocalIncomes } = useLocal();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const uid = useStore((state) => state.uid);
   const setUID = useStore((state) => state.setUID);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
+  const setAllIncomes = useStore((state) => state.setAllIncomes);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
 
   // Get data from local storage
@@ -30,7 +31,9 @@ export default function App() {
 
     const localUID = await getLocalUID();
     const localExpenses = await getLocalExpenses();
+    const localIncomes = await getLocalIncomes();
 
+    // Check if user has already logged in or not
     if (localUID) {
       setUID(localUID);
       console.log(`User: ${localUID} logged in`);
@@ -38,16 +41,28 @@ export default function App() {
       console.log("No uid in storage");
     }
 
+    // Check if there is already expenses in storage
     if (localExpenses) {
       if (localExpenses.length) {
         setAllExpenses(localExpenses);
-        setSortDateExpenses(localExpenses);
         console.log(`${localExpenses.length} expenses in storage`);
       } else {
         console.log("No expenses in storage");
       }
     } else {
       console.log("No expenses in storage");
+    }
+
+    // Check if there is already incomes in storage
+    if (localIncomes) {
+      if (localIncomes.length) {
+        setAllIncomes(localIncomes);
+        console.log(`${localIncomes.length} incomes in storage`);
+      } else {
+        console.log("No incomes in storage");
+      }
+    } else {
+      console.log("No incomes in storage");
     }
 
     setIsLoading(false);

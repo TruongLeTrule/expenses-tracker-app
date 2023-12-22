@@ -5,18 +5,22 @@ import useStore from "../data/useStore";
 import useLocal from "../data/localData";
 
 export default function MoreScreen() {
-  const { removeLocalUID, removeLocalExpenses } = useLocal();
+  const { removeLocalUID, removeLocalExpenses, removeLocalIncomes } =
+    useLocal();
 
   const setUID = useStore((state) => state.setUID);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
+  const setAllIncomes = useStore((state) => state.setAllIncomes);
   const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
 
   const handleSignOut = async () => {
     setUID(null);
     setAllExpenses(null);
+    setAllIncomes(null);
     setFilteredExpenses(null);
     await removeLocalUID();
     await removeLocalExpenses();
+    await removeLocalIncomes();
   };
 
   return (

@@ -20,22 +20,27 @@ import useStore from "../data/useStore";
 
 import Header from "../components/WalletsScreen/Header";
 import DayOverall from "../components/WalletsScreen/DayOverall";
-import Expense from "../components/WalletsScreen/Expense";
+import Transaction from "../components/WalletsScreen/Transaction";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
 import Overall from "../components/WalletsScreen/Overall";
 import EditModal from "../components/WalletsScreen/EditModal";
 
 export default function Wallets() {
-  const { getAllExpenses } = useFetch();
+  const { getAllExpenses, getAllIncomes } = useFetch();
 
-  const sortDateExpenses = useStore((state) => state.sortDateExpenses);
-  const total = useStore((state) => state.total);
   const isLoadingInWalletScreen = useStore(
     (state) => state.isLoadingInWalletScreen
   );
   const allExpenses = useStore((state) => state.allExpenses);
-  const filteredExpenses = useStore((state) => state.filteredExpenses);
-  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
+  const allIncomes = useStore((state) => state.allIncomes);
+  const filteredList = useStore((state) => state.filteredList);
+  const renderList = useStore((state) => state.renderList);
+  const setRenderList = useStore((state) => state.setRenderList);
+  const totalExpense = useStore((state) => state.totalExpense);
+  const setTotalExpense = useStore((state) => state.setTotalExpense);
+  const totalIncome = useStore((state) => state.totalIncome);
+  const setTotalIncome = useStore((state) => state.setTotalIncome);
+  const total = useStore((state) => state.total);
   const setTotal = useStore((state) => state.setTotal);
   const uid = useStore((state) => state.uid);
 
@@ -62,31 +67,68 @@ export default function Wallets() {
     height: `${height.value}%`,
   }));
 
-  // If the is no expense in local, get expense from db
+  // If the is no expense or income in local, get them from db
   useEffect(() => {
     if (!allExpenses) {
       getAllExpenses(uid);
     }
+    if (!allIncomes) {
+      getAllIncomes(uid);
+    }
   }, []);
 
-  // Set expenses grouped by date again when all expenses
-  // or filtered expenses have been changed
+  // Set render array again if income or expense has been changed
+  // or there is filter feature enabled
   useEffect(() => {
-    if (allExpenses) {
-      if (filteredExpenses) {
-        setSortDateExpenses(filteredExpenses);
-      } else {
-        setSortDateExpenses(allExpenses);
-      }
-    }
-  }, [allExpenses, filteredExpenses]);
+    if (filteredList) {
+      // Sort list every rendering
+      filteredList.sort(function (a, b) {
+        // Convert the date strings to Date objects
+        let dateA = a.date.seconds;
+        let dateB = b.date.seconds;
 
-  // Set total when all expenses have been changed
+        // Subtract the dates to get a value that is either negative, positive, or zero
+        return dateB - dateA;
+      });
+      setRenderList(filteredList);
+    } else if (allExpenses || allIncomes) {
+      let renderArr;
+      if (!allExpenses && allIncomes) {
+        renderArr = [...allIncomes];
+      } else if (allExpenses && !allIncomes) {
+        renderArr = [...allExpenses];
+      } else {
+        renderArr = [...allExpenses, ...allIncomes];
+      }
+      // Sort list every rendering
+      renderArr.sort(function (a, b) {
+        // Convert the date strings to Date objects
+        let dateA = a.date.seconds;
+        let dateB = b.date.seconds;
+
+        // Subtract the dates to get a value that is either negative, positive, or zero
+        return dateB - dateA;
+      });
+      setRenderList(renderArr);
+    }
+  }, [allExpenses, allIncomes, filteredList]);
+
+  // Set total expense when all expenses have been changed
   useEffect(() => {
     if (allExpenses) {
-      setTotal(allExpenses);
+      setTotalExpense(allExpenses);
     }
   }, [allExpenses]);
+  // Set total income when all incomes have been changed
+  useEffect(() => {
+    if (allIncomes) {
+      setTotalIncome(allIncomes);
+    }
+  }, [allIncomes]);
+  // Set total if income or expense have been changed
+  useEffect(() => {
+    setTotal(totalIncome - totalExpense);
+  }, [totalExpense, totalIncome]);
 
   // Render loading circle if haven't got data yet
   if (isLoadingInWalletScreen) {
@@ -109,11 +151,15 @@ export default function Wallets() {
       <View className="mt-5 px-4" style={{ flex: 1 }}>
         {/* Overall section */}
         <WhiteBox mt={"mt-4"}>
-          <Overall total={total} />
+          <Overall
+            totalExpense={totalExpense}
+            totalIncome={totalIncome}
+            total={total}
+          />
         </WhiteBox>
 
         {/* Each day section */}
-        {sortDateExpenses ? (
+        {renderList ? (
           <View
             className="items-center justify-center flex-1"
             style={{ marginTop: 40, marginBottom: 20 }}
@@ -131,15 +177,22 @@ export default function Wallets() {
 
             {/* Specific date show */}
             <Animated.View style={animatedStyle} className="w-full mb-4">
-              <FlatList showsVerticalScrollIndicator={false}
-                data={sortDateExpenses}
-                extraData={sortDateExpenses}
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={renderList}
+                extraData={renderList}
                 keyExtractor={(item) => item.title}
                 renderItem={({ item }) => (
                   <WhiteBox mt={"mt-4"}>
-                    <DayOverall inputDate={item.title} expenses={item.data} />
-                    {item.data.map((expense) => (
-                      <Expense key={expense.id} expense={expense} />
+                    <DayOverall
+                      inputDate={item.title}
+                      transactions={item.data}
+                    />
+                    {item.data.map((transaction) => (
+                      <Transaction
+                        key={transaction.id}
+                        transaction={transaction}
+                      />
                     ))}
                   </WhiteBox>
                 )}

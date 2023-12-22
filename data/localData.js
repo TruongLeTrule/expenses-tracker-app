@@ -64,6 +64,38 @@ const useLocal = () => {
     }
   };
 
+  // Set incomes to local storage
+  const setLocalIncomes = async (incomes) => {
+    try {
+      const jsonValue = JSON.stringify(incomes);
+      await AsyncStorage.setItem("income", jsonValue);
+      console.log("Set income in local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Get incomes from local storage
+  const getLocalIncomes = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("income");
+      console.log("Get incomes from local");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Remove incomes from localStorage
+  const removeLocalIncomes = async () => {
+    try {
+      await AsyncStorage.removeItem("income");
+      console.log("Remove income from local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getLocalUID: getLocalUID,
     setLocalUID: setLocalUID,
@@ -71,6 +103,9 @@ const useLocal = () => {
     setLocalExpenses: setLocalExpenses,
     getLocalExpenses: getLocalExpenses,
     removeLocalExpenses: removeLocalExpenses,
+    setLocalIncomes: setLocalIncomes,
+    getLocalIncomes: getLocalIncomes,
+    removeLocalIncomes: removeLocalIncomes,
   };
 };
 
