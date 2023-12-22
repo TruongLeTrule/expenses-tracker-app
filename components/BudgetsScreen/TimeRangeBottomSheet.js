@@ -2,9 +2,9 @@ import {View, Text, StyleSheet} from "react-native";
 import React,{useContext} from "react";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import CustomBudgetButton from "./CustomBudgetButton";
-import { BudgetContext } from "./BudgetContext";
+import useStore from "../../data/useStore";
 const TimeRangeBottomSheet = ({onPress}) => {
-    const {budgetTime} = useContext(BudgetContext);
+    const budgetTime = useStore((state) => state.budgetTime);
     return (
         <View style={styles.container}>
             <View style={styles.detailContainer}>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: "flex-end",
         backgroundColor: "rgba(0,0,0,0.5)",
+        
     },
     detailContainer:{
         backgroundColor: "#fff",

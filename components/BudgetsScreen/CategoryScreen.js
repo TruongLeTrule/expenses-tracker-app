@@ -1,10 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, {useContext} from "react";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import TreeNode from "./Treenode";
-import { BudgetContext } from "./BudgetContext";
+import useStore from "../../data/useStore";
 export default CategoryScreen = ({onPress}) => {
-    const {budgetCategory} = useContext(BudgetContext);
+    const budgetCategory = useStore((state) => state.budgetCategory);
     return (
         <View style={styles.container}>
             <View style={styles.detailContainer}>

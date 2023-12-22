@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import { useState,useContext } from 'react';
+import { useState } from 'react';
 import Collapsible from 'react-native-collapsible';
-import { BudgetContext } from "./BudgetContext";
+
 export default TreeNode = ({ content, type, onPress, children }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const {budgetCategory, setBudgetCategory} = useContext(BudgetContext);
+
     const toggleCollapse = () => {
       setIsCollapsed(!isCollapsed);
     };
