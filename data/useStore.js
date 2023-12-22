@@ -110,6 +110,11 @@ const useStore = create((set) => ({
     set((state) => ({ addModalVisible: !state.addModalVisible }));
   },
 
+  monthYearModalVisible: false,
+  toggleMonthYearModalVisible: () => {
+    set((state) => ({ monthYearModalVisible: !state.monthYearModalVisible }))
+  },
+
   // Loading state
   isLoadingInWalletScreen: false,
   setIsLoadingInWalletScreen: (data) => {

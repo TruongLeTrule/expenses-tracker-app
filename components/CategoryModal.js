@@ -39,6 +39,7 @@ const CategoryModal = ({ setCategory, type, filter }) => {
       isVisible={categoryModalVisible}
       onBackdropPress={toggleCategoryModalVisible}
       className="flex-1 m-0 justify-end"
+      onBackButtonPress={toggleCategoryModalVisible}
     >
       <View className="bg-[#d1d1d1] rounded-t-xl h-full">
         {/* Heading section */}
@@ -53,6 +54,7 @@ const CategoryModal = ({ setCategory, type, filter }) => {
         {/* Body */}
         <View className="pb-28">
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={renderCategories}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
