@@ -174,6 +174,30 @@ const useStore = create((set) => ({
   setEditingTransaction: (transaction) => {
     set((state) => ({ editingTransaction: transaction }));
   },
+
+  //Budget state
+  data: [],
+  setData: (data) => set({ data }),
+
+  budgetName: '',
+  setBudgetName: (budgetName) => set({ budgetName }),
+
+  budgetAmount: '',
+  setBudgetAmount: (budgetAmount) => set({ budgetAmount }),
+
+  budgetTime: 'Time Range',
+  setBudgetTime: (budgetTime) => set({ budgetTime }),
+
+  modalVisible: false,
+  setModalVisible: (modalVisible) => set({ modalVisible }),
+
+  budgetCategory: 'Categories',
+  setBudgetCategory: (budgetCategory) => set({ budgetCategory }),
+
+  isLoading: true,
+  setIsLoading: (isLoading) => set({ isLoading }),
+
+  time: ['Weekly', 'Monthly', 'Quarterly', 'Half Yearly', 'Yearly'],
 }));
 
 export default useStore;
