@@ -43,6 +43,7 @@ export default function Wallets() {
   const total = useStore((state) => state.total);
   const setTotal = useStore((state) => state.setTotal);
   const uid = useStore((state) => state.uid);
+  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
 
   // Toggle list visible feature
   const [chevronType, setChevronType] = useState("chevron-up");
@@ -117,6 +118,7 @@ export default function Wallets() {
   useEffect(() => {
     if (allExpenses) {
       setTotalExpense(allExpenses);
+      setSortDateExpenses(allExpenses);
     }
   }, [allExpenses]);
   // Set total income when all incomes have been changed

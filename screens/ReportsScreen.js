@@ -5,11 +5,10 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useEffect } from "react";
 import useStore from "../data/useStore";
 import BarChart from "../components/ReportsScreen/BarChart";
 import PieChart from "../components/ReportsScreen/PieChart";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MonthYearSelector from "../components/ReportsScreen/monthYearSelector";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -22,15 +21,7 @@ export default function ReportsScreen() {
     (state) => state.toggleMonthYearModalVisible
   );
   const sortDateExpenses = useStore((state) => state.sortDateExpenses);
-  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const allExpenses = useStore((state) => state.allExpenses);
-
-  // Set sort date expenses when all expenses have been changed
-  useEffect(() => {
-    if (allExpenses) {
-      setSortDateExpenses(allExpenses);
-    }
-  }, [allExpenses]);
 
   //Getting month/ year from sortDateExpenses
   useEffect(() => {
