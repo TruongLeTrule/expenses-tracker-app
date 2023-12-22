@@ -149,6 +149,7 @@ export default function Wallets() {
             totalIncome={totalIncome}
             total={total}
           />
+          {console.log(totalIncome)}
         </WhiteBox>
 
         {/* Each day section */}

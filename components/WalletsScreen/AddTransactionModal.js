@@ -129,7 +129,7 @@ const AddTransactionModal = ({
 
         {/* Body */}
         <View className="bg-[#fff] rounded-xl mt-16 p-6">
-          {/* Expense input */}
+          {/* Transaction input */}
           <View className="flex-row items-center gap-4">
             <View className="rounded-full h-12 w-12 flex items-center justify-center bg-dark-green">
               <Ionicons name="cash" size={27} color={"#fff"} />
@@ -138,14 +138,22 @@ const AddTransactionModal = ({
               <Text className="text-base text-grey-text">Amount</Text>
               <View className="flex-row">
                 <TextInput
-                  className="font-bold  text-2xl text-danger-red"
+                  className={`font-bold  text-2xl ${
+                    type === "out" ? "text-danger-red" : "text-primary"
+                  }`}
                   value={String(value)}
                   keyboardType="numeric"
                   onChangeText={(text) =>
                     setValue(Number(text.replace(/[^0-9]/g, "")))
                   }
                 />
-                <Text className="font-bold  text-2xl text-danger-red">₫</Text>
+                <Text
+                  className={`font-bold  text-2xl ${
+                    type === "out" ? "text-danger-red" : "text-primary"
+                  }`}
+                >
+                  ₫
+                </Text>
               </View>
             </View>
           </View>

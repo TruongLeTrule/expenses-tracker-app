@@ -227,14 +227,26 @@ const EditModal = () => {
                 <Text className="text-base text-grey-text">Amount</Text>
                 <View className="flex-row">
                   <TextInput
-                    className="font-bold  text-2xl text-danger-red"
+                    className={`font-bold  text-2xl ${
+                      editingTransaction.type === "out"
+                        ? "text-danger-red"
+                        : "text-primary"
+                    }`}
                     value={String(value)}
                     keyboardType="numeric"
                     onChangeText={(text) =>
                       setValue(Number(text.replace(/[^0-9]/g, "")))
                     }
                   />
-                  <Text className="font-bold  text-2xl text-danger-red">₫</Text>
+                  <Text
+                    className={`font-bold  text-2xl ${
+                      editingTransaction.type === "out"
+                        ? "text-danger-red"
+                        : "text-primary"
+                    }`}
+                  >
+                    ₫
+                  </Text>
                 </View>
               </View>
             </View>
