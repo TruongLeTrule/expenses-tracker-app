@@ -11,7 +11,7 @@ import FilterByCategory from "./FilterByCategory";
 import { commafy } from "../formatCurrency";
 
 const Header = ({ total }) => {
-  const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
+  const setFilteredList = useStore((state) => state.setFilteredList);
 
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
@@ -71,9 +71,9 @@ const Header = ({ total }) => {
 
             {/* Show all */}
             <TouchableOpacity
-              className="flex-row justify-center items-center mt-5"
+              className="flex-row justify-center items-center mt-2"
               onPress={() => {
-                setFilteredExpenses(null);
+                setFilteredList(null);
                 setFilterModalVisible(false);
               }}
             >

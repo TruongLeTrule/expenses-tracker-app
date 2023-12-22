@@ -11,6 +11,7 @@ const icons = {
   wage: "server",
   bonus: "gift",
   other: "basketball",
+  all: "eye",
 };
 
 const titles = {
@@ -26,6 +27,7 @@ const titles = {
   wage: "Wage",
   bonus: "Bonus",
   other: "Other",
+  all: "Show all",
 };
 
 const expenseCategories = [

@@ -10,6 +10,7 @@ const FilterByDate = () => {
   const allExpenses = useStore((state) => state.allExpenses);
   const allIncomes = useStore((state) => state.allIncomes);
   const setFilteredList = useStore((state) => state.setFilteredList);
+  const filteredList = useStore((state) => state.filteredList);
 
   const [pickerVisible, setPickerVisible] = useState(false);
   const [datePickModal, setDatePickModal] = useState(false);
@@ -52,15 +53,14 @@ const FilterByDate = () => {
           ? filteredList
           : [...allExpenses, ...allIncomes];
 
-        const filteredList = chosenList.filter((transaction) => {
+        const newList = chosenList.filter((transaction) => {
           const currTransactionDate = new Date(transaction.date.seconds * 1000);
           return (
             currTransactionDate <= endDate.setHours(23, 59, 59, 999) &&
             currTransactionDate >= startDate.setHours(0, 0, 0, 0)
           );
         });
-        console.log(filteredList);
-        setFilteredList(filteredList);
+        setFilteredList(newList);
         console.log("Filter render list by date");
       } else {
         Alert.alert("Error", "Invalid date, please try again");
