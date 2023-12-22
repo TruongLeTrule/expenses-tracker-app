@@ -67,7 +67,7 @@ function PieChartExpenses({ selectedDate, allExpenses }) {
       continue;
     }
     else
-      data[i].text = `${(data[i].value / totalExpenseInAMonth).toFixed(3) * 100}%`
+      data[i].text = `${((data[i].value / totalExpenseInAMonth) * 100).toFixed(2)}%`
   }
   return (
     <View style={styles.pieChartContainer}>

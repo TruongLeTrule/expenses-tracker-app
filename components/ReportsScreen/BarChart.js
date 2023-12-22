@@ -171,7 +171,7 @@ export default BarChartExpenses;
 const styles = StyleSheet.create({
   barChartContainer: {
     width: 375,
-    height: 420,
+    height: 450,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "gray",
