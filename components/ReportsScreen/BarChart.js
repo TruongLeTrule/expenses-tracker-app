@@ -83,7 +83,7 @@ function BarChartExpenses({ selectedDate, allExpenses }) {
 
   return (
     <View style={styles.barChartContainer}>
-      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold', marginBottom: 35 }}>Monthly Expense Bar Chart (VND)</Text>
+      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold', marginBottom: 35 }}>Monthly Expenses Bar Chart (VND)</Text>
       <BarChart
         xAxisLength={250}
         data={data}

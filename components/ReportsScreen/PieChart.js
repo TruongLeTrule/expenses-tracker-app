@@ -69,7 +69,7 @@ function PieChartExpenses({ selectedDate, allExpenses }) {
   }
   return (
     <View style={styles.pieChartContainer}>
-      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold', marginBottom: 15 }}>Monthly Expense Pie Chart</Text>
+      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold', marginBottom: 15 }}>Monthly Expenses Pie Chart</Text>
       <PieChart
         showText
         data={data}
@@ -83,17 +83,17 @@ function PieChartExpenses({ selectedDate, allExpenses }) {
       <View style={styles.colorDetails}>
         <View style={styles.detailContainer}>
 
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="red" />   Food</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="orange" />   Vehicle</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="#65fe04" />   Clothing</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="blue" />   Health Care</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="red" />   {data[0].label}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="orange" />   {data[2].label}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="#65fe04" />   {data[4].label}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="blue" />   {data[6].label}</Text>
 
         </View>
         <View style={styles.detailContainer}>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="green" />   Drink</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="purple" />   Education</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="aqua" />   Relax</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="brown" />   Other</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="green" />   {data[1].label}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="purple" />   {data[3].label}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="aqua" />   {data[5].label}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="brown" />   {data[7].label}</Text>
 
         </View>
 

@@ -23,6 +23,8 @@ export default function ReportsScreen() {
   const [selectedDate, setSelectedDate] = useState({});
   const allExpenses = useStore((state) => state.allExpenses);
 
+
+  //Getting month/ year from sortDateExpenses
   useEffect(() => {
     if (sortDateExpenses !== undefined) {
       let currentMonthYear = {
@@ -134,9 +136,7 @@ export default function ReportsScreen() {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <BarChart selectedDate={selectedDate} allExpenses={allExpenses} />
-        <BarChart selectedDate={selectedDate} />
-        <BarChart selectedDate={selectedDate} />
-        <BarChart selectedDate={selectedDate} />
+        <PieChart selectedDate={selectedDate} allExpenses={allExpenses} />
       </ScrollView>
       <MonthYearSelector
         data={monthYearList}
