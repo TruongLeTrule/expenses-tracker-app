@@ -6,7 +6,12 @@ const icons = {
   clothing: "shirt",
   relax: "game-controller",
   healthCare: "heart-circle",
+  salary: "cash",
+  invest: "pulse",
+  wage: "server",
+  bonus: "gift",
   other: "basketball",
+  all: "eye",
 };
 
 const titles = {
@@ -17,10 +22,15 @@ const titles = {
   clothing: "Clothing",
   relax: "Relax",
   healthCare: "Health Care",
+  salary: "Salary",
+  invest: "Invest",
+  wage: "Wage",
+  bonus: "Bonus",
   other: "Other",
+  all: "Show all",
 };
 
-const categories = [
+const expenseCategories = [
   "food",
   "drink",
   "vehicle",
@@ -31,4 +41,6 @@ const categories = [
   "other",
 ];
 
-export { icons, titles, categories };
+const incomeCategories = ["salary", "invest", "wage", "bonus", "other"];
+
+export { icons, titles, expenseCategories, incomeCategories };

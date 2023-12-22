@@ -11,7 +11,7 @@ import FilterByCategory from "./FilterByCategory";
 import { commafy } from "../formatCurrency";
 
 const Header = ({ total }) => {
-  const setFilteredExpenses = useStore((state) => state.setFilteredExpenses);
+  const setFilteredList = useStore((state) => state.setFilteredList);
 
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
@@ -28,10 +28,11 @@ const Header = ({ total }) => {
               <Text className="text-2xl text-grey-text font-normal">Cash</Text>
             </View>
             <Text
-              className="text-4xl text-danger-red font-bold mt-2"
+              className="text-4xl font-bold mt-2"
+              style={{ color: total < 0 ? "#f04433" : "#4cb050" }}
               numberOfLines={1}
             >
-              {total ? `-${commafy(total)}` : 0}₫
+              {commafy(total)}₫
             </Text>
           </View>
 
@@ -70,9 +71,9 @@ const Header = ({ total }) => {
 
             {/* Show all */}
             <TouchableOpacity
-              className="flex-row justify-center items-center mt-5"
+              className="flex-row justify-center items-center mt-2"
               onPress={() => {
-                setFilteredExpenses(null);
+                setFilteredList(null);
                 setFilterModalVisible(false);
               }}
             >
