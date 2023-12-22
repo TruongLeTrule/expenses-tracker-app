@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { BudgetProvider } from "./components/BudgetsScreen/BudgetContext";
 
 import LogSignStack from "./screens/LogSignStack";
 import MainBottomTab from "./screens/MainBottomTab";
@@ -81,7 +80,6 @@ export default function App() {
   }
 
   return (
-    <BudgetProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!uid ? (
@@ -98,6 +96,5 @@ export default function App() {
           )}
         </Stack.Navigator>
       </NavigationContainer>
-    </BudgetProvider>
   );
 }
