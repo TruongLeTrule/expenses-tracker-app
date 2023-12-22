@@ -131,7 +131,7 @@ export default function Wallets() {
 
             {/* Specific date show */}
             <Animated.View style={animatedStyle} className="w-full mb-4">
-              <FlatList
+              <FlatList showsVerticalScrollIndicator={false}
                 data={sortDateExpenses}
                 extraData={sortDateExpenses}
                 keyExtractor={(item) => item.title}

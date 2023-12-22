@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Pressable, ScrollView } from "react-native";
 import React, { useEffect } from "react";
 import useStore from "../data/useStore";
 import BarChart from "../components/ReportsScreen/BarChart";
@@ -79,8 +79,12 @@ export default function ReportsScreen() {
         <TouchableOpacity onPress={handleForwardMonthButton}>
           <Ionicons name="chevron-forward-outline" size={27} /></TouchableOpacity>
       </View>
-
-      <BarChart selectedDate={selectedDate} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <BarChart selectedDate={selectedDate} />
+        <BarChart selectedDate={selectedDate} />
+        <BarChart selectedDate={selectedDate} />
+        <BarChart selectedDate={selectedDate} />
+      </ScrollView>
       <MonthYearSelector data={monthYearList} setSelectedDate={setSelectedDate} />
     </View>
   );

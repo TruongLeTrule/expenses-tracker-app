@@ -20,7 +20,7 @@ function MonthYearSelector({ data, setSelectedDate }) {
       onBackButtonPress={toggleMonthYearModalVisible}>
       <View className="bg-[#d1d1d1] rounded-t-xl h-3/4">
         <Text style={styles.textStyle}>Choose month</Text>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {
             data.map((item, index) => {
               return (

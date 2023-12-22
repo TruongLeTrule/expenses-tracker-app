@@ -37,7 +37,7 @@ const CategoryModal = ({ setCategory }) => {
 
         {/* Body */}
         <View className="pb-28">
-          <FlatList
+          <FlatList showsVerticalScrollIndicator={false}
             data={categories}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (

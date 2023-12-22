@@ -1,21 +1,21 @@
-import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image ,TextInput, Alert } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { Modal } from "react-native";
 import TimeRangeBottomSheet from "./TimeRangeBottomSheet";
 import { BudgetContext } from "./BudgetContext";
 import CustomBudgetButton from "./CustomBudgetButton";
 import CategoryScreen from "./CategoryScreen";
-import {getDocs,addDoc, collection} from 'firebase/firestore';
-import {db} from "../../firebase";
+import { getDocs, addDoc, collection } from 'firebase/firestore';
+import { db } from "../../firebase";
 
-const BottomSheet = ({ onPress}) => {
+const BottomSheet = ({ onPress }) => {
   const [timeVisible, setTimeVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
-  const {modalVisible,setModalVisible, budgetName, setBudgetName, 
-          budgetAmount, setBudgetAmount, budgetTime, setBudgetTime, 
-          budgetCategory, setBudgetCategory,setIsLoading,time,setData
-          } = useContext(BudgetContext);
+  const { modalVisible, setModalVisible, budgetName, setBudgetName,
+    budgetAmount, setBudgetAmount, budgetTime, setBudgetTime,
+    budgetCategory, setBudgetCategory, setIsLoading, time, setData
+  } = useContext(BudgetContext);
 
   const updateTimeRangeTitle = (selectedText) => {
     setBudgetTime(selectedText);
@@ -53,7 +53,7 @@ const BottomSheet = ({ onPress}) => {
     if (budgetName === '' || budgetAmount === '' || budgetTime === 'Time Range' || budgetCategory === 'Categories') {
       Alert.alert('Please fill all the fields');
     } else {
-      try{
+      try {
         const queryData = collection(db, "Budget", "Time", budgetTime);
         addDoc(queryData,
           {
@@ -77,8 +77,8 @@ const BottomSheet = ({ onPress}) => {
   };
 
   useEffect(() => {
-    const fetchData = async() => {  
-      const data =  await fetchDataFromFirestore();
+    const fetchData = async () => {
+      const data = await fetchDataFromFirestore();
       setData(data);
     }
     fetchData();
@@ -130,6 +130,10 @@ const BottomSheet = ({ onPress}) => {
             icon='https://cdn-icons-png.flaticon.com/512/2603/2603910.png'
             onPress={() => setCategoryVisible(true)}
           />
+
+          <TouchableOpacity style={styles.button} onPress={saveBudget}>
+            <Text style={styles.text}>Save</Text>
+          </TouchableOpacity>
         </View>
         <Modal
           animationType="slide"
@@ -150,84 +154,84 @@ const BottomSheet = ({ onPress}) => {
           }}>
           <CategoryScreen onPress={updateCategoryTitle} />
         </Modal>
-        <TouchableOpacity style={styles.button} onPress={saveBudget}>
-          <Text style={styles.text}>Save</Text>
-        </TouchableOpacity>
+
       </View>
     </View>
   );
 };
 export default BottomSheet;
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent: "flex-end",
-        backgroundColor: "rgba(0,0,0,0.5)",
-    },
-    titleHeader: {
-        flexDirection: "row",
-        padding:10,
-        backgroundColor: "#fff",
-        borderRadius: 10,
-    },
-    content:{
-        marginHorizontal: 5,
-        marginVertical: 20,
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        borderWidth: 0.2,
-    },
-    titleText:{
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "black",
-        marginLeft: 100,
-    },
-    detailContainer:{
-        backgroundColor: "#f1f1f1",
-        borderRadius: 10,
-        height: 500,
-    },
-    name:{
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    header: {
-        height: 50,
-    },
-    button:{
-        marginTop: 50,
-        backgroundColor: "#4cb050",
-        height: 50,
-        width: 150,
-        alignSelf: "center",
-        borderRadius: 30,
-    },
-    text:{
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-        textAlign: "center",
-        marginTop: 10,
-    },
-    title:{
-        fontSize: 20,
-        color: "gray",
-        marginTop: 10,
-    },
-    titleContainer:{
-        marginLeft: 10,
-    },
-    line:{
-        height: 1,
-        width: 350,
-        backgroundColor: '#ccc',
-        marginVertical: 12,
-        
-    },
-    image:{
-        width: 30,
-        height: 30,
-    }
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  titleHeader: {
+    flexDirection: "row",
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+  },
+  content: {
+    marginHorizontal: 5,
+    marginVertical: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    borderWidth: 0.2,
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "black",
+    marginLeft: 100,
+  },
+  detailContainer: {
+    backgroundColor: "#f1f1f1",
+    borderRadius: 10,
+    height: 500,
+  },
+  name: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    height: 50,
+  },
+  button: {
+    marginTop: 20,
+    marginBottom: 30,
+    backgroundColor: "#4cb050",
+    height: 50,
+    width: 150,
+    alignSelf: "center",
+    borderRadius: 30,
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 20,
+    color: "gray",
+    marginTop: 10,
+  },
+  titleContainer: {
+    marginLeft: 10,
+  },
+  line: {
+    height: 1,
+    width: 350,
+    backgroundColor: '#ccc',
+    marginVertical: 12,
+
+  },
+  image: {
+    width: 30,
+    height: 30,
+  }
 });

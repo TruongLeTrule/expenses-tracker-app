@@ -110,7 +110,7 @@ export default BarChartExpenses
 
 const styles = StyleSheet.create({
   barChartContainer: {
-    width: '90%',
+    width: 375,
     height: 400,
     borderWidth: 1,
     borderStyle: 'solid',
@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20
+    padding: 20,
+    marginBottom: 20
   },
   barChartTopLabel: {
     fontSize: 13,
