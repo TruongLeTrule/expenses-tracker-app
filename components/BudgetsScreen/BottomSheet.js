@@ -1,31 +1,36 @@
-import React, { useState, useContext, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert } from "react-native";
+import React, { useState,useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image ,TextInput, Alert } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { Modal } from "react-native";
 import TimeRangeBottomSheet from "./TimeRangeBottomSheet";
-import { BudgetContext } from "./BudgetContext";
 import CustomBudgetButton from "./CustomBudgetButton";
+import useStore from "../../data/useStore";
+//import CategoryModal from "../CategoryModal";
 import CategoryScreen from "./CategoryScreen";
-import { getDocs, addDoc, collection } from 'firebase/firestore';
-import { db } from "../../firebase";
+import {getDocs,addDoc, collection} from 'firebase/firestore';
+import {db} from "../../firebase";
 
-const BottomSheet = ({ onPress }) => {
+const BottomSheet = ({ onPress}) => {
   const [timeVisible, setTimeVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
-  const { modalVisible, setModalVisible, budgetName, setBudgetName,
-    budgetAmount, setBudgetAmount, budgetTime, setBudgetTime,
-    budgetCategory, setBudgetCategory, setIsLoading, time, setData
-  } = useContext(BudgetContext);
+  const budgetName = useStore((state) => state.budgetName);
+  const budgetAmount = useStore((state) => state.budgetAmount);
+  const budgetTime = useStore((state) => state.budgetTime);
+  const budgetCategory = useStore((state) => state.budgetCategory);
+  const time = useStore((state) => state.time);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  const setData = useStore((state) => state.setData);
 
   const updateTimeRangeTitle = (selectedText) => {
-    setBudgetTime(selectedText);
+    useStore.setState({ budgetTime: selectedText });
     setTimeVisible(false);
   };
 
   const updateCategoryTitle = (selectedText) => {
-    setBudgetCategory(selectedText);
+    useStore.setState({ budgetCategory: selectedText });
     setCategoryVisible(false);
   };
+
 
   const fetchDataFromFirestore = async () => {
     try {
@@ -49,27 +54,28 @@ const BottomSheet = ({ onPress }) => {
     }
   };
 
-  const saveBudget = () => {
+  const saveBudget = async () => {
     if (budgetName === '' || budgetAmount === '' || budgetTime === 'Time Range' || budgetCategory === 'Categories') {
       Alert.alert('Please fill all the fields');
     } else {
       try {
         const queryData = collection(db, "Budget", "Time", budgetTime);
-        addDoc(queryData,
-          {
-            name: budgetName,
-            amount: budgetAmount,
-            time: budgetTime,
-            category: budgetCategory,
-          });
+        await addDoc(queryData, {
+          name: budgetName,
+          amount: budgetAmount,
+          time: budgetTime,
+          category: budgetCategory,
+        });
         Alert.alert('Budget created successfully');
-        const data = fetchDataFromFirestore();
+        const data = await fetchDataFromFirestore();
         setData(data);
-        setModalVisible(!modalVisible);
-        setBudgetName('');
-        setBudgetAmount('');
-        setBudgetTime('Time Range');
-        setBudgetCategory('Categories');
+        useStore.setState({ modalVisible: false });
+        useStore.setState({
+          budgetName: '',
+          budgetAmount: '',
+          budgetTime: 'Time Range',
+          budgetCategory: 'Categories',
+        });
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -77,8 +83,8 @@ const BottomSheet = ({ onPress }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchDataFromFirestore();
+    const fetchData = async() => {  
+      const data =  await fetchDataFromFirestore();
       setData(data);
     }
     fetchData();
@@ -99,7 +105,7 @@ const BottomSheet = ({ onPress }) => {
                 style={styles.title}
                 value={budgetName}
                 placeholder="Budget name"
-                onChangeText={(budgetName) => setBudgetName(budgetName)}
+                onChangeText={(budgetName) => useStore.setState({ budgetName: budgetName })}
               />
               <View style={styles.line} />
             </View>
@@ -111,7 +117,7 @@ const BottomSheet = ({ onPress }) => {
                 style={styles.title}
                 value={budgetAmount}
                 placeholder="Amount"
-                onChangeText={(budgetAmount) => setBudgetAmount(budgetAmount)}
+                onChangeText={(budgetAmount) => useStore.setState({ budgetAmount: budgetAmount })}
               />
               <View style={styles.line} />
             </View>
@@ -130,10 +136,6 @@ const BottomSheet = ({ onPress }) => {
             icon='https://cdn-icons-png.flaticon.com/512/2603/2603910.png'
             onPress={() => setCategoryVisible(true)}
           />
-
-          <TouchableOpacity style={styles.button} onPress={saveBudget}>
-            <Text style={styles.text}>Save</Text>
-          </TouchableOpacity>
         </View>
         <Modal
           animationType="slide"
@@ -145,6 +147,7 @@ const BottomSheet = ({ onPress }) => {
           {/* Pass the callback function to update the title */}
           <TimeRangeBottomSheet onPress={updateTimeRangeTitle} />
         </Modal>
+
         <Modal
           animationType="slide"
           transparent={true}
@@ -153,85 +156,87 @@ const BottomSheet = ({ onPress }) => {
             setCategoryVisible(!categoryVisible);
           }}>
           <CategoryScreen onPress={updateCategoryTitle} />
+          {/* <CategoryModal/> */}
         </Modal>
-
+        
+        <TouchableOpacity style={styles.button} onPress={saveBudget}>
+          <Text style={styles.text}>Save</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 export default BottomSheet;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  titleHeader: {
-    flexDirection: "row",
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-  },
-  content: {
-    marginHorizontal: 5,
-    marginVertical: 20,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    borderWidth: 0.2,
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "black",
-    marginLeft: 100,
-  },
-  detailContainer: {
-    backgroundColor: "#f1f1f1",
-    borderRadius: 10,
-    height: 500,
-  },
-  name: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    height: 50,
-  },
-  button: {
-    marginTop: 20,
-    marginBottom: 30,
-    backgroundColor: "#4cb050",
-    height: 50,
-    width: 150,
-    alignSelf: "center",
-    borderRadius: 30,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-    textAlign: "center",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 20,
-    color: "gray",
-    marginTop: 10,
-  },
-  titleContainer: {
-    marginLeft: 10,
-  },
-  line: {
-    height: 1,
-    width: 350,
-    backgroundColor: '#ccc',
-    marginVertical: 12,
-
-  },
-  image: {
-    width: 30,
-    height: 30,
-  }
+    container:{
+        flex:1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    titleHeader: {
+        flexDirection: "row",
+        padding:10,
+        backgroundColor: "#fff",
+        borderRadius: 10,
+    },
+    content:{
+        marginHorizontal: 5,
+        marginVertical: 20,
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        borderWidth: 0.2,
+    },
+    titleText:{
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "black",
+        marginLeft: 100,
+    },
+    detailContainer:{
+        backgroundColor: "#f1f1f1",
+        borderRadius: 10,
+        height: 500,
+    },
+    name:{
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    header: {
+        height: 50,
+    },
+    button:{
+        marginTop: 50,
+        backgroundColor: "#4cb050",
+        height: 50,
+        width: 150,
+        alignSelf: "center",
+        borderRadius: 30,
+    },
+    text:{
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "white",
+        textAlign: "center",
+        marginTop: 10,
+    },
+    title:{
+        fontSize: 20,
+        color: "gray",
+        marginTop: 10,
+    },
+    titleContainer:{
+        marginLeft: 10,
+    },
+    line:{
+        height: 1,
+        width: 350,
+        backgroundColor: '#ccc',
+        marginVertical: 12,
+        
+    },
+    image:{
+        width: 30,
+        height: 30,
+    }
 });
