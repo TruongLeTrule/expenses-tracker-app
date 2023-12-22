@@ -19,10 +19,10 @@ const useStore = create((set) => ({
     set((state) => ({ allIncomes: data }));
   },
 
-  // Filtered expenses array
-  filteredExpenses: null,
-  setFilteredExpenses: (data) => {
-    set((state) => ({ filteredExpenses: data }));
+  // Filtered transactions list
+  filteredList: null,
+  setFilteredList: (data) => {
+    set((state) => ({ filteredList: data }));
   },
 
   // Render list which combine all expense and income together

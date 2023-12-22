@@ -228,7 +228,7 @@ const EditModal = () => {
                 <View className="flex-row">
                   <TextInput
                     className={`font-bold  text-2xl ${
-                      editingTransaction.type === "out"
+                      editingTransaction?.type === "out"
                         ? "text-danger-red"
                         : "text-primary"
                     }`}
@@ -240,7 +240,7 @@ const EditModal = () => {
                   />
                   <Text
                     className={`font-bold  text-2xl ${
-                      editingTransaction.type === "out"
+                      editingTransaction?.type === "out"
                         ? "text-danger-red"
                         : "text-primary"
                     }`}

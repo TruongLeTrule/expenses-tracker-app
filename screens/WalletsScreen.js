@@ -33,7 +33,7 @@ export default function Wallets() {
   );
   const allExpenses = useStore((state) => state.allExpenses);
   const allIncomes = useStore((state) => state.allIncomes);
-  const filteredExpenses = useStore((state) => state.filteredExpenses);
+  const filteredList = useStore((state) => state.filteredList);
   const renderList = useStore((state) => state.renderList);
   const setRenderList = useStore((state) => state.setRenderList);
   const totalExpense = useStore((state) => state.totalExpense);
@@ -80,11 +80,18 @@ export default function Wallets() {
   // Set render array again if income or expense has been changed
   // or there is filter feature enabled
   useEffect(() => {
-    if (filteredExpenses) {
-      setRenderList(filteredExpenses);
-    }
+    if (filteredList) {
+      // Sort list every rendering
+      filteredList.sort(function (a, b) {
+        // Convert the date strings to Date objects
+        let dateA = a.date.seconds;
+        let dateB = b.date.seconds;
 
-    if (allExpenses || allIncomes) {
+        // Subtract the dates to get a value that is either negative, positive, or zero
+        return dateB - dateA;
+      });
+      setRenderList(filteredList);
+    } else if (allExpenses || allIncomes) {
       let renderArr;
       if (!allExpenses && allIncomes) {
         renderArr = [...allIncomes];
@@ -93,7 +100,7 @@ export default function Wallets() {
       } else {
         renderArr = [...allExpenses, ...allIncomes];
       }
-      // Sort array by date
+      // Sort list every rendering
       renderArr.sort(function (a, b) {
         // Convert the date strings to Date objects
         let dateA = a.date.seconds;
@@ -104,7 +111,7 @@ export default function Wallets() {
       });
       setRenderList(renderArr);
     }
-  }, [allExpenses, allIncomes, filteredExpenses]);
+  }, [allExpenses, allIncomes, filteredList]);
 
   // Set total expense when all expenses have been changed
   useEffect(() => {
@@ -149,7 +156,6 @@ export default function Wallets() {
             totalIncome={totalIncome}
             total={total}
           />
-          {console.log(totalIncome)}
         </WhiteBox>
 
         {/* Each day section */}
