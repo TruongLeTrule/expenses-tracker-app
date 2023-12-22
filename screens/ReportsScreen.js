@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Pressable, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect } from "react";
 import useStore from "../data/useStore";
 import BarChart from "../components/ReportsScreen/BarChart";
@@ -13,6 +13,8 @@ export default function ReportsScreen() {
   const [monthYearList, setMonthYear] = useState([])
   const sortDateExpenses = useStore((state) => state.sortDateExpenses)
   const [selectedDate, setSelectedDate] = useState({})
+  const allExpenses = useStore((state) => state.allExpenses)
+
   useEffect(() => {
     if (sortDateExpenses !== undefined) {
       let currentMonthYear = { 'month': sortDateExpenses[0].title.getMonth() + 1, 'year': sortDateExpenses[0].title.getFullYear() }
@@ -80,7 +82,7 @@ export default function ReportsScreen() {
           <Ionicons name="chevron-forward-outline" size={27} /></TouchableOpacity>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <BarChart selectedDate={selectedDate} />
+        <BarChart selectedDate={selectedDate} allExpenses={allExpenses} />
         <BarChart selectedDate={selectedDate} />
         <BarChart selectedDate={selectedDate} />
         <BarChart selectedDate={selectedDate} />

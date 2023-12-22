@@ -1,11 +1,8 @@
 import React from 'react'
 import { BarChart } from 'react-native-gifted-charts'
 import { StyleSheet, Text, View } from 'react-native'
-import useStore from '../../data/useStore'
-import { titles } from '../template'
 
-function BarChartExpenses({ selectedDate }) {
-  const allExpenses = useStore((state) => state.allExpenses)
+function BarChartExpenses({ selectedDate, allExpenses }) {
   let data = [
     { label: "Food", value: 0 },
     { label: "Drink", value: 0 },
@@ -18,7 +15,7 @@ function BarChartExpenses({ selectedDate }) {
   ] //this array contain data for drawing the bar chart
 
 
-  //Extracting month and year to find the data
+  //Extracting data in the selected month
   allExpenses.forEach(expense => {
     let date = new Date(expense.date.seconds * 1000)
     if (selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
