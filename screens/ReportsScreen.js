@@ -32,14 +32,6 @@ export default function ReportsScreen() {
     }
   }, [allExpenses]);
 
-  // Set sort date expenses when all expenses have been changed
-  useEffect(() => {
-    if (allExpenses) {
-      setSortDateExpenses(allExpenses);
-    }
-  }, [allExpenses]);
-
-
   //Getting month/ year from sortDateExpenses
   useEffect(() => {
     if (sortDateExpenses !== undefined) {
