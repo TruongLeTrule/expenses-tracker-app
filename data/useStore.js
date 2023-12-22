@@ -14,7 +14,6 @@ const useStore = create((set) => ({
   },
 
   // Expenses grouped by date
-  // Render list which combine all expense and income together
   sortDateExpenses: null,
   setSortDateExpenses: (data) => {
     // Group list by date which date is title and data is a group of expense and income
@@ -59,6 +58,53 @@ const useStore = create((set) => ({
       }
     };
     set((state) => ({ sortDateExpenses: groupByDate(data) }));
+  },
+
+  // Incomes grouped by date
+  sortDateIncomes: null,
+  setSortDateIncomes: (data) => {
+    // Group list by date which date is title and data is a group of expense and income
+    const groupByDate = (list) => {
+      if (list.length) {
+        // Set last date to the last date of list
+        let lastDate = new Date(list[0].date.seconds * 1000);
+        let smallList = [list[0]];
+        let result = [];
+
+        for (let i = 0; i < list.length; i++) {
+          const itemDate = new Date(list[i].date.seconds * 1000);
+
+          // Push small list into result if current item has different date
+          if (lastDate.toDateString() !== itemDate.toDateString()) {
+            result.push({
+              title: lastDate,
+              data: [...smallList],
+            });
+
+            // Set last date to current item date and empty the array
+            lastDate = itemDate;
+            smallList = [];
+          }
+
+          // Don't push into small list if this is the first element,
+          // cause is already pushed in the declaration
+          if (i !== 0) {
+            smallList.push(list[i]);
+          }
+
+          // Push small list into result if this is the last element
+          if (i === list.length - 1) {
+            result.push({
+              title: lastDate,
+              data: [...smallList],
+            });
+          }
+        }
+
+        return result;
+      }
+    };
+    set((state) => ({ sortDateIncomes: groupByDate(data) }));
   },
 
   // All incomes array
@@ -179,25 +225,25 @@ const useStore = create((set) => ({
   data: [],
   setData: (data) => set({ data }),
 
-  budgetName: '',
+  budgetName: "",
   setBudgetName: (budgetName) => set({ budgetName }),
 
-  budgetAmount: '',
+  budgetAmount: "",
   setBudgetAmount: (budgetAmount) => set({ budgetAmount }),
 
-  budgetTime: 'Time Range',
+  budgetTime: "Time Range",
   setBudgetTime: (budgetTime) => set({ budgetTime }),
 
   modalVisible: false,
   setModalVisible: (modalVisible) => set({ modalVisible }),
 
-  budgetCategory: 'Categories',
+  budgetCategory: "Categories",
   setBudgetCategory: (budgetCategory) => set({ budgetCategory }),
 
   isLoading: true,
   setIsLoading: (isLoading) => set({ isLoading }),
 
-  time: ['Weekly', 'Monthly', 'Quarterly', 'Half Yearly', 'Yearly'],
+  time: ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"],
 }));
 
 export default useStore;
