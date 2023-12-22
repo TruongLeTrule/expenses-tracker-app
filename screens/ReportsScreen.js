@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import React, { useEffect } from "react";
 import useStore from "../data/useStore";
 import BarChart from "../components/ReportsScreen/BarChart";
+import PieChart from "../components/ReportsScreen/PieChart";
 import { useState } from "react";
 import MonthYearSelector from "../components/ReportsScreen/monthYearSelector";
 import { Ionicons } from "@expo/vector-icons";
@@ -83,9 +84,7 @@ export default function ReportsScreen() {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <BarChart selectedDate={selectedDate} allExpenses={allExpenses} />
-        <BarChart selectedDate={selectedDate} />
-        <BarChart selectedDate={selectedDate} />
-        <BarChart selectedDate={selectedDate} />
+        <PieChart selectedDate={selectedDate} allExpenses={allExpenses} />
       </ScrollView>
       <MonthYearSelector data={monthYearList} setSelectedDate={setSelectedDate} />
     </View>
