@@ -139,11 +139,15 @@ function BarChartExpenses({ selectedDate, allExpenses }) {
           padding: 10,
           fontSize: 20,
           fontWeight: "bold",
-          marginBottom: 35,
         }}
       >
-        Monthly Expenses Bar Chart (VND)
+        Monthly Expenses Bar Chart
       </Text>
+      <Text style={{
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 35,
+      }}>(VND)</Text>
       <BarChart
         xAxisLength={250}
         data={data}
@@ -167,7 +171,7 @@ export default BarChartExpenses;
 const styles = StyleSheet.create({
   barChartContainer: {
     width: 375,
-    height: 400,
+    height: 420,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "gray",

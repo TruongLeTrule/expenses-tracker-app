@@ -18,38 +18,40 @@ function PieChartExpenses({ selectedDate, allExpenses }) {
 
 
   //Extracting data in the selected month
-  allExpenses.forEach(expense => {
-    let date = new Date(expense.date.seconds * 1000)
-    if (selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
-      switch (expense.category) {
-        case "food":
-          data[0] = { ...data[0], value: data[0].value + expense.value }
-          break;
-        case "drink":
-          data[1] = { ...data[1], value: data[1].value + expense.value }
-          break;
-        case "vehicle":
-          data[2] = { ...data[2], value: data[2].value + expense.value }
-          break;
-        case "education":
-          data[3] = { ...data[3], value: data[3].value + expense.value }
-          break;
-        case "clothing":
-          data[4] = { ...data[4], value: data[4].value + expense.value }
-          break;
-        case "relax":
-          data[5] = { ...data[5], value: data[5].value + expense.value }
-          break;
-        case "healthCare":
-          data[6] = { ...data[6], value: data[6].value + expense.value }
-          break;
-        case "other":
-          data[7] = { ...data[7], value: data[7].value + expense.value }
-          break;
+  if (allExpenses) {
+    allExpenses.forEach(expense => {
+      let date = new Date(expense.date.seconds * 1000)
+      if (selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
+        switch (expense.category) {
+          case "food":
+            data[0] = { ...data[0], value: data[0].value + expense.value }
+            break;
+          case "drink":
+            data[1] = { ...data[1], value: data[1].value + expense.value }
+            break;
+          case "vehicle":
+            data[2] = { ...data[2], value: data[2].value + expense.value }
+            break;
+          case "education":
+            data[3] = { ...data[3], value: data[3].value + expense.value }
+            break;
+          case "clothing":
+            data[4] = { ...data[4], value: data[4].value + expense.value }
+            break;
+          case "relax":
+            data[5] = { ...data[5], value: data[5].value + expense.value }
+            break;
+          case "healthCare":
+            data[6] = { ...data[6], value: data[6].value + expense.value }
+            break;
+          case "other":
+            data[7] = { ...data[7], value: data[7].value + expense.value }
+            break;
 
+        }
       }
-    }
-  })
+    })
+  }
 
   //Summing up all categories total amount of money 
 
