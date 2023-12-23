@@ -1,6 +1,6 @@
-import {View, Text, StyleSheet, TouchableOpacity,Image,TextInput,Button, Alert,Modal} from "react-native";
-import React,{useState} from "react";
-const CustomBudgetButton = ({onPress, title,icon}) => {
+import {View, Text, StyleSheet, TouchableOpacity, Image} from "react-native";
+import React from "react";
+const CustomBudgetButton = ({onPress, title, icon}) => {
     return(
         <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
             <Image style={styles.image} source={{uri:icon}}/>
@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        
     },
     title:{
         fontSize: 20,
@@ -33,11 +32,9 @@ const styles = StyleSheet.create({
         width: 350,
         backgroundColor: '#ccc',
         marginVertical: 12,
-        
     },
     image:{
         width: 30,
         height: 30,
     }
-
 })

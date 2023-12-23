@@ -1,14 +1,14 @@
 import React, { useState,useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image ,TextInput, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { Modal } from "react-native";
 import TimeRangeBottomSheet from "./TimeRangeBottomSheet";
 import CustomBudgetButton from "./CustomBudgetButton";
 import useStore from "../../data/useStore";
-//import CategoryModal from "../CategoryModal";
 import CategoryScreen from "./CategoryScreen";
 import {getDocs,addDoc, collection} from 'firebase/firestore';
 import {db} from "../../firebase";
+import BottomSheetTextInput from "./BottomSheetTextInput";
 
 const BottomSheet = ({ onPress}) => {
   const [timeVisible, setTimeVisible] = useState(false);
@@ -18,77 +18,116 @@ const BottomSheet = ({ onPress}) => {
   const budgetTime = useStore((state) => state.budgetTime);
   const budgetCategory = useStore((state) => state.budgetCategory);
   const time = useStore((state) => state.time);
-  const setIsLoading = useStore((state) => state.setIsLoading);
-  const setData = useStore((state) => state.setData);
-
+  const uid = useStore((state) => state.uid);
   const updateTimeRangeTitle = (selectedText) => {
     useStore.setState({ budgetTime: selectedText });
     setTimeVisible(false);
   };
 
+    {/* Get date */}
+    const getDate = (interval) => {
+      const currentDate = new Date();
+      const nextDate = new Date();
+      // Adjust the date based on the specified interval
+      switch (interval) {
+        case 'Weekly':
+          nextDate.setDate(nextDate.getDate() + 7);
+          break;
+        case 'Monthly':
+          nextDate.setMonth(nextDate.getMonth() + 1);
+          break;
+        case 'Yearly':
+          nextDate.setFullYear(nextDate.getFullYear() + 1);
+          break;
+        case 'Half Yearly':
+          nextDate.setMonth(nextDate.getMonth() + 6);
+          break;
+        case 'Quarterly':
+          nextDate.setMonth(nextDate.getMonth() + 3);
+          break;
+        default:
+          // Default to weekly if no or invalid interval provided
+          nextDate.setDate(nextDate.getDate() + 7);
+      }
+      const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+        timeZone: 'Asia/Ho_Chi_Minh',
+      };
+      const formatter = new Intl.DateTimeFormat('en-US', options);
+      const formattedCurrentDate = formatter.format(currentDate);
+      const formattedNextdate = formatter.format(nextDate);
+
+      return [formattedCurrentDate, formattedNextdate];
+    };
+
+    const [currentDate, nextDate] = getDate(budgetTime);
+
+  {/* Update Category */}
   const updateCategoryTitle = (selectedText) => {
     useStore.setState({ budgetCategory: selectedText });
     setCategoryVisible(false);
   };
 
+    {/* Save Budget */}
+    const saveBudget = async () => {
+      if (budgetName === '' || budgetAmount === '' || budgetTime === 'Time Range' || budgetCategory === 'Categories') {
+        Alert.alert('Please fill all the fields');
+      } else {
+        try {
+          const queryData = collection(db, "Budget");
+          await addDoc(queryData, {
+            name: budgetName,
+            value: Number(budgetAmount),
+            category: budgetCategory,
+            uid: uid,
+            timerange: {
+              start: currentDate,
+              end: nextDate,
+              type: budgetTime,
+            }
+          });
+    
+          // Use the spread operator with the previous data
+          const newData = [...useStore.getState().data, {
+            name: budgetName,
+            value: Number(budgetAmount),
+            category: budgetCategory,
+            uid: uid,
+            timerange: {
+              start: currentDate,
+              end: nextDate,
+              type: budgetTime,
+            }
+          }];
+    
+          // Sort newData based on custom order
+          newData.sort((a, b) => {
+            const orderA = time.indexOf(a.timerange?.type);
+            const orderB = time.indexOf(b.timerange?.type);
+            return orderA - orderB;
+          });
 
-  const fetchDataFromFirestore = async () => {
-    try {
-      const data = [];
-      for (const currentTime of time) {
-        const queryData = await getDocs(collection(db, "Budget", "Time", currentTime));
-        queryData.forEach((doc) => {
-          const subDocData = doc.data();
-          if (time.includes(subDocData.time)) {
-            data.push(subDocData);
-          }
-        });
+          // Update the state using the setState function
+          useStore.setState({ data: newData, modalVisible: false });
+          useStore.setState({
+            budgetName: '',
+            budgetTime: 'Time Range',
+            budgetCategory: 'Categories',
+            budgetAmount: ''
+          });
+    
+          Alert.alert('Budget created successfully');
+        } catch (error) {
+          console.error("Error adding document: ", error);
+        }
       }
-      return data;
-    } catch (error) {
-      console.error("Error fetching data from Firestore:", error);
-      return [];
-    }
-    finally {
-      setIsLoading(false);
-    }
-  };
-
-  const saveBudget = async () => {
-    if (budgetName === '' || budgetAmount === '' || budgetTime === 'Time Range' || budgetCategory === 'Categories') {
-      Alert.alert('Please fill all the fields');
-    } else {
-      try {
-        const queryData = collection(db, "Budget", "Time", budgetTime);
-        await addDoc(queryData, {
-          name: budgetName,
-          amount: budgetAmount,
-          time: budgetTime,
-          category: budgetCategory,
-        });
-        Alert.alert('Budget created successfully');
-        const data = await fetchDataFromFirestore();
-        setData(data);
-        useStore.setState({ modalVisible: false });
-        useStore.setState({
-          budgetName: '',
-          budgetAmount: '',
-          budgetTime: 'Time Range',
-          budgetCategory: 'Categories',
-        });
-      } catch (error) {
-        console.error("Error adding document: ", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async() => {  
-      const data =  await fetchDataFromFirestore();
-      setData(data);
-    }
-    fetchData();
-  }, []);
+    };
 
   return (
     <View style={styles.container}>
@@ -98,43 +137,28 @@ const BottomSheet = ({ onPress}) => {
           <Text style={styles.titleText}>Create Budget</Text>
         </View>
         <View style={styles.content}>
-          <View style={styles.name}>
-            <Image style={styles.image} source={{ uri: 'https://icons.veryicon.com/png/o/internet--web/billion-square-cloud/rename-5.png' }} />
-            <View style={styles.titleContainer}>
-              <TextInput
-                style={styles.title}
-                value={budgetName}
-                placeholder="Budget name"
-                onChangeText={(budgetName) => useStore.setState({ budgetName: budgetName })}
-              />
-              <View style={styles.line} />
-            </View>
-          </View>
-          <View style={styles.name}>
-            <Image style={styles.image} source={{ uri: 'https://cdn-icons-png.flaticon.com/512/94/94661.png' }} />
-            <View style={styles.titleContainer}>
-              <TextInput
-                style={styles.title}
-                value={budgetAmount}
-                placeholder="Amount"
-                onChangeText={(budgetAmount) => useStore.setState({ budgetAmount: budgetAmount })}
-              />
-              <View style={styles.line} />
-            </View>
-          </View>
+          <BottomSheetTextInput
+            link='https://icons.veryicon.com/png/o/internet--web/billion-square-cloud/rename-5.png'
+            placeholder="Budget Name"
+            value={budgetName}
+            onChangeText={(budgetName) => useStore.setState({ budgetName: budgetName })}
+          />
+          <BottomSheetTextInput
+            link='https://cdn-icons-png.flaticon.com/512/94/94661.png'
+            placeholder={"Amount"}
+            value={String(budgetAmount)}
+            onChangeText={(text) => useStore.setState({budgetAmount: text.replace(/[^0-9]/g, "")})}
+            keyboardType={'numeric'}
+          />
           <CustomBudgetButton
             title={budgetTime}
             icon='https://cdn-icons-png.flaticon.com/512/4781/4781427.png'
-            onPress={() => setTimeVisible(true)}
-          />
-          <CustomBudgetButton
-            title="Wallets"
-            icon='https://cdn-icons-png.flaticon.com/512/3359/3359235.png'
+            onPress={() => {setTimeVisible(true)}}
           />
           <CustomBudgetButton
             title={budgetCategory}
             icon='https://cdn-icons-png.flaticon.com/512/2603/2603910.png'
-            onPress={() => setCategoryVisible(true)}
+            onPress={() => {setCategoryVisible(true)}}
           />
         </View>
         <Modal
@@ -156,7 +180,6 @@ const BottomSheet = ({ onPress}) => {
             setCategoryVisible(!categoryVisible);
           }}>
           <CategoryScreen onPress={updateCategoryTitle} />
-          {/* <CategoryModal/> */}
         </Modal>
         
         <TouchableOpacity style={styles.button} onPress={saveBudget}>
@@ -197,11 +220,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         height: 500,
     },
-    name:{
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    },
     header: {
         height: 50,
     },
@@ -220,23 +238,4 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 10,
     },
-    title:{
-        fontSize: 20,
-        color: "gray",
-        marginTop: 10,
-    },
-    titleContainer:{
-        marginLeft: 10,
-    },
-    line:{
-        height: 1,
-        width: 350,
-        backgroundColor: '#ccc',
-        marginVertical: 12,
-        
-    },
-    image:{
-        width: 30,
-        height: 30,
-    }
 });
