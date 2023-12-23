@@ -2,7 +2,7 @@ import React from "react";
 import { BarChart } from "react-native-gifted-charts";
 import { StyleSheet, Text, View } from "react-native";
 
-function BarChartExpenses({ selectedDate, allExpenses }) {
+function BarChartExpenses({ selectedDate, allExpenses, allIncomes, type }) {
   let data = [
     { label: "Food", value: 0 },
     { label: "Drink", value: 0 },
@@ -13,123 +13,607 @@ function BarChartExpenses({ selectedDate, allExpenses }) {
     { label: "Health", value: 0 },
     { label: "Other", value: 0 },
   ]; //this array contain data for drawing the bar chart
+  let dataIncomes = [
 
-  //Extracting data in the selected month
+    { label: "Salary", value: 0 },
+    { label: "Invest", value: 0 },
+    { label: "Wage", value: 0 },
+    { label: "Bonus", value: 0 },
+    { label: "Other", value: 0 },
+
+  ]
+  let ExpensesIncomes = ''
+  if (allExpenses)
+    ExpensesIncomes = 'Expenses'
+  else if (allIncomes)
+    ExpensesIncomes = 'Incomes'
+
+
   if (allExpenses) {
-    allExpenses.forEach((expense) => {
-      let date = new Date(expense.date.seconds * 1000);
-      if (
-        selectedDate.month === date.getMonth() + 1 &&
-        selectedDate.year === date.getFullYear()
-      ) {
-        switch (expense.category) {
-          case "food":
-            data[0] = {
-              ...data[0],
-              value: data[0].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[0].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "drink":
-            data[1] = {
-              ...data[1],
-              value: data[1].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[1].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "vehicle":
-            data[2] = {
-              ...data[2],
-              value: data[2].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[2].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "education":
-            data[3] = {
-              ...data[3],
-              value: data[3].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[3].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "clothing":
-            data[4] = {
-              ...data[4],
-              value: data[4].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[4].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "relax":
-            data[5] = {
-              ...data[5],
-              value: data[5].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[5].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "healthCare":
-            data[6] = {
-              ...data[6],
-              value: data[6].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[6].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
-          case "other":
-            data[7] = {
-              ...data[7],
-              value: data[7].value + expense.value,
-              topLabelComponent: () => {
-                return (
-                  <Text style={styles.barChartTopLabel}>
-                    {data[7].value.toLocaleString()}
-                  </Text>
-                );
-              },
-            };
-            break;
+    if (type === 'Month') {
+      allExpenses.forEach((expense) => {
+        let date = new Date(expense.date.seconds * 1000);
+        if (
+          selectedDate.month === date.getMonth() + 1 &&
+          selectedDate.year === date.getFullYear()
+        ) {
+          switch (expense.category) {
+            case "food":
+              data[0] = {
+                ...data[0],
+                value: data[0].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[0].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "drink":
+              data[1] = {
+                ...data[1],
+                value: data[1].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[1].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "vehicle":
+              data[2] = {
+                ...data[2],
+                value: data[2].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[2].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "education":
+              data[3] = {
+                ...data[3],
+                value: data[3].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[3].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "clothing":
+              data[4] = {
+                ...data[4],
+                value: data[4].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[4].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "relax":
+              data[5] = {
+                ...data[5],
+                value: data[5].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[5].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "healthCare":
+              data[6] = {
+                ...data[6],
+                value: data[6].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[6].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "other":
+              data[7] = {
+                ...data[7],
+                value: data[7].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[7].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+          }
         }
-      }
-    });
+      });
+    }
+    else if (type === 'Day') {
+      allExpenses.forEach((expense) => {
+        let date = new Date(expense.date.seconds * 1000);
+        if (
+          selectedDate.day === date.getDate() &&
+          selectedDate.month === date.getMonth() + 1 &&
+          selectedDate.year === date.getFullYear()
+        ) {
+          switch (expense.category) {
+            case "food":
+              data[0] = {
+                ...data[0],
+                value: data[0].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[0].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "drink":
+              data[1] = {
+                ...data[1],
+                value: data[1].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[1].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "vehicle":
+              data[2] = {
+                ...data[2],
+                value: data[2].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[2].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "education":
+              data[3] = {
+                ...data[3],
+                value: data[3].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[3].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "clothing":
+              data[4] = {
+                ...data[4],
+                value: data[4].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[4].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "relax":
+              data[5] = {
+                ...data[5],
+                value: data[5].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[5].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "healthCare":
+              data[6] = {
+                ...data[6],
+                value: data[6].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[6].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "other":
+              data[7] = {
+                ...data[7],
+                value: data[7].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[7].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+          }
+        }
+      });
+    }
+    else if (type === "Year") {
+      allExpenses.forEach((expense) => {
+        let date = new Date(expense.date.seconds * 1000);
+        if (
+          selectedDate.year === date.getFullYear()
+        ) {
+          switch (expense.category) {
+            case "food":
+              data[0] = {
+                ...data[0],
+                value: data[0].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[0].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "drink":
+              data[1] = {
+                ...data[1],
+                value: data[1].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[1].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "vehicle":
+              data[2] = {
+                ...data[2],
+                value: data[2].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[2].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "education":
+              data[3] = {
+                ...data[3],
+                value: data[3].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[3].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "clothing":
+              data[4] = {
+                ...data[4],
+                value: data[4].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[4].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "relax":
+              data[5] = {
+                ...data[5],
+                value: data[5].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[5].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "healthCare":
+              data[6] = {
+                ...data[6],
+                value: data[6].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[6].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "other":
+              data[7] = {
+                ...data[7],
+                value: data[7].value + expense.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {data[7].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+          }
+        }
+      });
+    }
+  }
+
+
+  if (allIncomes) {
+    if (type === 'Month') {
+      allIncomes.forEach((income) => {
+        let date = new Date(income.date.seconds * 1000);
+        if (
+          selectedDate.month === date.getMonth() + 1 &&
+          selectedDate.year === date.getFullYear()
+        ) {
+          switch (income.category) {
+            case "salary":
+              dataIncomes[0] = {
+                ...dataIncomes[0],
+                value: dataIncomes[0].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[0].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "invest":
+              dataIncomes[1] = {
+                ...dataIncomes[1],
+                value: dataIncomes[1].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[1].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "wage":
+              dataIncomes[2] = {
+                ...dataIncomes[2],
+                value: dataIncomes[2].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[2].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "bonus":
+              dataIncomes[3] = {
+                ...dataIncomes[3],
+                value: dataIncomes[3].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[3].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "other":
+              dataIncomes[4] = {
+                ...dataIncomes[4],
+                value: dataIncomes[4].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[4].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+          }
+        }
+      });
+
+    }
+    else if (type === 'Day') {
+      allIncomes.forEach((income) => {
+        let date = new Date(income.date.seconds * 1000);
+        if (
+          selectedDate.day === date.getDate() &&
+          selectedDate.month === date.getMonth() + 1 &&
+          selectedDate.year === date.getFullYear()
+        ) {
+          switch (income.category) {
+            case "salary":
+              dataIncomes[0] = {
+                ...dataIncomes[0],
+                value: dataIncomes[0].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[0].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "invest":
+              dataIncomes[1] = {
+                ...dataIncomes[1],
+                value: dataIncomes[1].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[1].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "wage":
+              dataIncomes[2] = {
+                ...dataIncomes[2],
+                value: dataIncomes[2].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[2].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "bonus":
+              dataIncomes[3] = {
+                ...dataIncomes[3],
+                value: dataIncomes[3].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[3].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "other":
+              dataIncomes[4] = {
+                ...dataIncomes[4],
+                value: dataIncomes[4].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[4].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+          }
+        }
+      });
+    }
+    else if (type === 'Year') {
+      allIncomes.forEach((income) => {
+        let date = new Date(income.date.seconds * 1000);
+        if (
+          selectedDate.year === date.getFullYear()
+        ) {
+          switch (income.category) {
+            case "salary":
+              dataIncomes[0] = {
+                ...dataIncomes[0],
+                value: dataIncomes[0].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[0].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "invest":
+              dataIncomes[1] = {
+                ...dataIncomes[1],
+                value: dataIncomes[1].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[1].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "wage":
+              dataIncomes[2] = {
+                ...dataIncomes[2],
+                value: dataIncomes[2].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[2].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "bonus":
+              dataIncomes[3] = {
+                ...dataIncomes[3],
+                value: dataIncomes[3].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[3].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+            case "other":
+              dataIncomes[4] = {
+                ...dataIncomes[4],
+                value: dataIncomes[4].value + income.value,
+                topLabelComponent: () => {
+                  return (
+                    <Text style={styles.barChartTopLabel}>
+                      {dataIncomes[4].value.toLocaleString()}
+                    </Text>
+                  );
+                },
+              };
+              break;
+          }
+        }
+      });
+    }
   }
 
   return (
@@ -141,7 +625,7 @@ function BarChartExpenses({ selectedDate, allExpenses }) {
           fontWeight: "bold",
         }}
       >
-        Monthly Expenses Bar Chart
+        {`${ExpensesIncomes}`} Bar Chart
       </Text>
       <Text style={{
         fontSize: 20,
@@ -150,7 +634,7 @@ function BarChartExpenses({ selectedDate, allExpenses }) {
       }}>(VND)</Text>
       <BarChart
         xAxisLength={250}
-        data={data}
+        data={allIncomes ? dataIncomes : data}
         yAxisExtraHeight={20}
         labelWidth={40}
         rotateLabel

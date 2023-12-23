@@ -9,9 +9,9 @@ function ReportFilter({ handleReportByDay, handleReportByMonth, handleReportByYe
   return (
     <Modal
       isVisible={reportFilterVisible}
-      onBackdropPress={setReportFilterVisible}
-      onSwipeComplete={setReportFilterVisible}
-      onBackButtonPress={setReportFilterVisible}
+      onBackdropPress={() => setReportFilterVisible(false)}
+      onSwipeComplete={() => setReportFilterVisible(false)}
+      onBackButtonPress={() => setReportFilterVisible(false)}
       className="flex-1 m-0 justify-end"
     >
       <View style={styles.container}>
@@ -19,10 +19,10 @@ function ReportFilter({ handleReportByDay, handleReportByMonth, handleReportByYe
           <Text style={styles.textStyle}>Reports by Day</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.filterButton} onPress={handleReportByMonth}>
-          <Text style={styles.textStyle}>Reports by Day</Text>
+          <Text style={styles.textStyle}>Reports by Month</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.filterButton} onPress={handleReportByYear}>
-          <Text style={styles.textStyle}>Reports by Day</Text>
+          <Text style={styles.textStyle}>Reports by Year</Text>
         </TouchableOpacity>
       </View>
 
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     margin: 50,
-    width: 180,
+    width: 220,
     height: 75,
     display: 'flex',
     justifyContent: 'center',

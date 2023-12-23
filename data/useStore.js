@@ -7,6 +7,59 @@ const useStore = create((set) => ({
     set((state) => ({ uid: data }));
   },
 
+  // All expenses and income array
+  allExpensesAndIncomes: null,
+  setAllExpensesAndIncome: (data) => {
+    set((state) => ({ allExpensesAndIncomes: data }));
+  },
+
+  // Expenses and Income grouped by date
+  sortDateExpensesAndIncome: null,
+  setSortDateExpensesAndIncome: (data) => {
+    // Group list by date which date is title and data is a group of expense and income
+    const groupByDate = (list) => {
+      if (list.length) {
+        // Set last date to the last date of list
+        let lastDate = new Date(list[0].date.seconds * 1000);
+        let smallList = [list[0]];
+        let result = [];
+
+        for (let i = 0; i < list.length; i++) {
+          const itemDate = new Date(list[i].date.seconds * 1000);
+
+          // Push small list into result if current item has different date
+          if (lastDate.toDateString() !== itemDate.toDateString()) {
+            result.push({
+              title: lastDate,
+              data: [...smallList],
+            });
+
+            // Set last date to current item date and empty the array
+            lastDate = itemDate;
+            smallList = [];
+          }
+
+          // Don't push into small list if this is the first element,
+          // cause is already pushed in the declaration
+          if (i !== 0) {
+            smallList.push(list[i]);
+          }
+
+          // Push small list into result if this is the last element
+          if (i === list.length - 1) {
+            result.push({
+              title: lastDate,
+              data: [...smallList],
+            });
+          }
+        }
+
+        return result;
+      }
+    };
+    set((state) => ({ sortDateExpensesAndIncome: groupByDate(data) }));
+  },
+
   // All expenses array
   allExpenses: null,
   setAllExpenses: (data) => {
@@ -245,8 +298,8 @@ const useStore = create((set) => ({
 
   time: ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"],
   reportFilterVisible: true,
-  setReportFilterVisible: () => {
-    set((state) => ({ reportFilterVisible: !state.reportFilterVisible }))
+  setReportFilterVisible: (data) => {
+    set(() => ({ reportFilterVisible: data }))
   },
 
 }));

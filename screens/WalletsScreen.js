@@ -45,6 +45,7 @@ export default function Wallets() {
   const uid = useStore((state) => state.uid);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setSortDateIncomes = useStore((state) => state.setSortDateIncomes);
+  const setSortDateExpensesAndIncome = useStore((state) => state.setSortDateExpensesAndIncome)
 
   // Toggle list visible feature
   const [chevronType, setChevronType] = useState("chevron-up");
@@ -147,6 +148,21 @@ export default function Wallets() {
       );
     }
   }, [allIncomes]);
+
+  useEffect(() => {
+    if (allIncomes && allExpenses) {
+      setSortDateExpensesAndIncome(
+        [...allIncomes, ...allExpenses].sort(function (a, b) {
+          // Convert the date strings to Date objects
+          let dateA = a.date.seconds;
+          let dateB = b.date.seconds;
+
+          // Subtract the dates to get a value that is either negative, positive, or zero
+          return dateB - dateA;
+        })
+      );
+    }
+  }, [allIncomes, allExpenses]);
   // Set total if income or expense have been changed
   useEffect(() => {
     setTotal(totalIncome - totalExpense);

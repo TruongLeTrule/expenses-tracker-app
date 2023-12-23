@@ -7,7 +7,7 @@ function MonthYearSelector({ data, setSelectedDate, type }) {
   const monthYearModalVisible = useStore((state) => state.monthYearModalVisible)
   const toggleMonthYearModalVisible = useStore((state) => state.toggleMonthYearModalVisible)
   function handleChooseDate(item) {
-    setSelectedDate({ 'month': item.month, 'year': item.year })
+    setSelectedDate({ day: item.day, month: item.month, year: item.year })
     toggleMonthYearModalVisible()
   }
   return (
@@ -19,14 +19,24 @@ function MonthYearSelector({ data, setSelectedDate, type }) {
       className="flex-1 m-0 justify-end"
       onBackButtonPress={toggleMonthYearModalVisible}>
       <View className="bg-[#d1d1d1] rounded-t-xl h-3/4">
-        <Text style={styles.textStyle}>Choose month</Text>
+        <Text style={styles.textStyle}>Choose {type}</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           {
+            data &&
             data.map((item, index) => {
               return (
                 <TouchableOpacity onPress={() => handleChooseDate(item)} key={index}>
                   <View style={styles.monthYearContainer} >
-                    <Text style={{ fontSize: 20 }}>{item.month + '/' + item.year}</Text>
+                    <Text style={{ fontSize: 20 }}>
+                      {type === 'none'
+                        ? ""
+                        : (type === 'Day'
+                          ? item.day + "/" + item.month + "/" + item.year
+                          : (type === 'Month'
+                            ? item.month + "/" + item.year
+                            : item.year))
+                      }
+                    </Text>
                   </View>
                 </TouchableOpacity>
               )
