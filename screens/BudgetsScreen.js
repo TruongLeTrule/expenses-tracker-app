@@ -5,7 +5,7 @@ import Budgets from "../components/BudgetsScreen/Budgets";
 import { getDocs, collection} from "firebase/firestore";
 import {db} from "../firebase";
 import useStore from "../data/useStore";
-
+import WhiteBox from "../components/WalletsScreen/WhiteBox";
 export default function BudgetsScreen() {
   const data = useStore((state) => state.data);
   const modalVisible = useStore((state) => state.modalVisible);
@@ -14,26 +14,36 @@ export default function BudgetsScreen() {
 
         {/* Fetch data from Firestore */}
   const fetchDataFromFirestore = async () => {
-    try {
-      const data = [];
-      for (const currentTime of time) {
-        const queryData = await getDocs(collection(db, "Budget", "Time", currentTime));
-        queryData.forEach((doc) => {
-          const subDocData = doc.data();
-          if (time.includes(subDocData.time)) {
-            data.push(subDocData);
-          }
-        });
-      }
-      return data;
-    } catch (error) {
-      console.error("Error fetching data from Firestore:", error);
-      return [];
-    }
-    finally {
-      useStore.setState({ isLoading: false });
-    }
-  };
+  try {
+    const data = [];
+    const querySnapshot = await getDocs(collection(db, "Budget"));
+    querySnapshot.forEach((doc) => {
+      const docData = doc.data();
+      data.push({
+        category: docData.category,
+        name: docData.name,
+        timerange: docData.timerange,
+        uid: docData.uid,
+        value: docData.value,
+      });
+    });
+
+    // Sort data by custom order
+    const customOrder = ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"];
+    data.sort((a, b) => {
+      const orderA = customOrder.indexOf(a.timerange?.type);
+      const orderB = customOrder.indexOf(b.timerange?.type);
+      return orderA - orderB;
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching data from Firestore:", error);
+    return [];
+  } finally {
+    useStore.setState({ isLoading: false });
+  }
+};
 
   useEffect(() => {
     const fetchData = async() => {  
@@ -69,36 +79,64 @@ export default function BudgetsScreen() {
       <View style={styles.header}>
         <Text style={styles.text}>Budgets</Text>
       </View>
-        <FlatList
-          data={data}
-          renderItem={({item}) => (
-            <Budgets
-              name={item.name}
-              amount={item.amount}
-              time={item.time}
-              wallet={item.wallet}
-              category={item.category}
+      {data ? (
+        <View style={styles.container}>
+          <FlatList
+              data={time}
+              keyExtractor={(item) => item}
+              renderItem={({item}) => (
+                <WhiteBox mt={"mt-4"}>
+                    <View style={styles.boxContainer}>
+                      <View style={styles.box} >
+                        <View>
+                          <Text style={styles.boxText}>{item}</Text>
+                          <View style={styles.line}/>
+                        </View>
+                        {
+                          data.map((budget) => {
+                            if (budget.timerange?.type === item) {
+                              return (
+                                <Budgets
+                                  key={budget.name}
+                                  name={budget.name}
+                                  value={budget.value}
+                                  category={budget.category}
+                                />
+                              )
+                            }
+                          })
+                        }
+                      </View>
+                    </View>
+                </WhiteBox>
+                )}
+              ListFooterComponent={
+                <TouchableOpacity style={styles.button} onPress={() => useStore.setState({ modalVisible: true })}>
+                  <Text style={styles.text}>Add Budget</Text>
+                </TouchableOpacity>
+              }
             />
-          )}
-          ListFooterComponent={
-            <TouchableOpacity 
-          style={styles.button}
-          onPress={() => useStore.setState({ modalVisible: true })}
-          >
-          <Text style={styles.text}>Add Budget</Text>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    useStore.setState({ modalVisible: false });
+                }}
+            >
+                <BottomSheet onPress={reset}/>
+            </Modal>
+            </View>
+        ) : (
+          <View style={styles.container}>
+            <Text style={styles.text}>No budget yet</Text>
+            <TouchableOpacity style={styles.button} onPress={() => useStore.setState({ modalVisible: true })}>
+                      <Text style={styles.text}>Add Budget</Text>
             </TouchableOpacity>
-          }
-        />
-      <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-              useStore.setState({ modalVisible: false });
-          }}
-      >
-          <BottomSheet onPress={reset}/>
-      </Modal>
+          </View>
+        )
+      }
+        
     </View>
   );
 }
@@ -143,5 +181,23 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     marginTop: 10,
+  },
+  boxContainer:{
+      flexDirection: "column",
+      justifyContent: "center",
+      paddingVertical: 10,
+  },
+  box:{
+
+  },
+  line:{
+    borderWidth: 0.2,
+    backgroundColor: "#f2f2f2",
+    marginVertical: 5,
+    width: "100%",
+  },    
+  boxText:{
+    fontSize: 15,
+    color: "black",
   }
 });
