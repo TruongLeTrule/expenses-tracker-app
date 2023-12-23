@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-nati
 import Modal from 'react-native-modal'
 import useStore from '../../data/useStore'
 
-function MonthYearSelector({ data, setSelectedDate }) {
+function MonthYearSelector({ data, setSelectedDate, type }) {
   const monthYearModalVisible = useStore((state) => state.monthYearModalVisible)
   const toggleMonthYearModalVisible = useStore((state) => state.toggleMonthYearModalVisible)
   function handleChooseDate(item) {

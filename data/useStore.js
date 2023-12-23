@@ -244,6 +244,11 @@ const useStore = create((set) => ({
   setIsLoading: (isLoading) => set({ isLoading }),
 
   time: ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"],
+  reportFilterVisible: true,
+  setReportFilterVisible: () => {
+    set((state) => ({ reportFilterVisible: !state.reportFilterVisible }))
+  },
+
 }));
 
 export default useStore;

@@ -12,9 +12,12 @@ import { useState, useEffect } from "react";
 import MonthYearSelector from "../components/ReportsScreen/monthYearSelector";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import ReportFilter from "../components/ReportsScreen/ReportFilter";
 
 export default function ReportsScreen() {
   const [monthYearList, setMonthYear] = useState([]);
+  const [dayMonthYearList, setDayMonthYearList] = useState([]);
+  const [yearList, setYearList] = useState([]);
   const [selectedDate, setSelectedDate] = useState({});
 
   const toggleMonthYearModalVisible = useStore(
@@ -22,7 +25,16 @@ export default function ReportsScreen() {
   );
   const sortDateExpenses = useStore((state) => state.sortDateExpenses);
   const allExpenses = useStore((state) => state.allExpenses);
-
+  const sortDateIncomes = useStore((state) => state.sortDateIncomes);
+  let setReportFilterVisible = useStore(state => state.setReportFilterVisible)
+  function handleReportByDay() {
+    setReportFilterVisible();
+  }
+  function handleReportByMonth() {
+    setReportFilterVisible();
+  } function handleReportByYear() {
+    setReportFilterVisible();
+  }
   //Getting month/ year from sortDateExpenses
   useEffect(() => {
     if (sortDateExpenses !== undefined) {
@@ -137,10 +149,12 @@ export default function ReportsScreen() {
         <BarChart selectedDate={selectedDate} allExpenses={allExpenses} />
         <PieChart selectedDate={selectedDate} allExpenses={allExpenses} />
       </ScrollView>
+      <ReportFilter {...{ handleReportByDay, handleReportByMonth, handleReportByYear }} />
       <MonthYearSelector
         data={monthYearList}
         setSelectedDate={setSelectedDate}
       />
+
     </View>
   );
 }
