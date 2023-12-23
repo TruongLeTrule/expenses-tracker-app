@@ -301,6 +301,10 @@ const useStore = create((set) => ({
   setReportFilterVisible: (data) => {
     set(() => ({ reportFilterVisible: data }))
   },
+  selectedDate: {},
+  setSelectedDate: (data) => {
+    set(() => ({ selectedDate: data }))
+  }
 
 }));
 

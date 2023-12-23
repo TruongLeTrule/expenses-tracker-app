@@ -17,8 +17,8 @@ export default function ReportsScreen() {
   const [monthYearList, setMonthYearList] = useState([]);
   const [dayMonthYearList, setDayMonthYearList] = useState([]);
   const [yearList, setYearList] = useState([]);
-
-  const [selectedDate, setSelectedDate] = useState({});
+  const selectedDate = useStore(state => state.selectedDate)
+  const setSelectedDate = useStore(state => state.setSelectedDate)
   const [reportType, setReportType] = useState('none')
   const toggleMonthYearModalVisible = useStore(
     (state) => state.toggleMonthYearModalVisible
@@ -300,22 +300,23 @@ export default function ReportsScreen() {
         <TouchableOpacity onPress={toggleMonthYearModalVisible}>
           <View style={styles.monthSelector}>
             <Text style={{ fontSize: 25, marginRight: 10, lineHeight: 25 }}>
-              {reportType === 'Day' &&
-                selectedDate.day !== undefined &&
-                selectedDate.month !== undefined &&
-                selectedDate.year !== undefined
-                ? selectedDate.day + "/" + selectedDate.month + "/" + selectedDate.year
-                : (reportType === 'Month' &&
+              {
+                reportType === 'Day' &&
+                  selectedDate.day !== undefined &&
                   selectedDate.month !== undefined &&
                   selectedDate.year !== undefined
-                  ? selectedDate.month + "/" + selectedDate.year
-                  : (reportType === 'Year' &&
-                    selectedDate.year !== undefined ?
-                    selectedDate.year :
-                    'No Data'
-                  )
+                  ? selectedDate.day + "/" + selectedDate.month + "/" + selectedDate.year
+                  : (reportType === 'Month' &&
+                    selectedDate.month !== undefined &&
+                    selectedDate.year !== undefined
+                    ? selectedDate.month + "/" + selectedDate.year
+                    : (reportType === 'Year' &&
+                      selectedDate.year !== undefined ?
+                      selectedDate.year :
+                      'No Data'
+                    )
 
-                )
+                  )
               }
             </Text>
             <AntDesign name="caretdown" size={20} color="black" />
