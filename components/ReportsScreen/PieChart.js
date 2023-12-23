@@ -16,190 +16,80 @@ function PieChartExpenses({ selectedDate, allExpenses, allIncomes, type }) {
     { value: 0, text: '', color: 'brown', shiftTextX: -10 }
   ] //this array contain data for drawing the pie chart
 
-  if (allIncomes) {
-    if (type === 'Month') {
-      allIncomes.forEach(income => {
-        let date = new Date(income.date.seconds * 1000)
-        if (selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
-          switch (income.category) {
-            case 'salary':
-              data[0] = { ...data[0], value: data[0].value + income.value }
-              break;
-            case 'invest':
-              data[1] = { ...data[1], value: data[1].value + income.value }
-              break;
-            case 'wage':
-              data[2] = { ...data[2], value: data[2].value + income.value }
-              break;
-            case 'bonus':
-              data[3] = { ...data[3], value: data[3].value + income.value }
-              break;
-            case 'other':
-              data[4] = { ...data[4], value: data[4].value + income.value }
-              break;
-          }
-        }
-      })
 
-    }
-    else if (type === 'Day') {
-      allIncomes.forEach(income => {
-        let date = new Date(income.date.seconds * 1000)
-        if (selectedDate.day === date.getDate() && selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
-          switch (income.category) {
-            case 'salary':
-              data[0] = { ...data[0], value: data[0].value + income.value }
-              break;
-            case 'invest':
-              data[1] = { ...data[1], value: data[1].value + income.value }
-              break;
-            case 'wage':
-              data[2] = { ...data[2], value: data[2].value + income.value }
-              break;
-            case 'bonus':
-              data[3] = { ...data[3], value: data[3].value + income.value }
-              break;
-            case 'other':
-              data[4] = { ...data[4], value: data[4].value + income.value }
-              break;
-          }
-        }
-      })
+  function conditionalGetter(date) {
+    if (type === 'Day') {
+      return selectedDate.day === date.getDate() &&
+        selectedDate.month === date.getMonth() + 1 &&
+        selectedDate.year === date.getFullYear()
+    } else if (type === 'Month') {
+      return selectedDate.month === date.getMonth() + 1 &&
+        selectedDate.year === date.getFullYear()
     }
     else if (type === 'Year') {
-      allIncomes.forEach(income => {
-        let date = new Date(income.date.seconds * 1000)
-        if (selectedDate.year === date.getFullYear()) {
-          switch (income.category) {
-            case 'salary':
-              data[0] = { ...data[0], value: data[0].value + income.value }
-              break;
-            case 'invest':
-              data[1] = { ...data[1], value: data[1].value + income.value }
-              break;
-            case 'wage':
-              data[2] = { ...data[2], value: data[2].value + income.value }
-              break;
-            case 'bonus':
-              data[3] = { ...data[3], value: data[3].value + income.value }
-              break;
-            case 'other':
-              data[4] = { ...data[4], value: data[4].value + income.value }
-              break;
-          }
-        }
-      })
+      return selectedDate.year === date.getFullYear()
     }
+  }
+
+  if (allIncomes) {
+    allIncomes.forEach(income => {
+      let date = new Date(income.date.seconds * 1000)
+      if (conditionalGetter(date)) {
+        switch (income.category) {
+          case 'salary':
+            data[0] = { ...data[0], value: data[0].value + income.value }
+            break;
+          case 'invest':
+            data[1] = { ...data[1], value: data[1].value + income.value }
+            break;
+          case 'wage':
+            data[2] = { ...data[2], value: data[2].value + income.value }
+            break;
+          case 'bonus':
+            data[3] = { ...data[3], value: data[3].value + income.value }
+            break;
+          case 'other':
+            data[4] = { ...data[4], value: data[4].value + income.value }
+            break;
+        }
+      }
+    })
   }
 
 
   if (allExpenses) {
-    if (type === 'Month') {
-      allExpenses.forEach(expense => {
-        let date = new Date(expense.date.seconds * 1000)
-        if (selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
-          switch (expense.category) {
-            case "food":
-              data[0] = { ...data[0], value: data[0].value + expense.value }
-              break;
-            case "drink":
-              data[1] = { ...data[1], value: data[1].value + expense.value }
-              break;
-            case "vehicle":
-              data[2] = { ...data[2], value: data[2].value + expense.value }
-              break;
-            case "education":
-              data[3] = { ...data[3], value: data[3].value + expense.value }
-              break;
-            case "clothing":
-              data[4] = { ...data[4], value: data[4].value + expense.value }
-              break;
-            case "relax":
-              data[5] = { ...data[5], value: data[5].value + expense.value }
-              break;
-            case "healthCare":
-              data[6] = { ...data[6], value: data[6].value + expense.value }
-              break;
-            case "other":
-              data[7] = { ...data[7], value: data[7].value + expense.value }
-              break;
+    allExpenses.forEach(expense => {
+      let date = new Date(expense.date.seconds * 1000)
+      if (conditionalGetter(date)) {
+        switch (expense.category) {
+          case "food":
+            data[0] = { ...data[0], value: data[0].value + expense.value }
+            break;
+          case "drink":
+            data[1] = { ...data[1], value: data[1].value + expense.value }
+            break;
+          case "vehicle":
+            data[2] = { ...data[2], value: data[2].value + expense.value }
+            break;
+          case "education":
+            data[3] = { ...data[3], value: data[3].value + expense.value }
+            break;
+          case "clothing":
+            data[4] = { ...data[4], value: data[4].value + expense.value }
+            break;
+          case "relax":
+            data[5] = { ...data[5], value: data[5].value + expense.value }
+            break;
+          case "healthCare":
+            data[6] = { ...data[6], value: data[6].value + expense.value }
+            break;
+          case "other":
+            data[7] = { ...data[7], value: data[7].value + expense.value }
+            break;
 
-          }
         }
-      })
-    }
-
-    else if (type === 'Day') {
-      allExpenses.forEach(expense => {
-        let date = new Date(expense.date.seconds * 1000)
-        if (selectedDate.day === date.getDate() && selectedDate.month === date.getMonth() + 1 && selectedDate.year === date.getFullYear()) {
-          switch (expense.category) {
-            case "food":
-              data[0] = { ...data[0], value: data[0].value + expense.value }
-              break;
-            case "drink":
-              data[1] = { ...data[1], value: data[1].value + expense.value }
-              break;
-            case "vehicle":
-              data[2] = { ...data[2], value: data[2].value + expense.value }
-              break;
-            case "education":
-              data[3] = { ...data[3], value: data[3].value + expense.value }
-              break;
-            case "clothing":
-              data[4] = { ...data[4], value: data[4].value + expense.value }
-              break;
-            case "relax":
-              data[5] = { ...data[5], value: data[5].value + expense.value }
-              break;
-            case "healthCare":
-              data[6] = { ...data[6], value: data[6].value + expense.value }
-              break;
-            case "other":
-              data[7] = { ...data[7], value: data[7].value + expense.value }
-              break;
-
-          }
-        }
-      })
-
-    }
-
-    else if (type === 'Year') {
-      allExpenses.forEach(expense => {
-        let date = new Date(expense.date.seconds * 1000)
-        if (selectedDate.year === date.getFullYear()) {
-          switch (expense.category) {
-            case "food":
-              data[0] = { ...data[0], value: data[0].value + expense.value }
-              break;
-            case "drink":
-              data[1] = { ...data[1], value: data[1].value + expense.value }
-              break;
-            case "vehicle":
-              data[2] = { ...data[2], value: data[2].value + expense.value }
-              break;
-            case "education":
-              data[3] = { ...data[3], value: data[3].value + expense.value }
-              break;
-            case "clothing":
-              data[4] = { ...data[4], value: data[4].value + expense.value }
-              break;
-            case "relax":
-              data[5] = { ...data[5], value: data[5].value + expense.value }
-              break;
-            case "healthCare":
-              data[6] = { ...data[6], value: data[6].value + expense.value }
-              break;
-            case "other":
-              data[7] = { ...data[7], value: data[7].value + expense.value }
-              break;
-
-          }
-        }
-      })
-    }
-
+      }
+    })
   }
 
   //Summing up all categories total amount of money 
