@@ -151,8 +151,8 @@ function PieChartExpenses({ selectedDate, allExpenses, allIncomes, type }) {
 
         </View>
         <View style={styles.detailContainer}>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="green" />   Drink</Text>
-          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="purple" />   Education</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="green" />   {allExpenses ? "Drink" : "Invest"}</Text>
+          <Text style={styles.textStyle}><FontAwesome5 name="square-full" size={20} color="purple" />   {allExpenses ? "Education" : "Bonus"}</Text>
           {
             allExpenses &&
             <>
