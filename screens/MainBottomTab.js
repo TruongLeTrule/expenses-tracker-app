@@ -21,9 +21,15 @@ export default function MainBottomTab() {
         tabBarActiveTintColor: "#4cb050",
         tabBarLabelStyle: {
           fontSize: 17,
+          marginBottom: 10
         },
         tabBarStyle: {
-          height: 65,
+          height: 80,
+          borderTopColor: 'gray',
+          borderTopWidth: 0.5
+        },
+        tabBarIconStyle: {
+          marginTop: 10
         },
         headerShown: false,
       }}
@@ -53,6 +59,7 @@ export default function MainBottomTab() {
           tabBarButton: () => (
             <TouchableOpacity
               className="bg-primary shadow-md rounded-full h-16 w-16 flex items-center justify-center"
+              style={{ marginTop: 8 }}
               onPress={() => {
                 navigation.navigate("AddModal");
               }}
