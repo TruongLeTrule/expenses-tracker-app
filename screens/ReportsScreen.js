@@ -17,28 +17,34 @@ export default function ReportsScreen() {
   const [monthYearList, setMonthYearList] = useState([]);
   const [dayMonthYearList, setDayMonthYearList] = useState([]);
   const [yearList, setYearList] = useState([]);
-  const selectedDate = useStore(state => state.selectedDate)
-  const setSelectedDate = useStore(state => state.setSelectedDate)
-  const [reportType, setReportType] = useState('none')
+  const selectedDate = useStore((state) => state.selectedDate);
+  const setSelectedDate = useStore((state) => state.setSelectedDate);
+  const [reportType, setReportType] = useState("none");
   const toggleMonthYearModalVisible = useStore(
     (state) => state.toggleMonthYearModalVisible
   );
-  const sortDateExpensesAndIncome = useStore((state) => state.sortDateExpensesAndIncome);
+  const sortDateExpensesAndIncome = useStore(
+    (state) => state.sortDateExpensesAndIncome
+  );
   const allExpenses = useStore((state) => state.allExpenses);
-  const allIncomes = useStore((state) => state.allIncomes)
-  let setReportFilterVisible = useStore(state => state.setReportFilterVisible)
+  const allIncomes = useStore((state) => state.allIncomes);
+  let setReportFilterVisible = useStore(
+    (state) => state.setReportFilterVisible
+  );
 
   function handleReportByDay() {
-    setReportType('Day')
+    setReportType("Day");
     setReportFilterVisible(false);
   }
   function handleReportByMonth() {
-    setReportType('Month')
-    setReportFilterVisible(false);
-  } function handleReportByYear() {
-    setReportType('Year')
+    setReportType("Month");
     setReportFilterVisible(false);
   }
+  function handleReportByYear() {
+    setReportType("Year");
+    setReportFilterVisible(false);
+  }
+
   //Getting day, month and year from sortDateExpensesAndIncome
   useEffect(() => {
     if (sortDateExpensesAndIncome !== undefined) {
@@ -49,10 +55,10 @@ export default function ReportsScreen() {
       };
       let Iterator = {};
       const DayMonthYearList = [currentDayMonthYear];
-      const MonthYearList = [{ month: currentDayMonthYear.month, year: currentDayMonthYear.year }];
-      const YearList = [{ year: currentDayMonthYear.year }]
-
-
+      const MonthYearList = [
+        { month: currentDayMonthYear.month, year: currentDayMonthYear.year },
+      ];
+      const YearList = [{ year: currentDayMonthYear.year }];
 
       for (let i = 1; i < sortDateExpensesAndIncome.length; ++i) {
         Iterator = {
@@ -61,21 +67,17 @@ export default function ReportsScreen() {
           year: sortDateExpensesAndIncome[i].title.getFullYear(),
         };
 
-
-
         //Getting dayMonthYearList data
         if (
           currentDayMonthYear.day === Iterator.day &&
           currentDayMonthYear.month === Iterator.month &&
           currentDayMonthYear.year === Iterator.year
         ) {
-          currentDayMonthYear = { ...Iterator }
-          continue
+          currentDayMonthYear = { ...Iterator };
+          continue;
         } else {
           DayMonthYearList.push(Iterator);
         }
-
-
 
         //Getting monthYearList data
         if (
@@ -86,38 +88,40 @@ export default function ReportsScreen() {
           MonthYearList.push({ month: Iterator.month, year: Iterator.year });
         }
 
-
-
         //Getting yearList data
         if (currentDayMonthYear.year > Iterator.year) {
           YearList.push({ year: Iterator.year });
         }
 
-        currentDayMonthYear = { ...Iterator }
+        currentDayMonthYear = { ...Iterator };
       }
 
       setMonthYearList(MonthYearList);
       setDayMonthYearList(DayMonthYearList);
       setYearList(YearList);
-      if (reportType === 'none')
-        return
-      else if (reportType === 'Month') {
+      if (reportType === "none") return;
+      else if (reportType === "Month") {
         setSelectedDate(MonthYearList[0]);
-      }
-      else if (reportType === 'Day') {
+      } else if (reportType === "Day") {
         setSelectedDate(DayMonthYearList[0]);
-      }
-      else if (reportType === 'Year') {
+      } else if (reportType === "Year") {
         setSelectedDate(YearList[0]);
       }
     }
   }, [reportType, sortDateExpensesAndIncome]);
 
+  // If there are no data set selected date to {}
+  useEffect(() => {
+    if (allExpenses && allIncomes) {
+      setSelectedDate({});
+    }
+  }, [allExpenses, allIncomes]);
+
   function handleBackMonthButton() {
-    if (reportType === 'none')
-      return
-    if (reportType === 'Month') {
-      if ( // checking if is at the beginning of monthYearList
+    if (reportType === "none") return;
+    if (reportType === "Month") {
+      if (
+        // checking if is at the beginning of monthYearList
         selectedDate.month === monthYearList[0].month &&
         selectedDate.year === monthYearList[0].year
       ) {
@@ -144,8 +148,9 @@ export default function ReportsScreen() {
         year: monthYearList[index - 1].year,
       });
     }
-    if (reportType === 'Day') {
-      if ( // checking if is at the beginning of dayMonthYearList
+    if (reportType === "Day") {
+      if (
+        // checking if is at the beginning of dayMonthYearList
         selectedDate.day === dayMonthYearList[0].day &&
         selectedDate.month === dayMonthYearList[0].month &&
         selectedDate.year === dayMonthYearList[0].year
@@ -176,8 +181,9 @@ export default function ReportsScreen() {
         year: dayMonthYearList[index - 1].year,
       });
     }
-    if (reportType === 'Year') {
-      if ( // checking if is at the beginning of yearList
+    if (reportType === "Year") {
+      if (
+        // checking if is at the beginning of yearList
         selectedDate.year === yearList[0].year
       ) {
         setSelectedDate({
@@ -189,9 +195,7 @@ export default function ReportsScreen() {
       //finding position of selectedDate when not at the beginning
       let index = 0;
       for (let i = 0; i < yearList.length; ++i) {
-        if (
-          yearList[i].year === selectedDate.year
-        ) {
+        if (yearList[i].year === selectedDate.year) {
           index = i;
           break;
         }
@@ -202,10 +206,10 @@ export default function ReportsScreen() {
     }
   }
   function handleForwardMonthButton() {
-    if (reportType === 'none')
-      return
-    if (reportType === 'Month') {
-      if ( // checking if is at the end of monthYearList
+    if (reportType === "none") return;
+    if (reportType === "Month") {
+      if (
+        // checking if is at the end of monthYearList
         selectedDate.month === monthYearList[monthYearList.length - 1].month &&
         selectedDate.year === monthYearList[monthYearList.length - 1].year
       ) {
@@ -232,10 +236,13 @@ export default function ReportsScreen() {
         year: monthYearList[index + 1].year,
       });
     }
-    if (reportType === 'Day') {
-      if ( // checking if is at the end of dayMonthYearList
-        selectedDate.day === dayMonthYearList[dayMonthYearList.length - 1].day &&
-        selectedDate.month === dayMonthYearList[dayMonthYearList.length - 1].month &&
+    if (reportType === "Day") {
+      if (
+        // checking if is at the end of dayMonthYearList
+        selectedDate.day ===
+          dayMonthYearList[dayMonthYearList.length - 1].day &&
+        selectedDate.month ===
+          dayMonthYearList[dayMonthYearList.length - 1].month &&
         selectedDate.year === dayMonthYearList[dayMonthYearList.length - 1].year
       ) {
         setSelectedDate({
@@ -264,8 +271,9 @@ export default function ReportsScreen() {
         year: dayMonthYearList[index + 1].year,
       });
     }
-    if (reportType === 'Year') {
-      if ( // checking if is at the end of yearList
+    if (reportType === "Year") {
+      if (
+        // checking if is at the end of yearList
         selectedDate.year === yearList[yearList.length - 1].year
       ) {
         setSelectedDate({
@@ -277,9 +285,7 @@ export default function ReportsScreen() {
       //finding position of selectedDate when not at the end
       let index = 0;
       for (let i = 0; i < yearList.length; ++i) {
-        if (
-          yearList[i].year === selectedDate.year
-        ) {
+        if (yearList[i].year === selectedDate.year) {
           index = i;
           break;
         }
@@ -300,24 +306,22 @@ export default function ReportsScreen() {
         <TouchableOpacity onPress={toggleMonthYearModalVisible}>
           <View style={styles.monthSelector}>
             <Text style={{ fontSize: 25, marginRight: 10, lineHeight: 25 }}>
-              {
-                reportType === 'Day' &&
-                  selectedDate.day !== undefined &&
+              {reportType === "Day" &&
+              selectedDate.day !== undefined &&
+              selectedDate.month !== undefined &&
+              selectedDate.year !== undefined
+                ? selectedDate.day +
+                  "/" +
+                  selectedDate.month +
+                  "/" +
+                  selectedDate.year
+                : reportType === "Month" &&
                   selectedDate.month !== undefined &&
                   selectedDate.year !== undefined
-                  ? selectedDate.day + "/" + selectedDate.month + "/" + selectedDate.year
-                  : (reportType === 'Month' &&
-                    selectedDate.month !== undefined &&
-                    selectedDate.year !== undefined
-                    ? selectedDate.month + "/" + selectedDate.year
-                    : (reportType === 'Year' &&
-                      selectedDate.year !== undefined ?
-                      selectedDate.year :
-                      'No Data'
-                    )
-
-                  )
-              }
+                ? selectedDate.month + "/" + selectedDate.year
+                : reportType === "Year" && selectedDate.year !== undefined
+                ? selectedDate.year
+                : "No Data"}
             </Text>
             <AntDesign name="caretdown" size={20} color="black" />
           </View>
@@ -325,23 +329,49 @@ export default function ReportsScreen() {
         <TouchableOpacity onPress={handleForwardMonthButton}>
           <Ionicons name="chevron-forward-outline" size={27} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setReportFilterVisible(true)} style={{ position: 'absolute', right: 20 }}>
+        <TouchableOpacity
+          onPress={() => setReportFilterVisible(true)}
+          style={{ position: "absolute", right: 20 }}
+        >
           <FontAwesome name="filter" size={27} color="black" />
         </TouchableOpacity>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <BarChart selectedDate={selectedDate} allExpenses={allExpenses} type={reportType} />
-        <PieChart selectedDate={selectedDate} allExpenses={allExpenses} type={reportType} />
-        <BarChart selectedDate={selectedDate} allIncomes={allIncomes} type={reportType} />
-        <PieChart selectedDate={selectedDate} allIncomes={allIncomes} type={reportType} />
+        <BarChart
+          selectedDate={selectedDate}
+          allExpenses={allExpenses}
+          type={reportType}
+        />
+        <PieChart
+          selectedDate={selectedDate}
+          allExpenses={allExpenses}
+          type={reportType}
+        />
+        <BarChart
+          selectedDate={selectedDate}
+          allIncomes={allIncomes}
+          type={reportType}
+        />
+        <PieChart
+          selectedDate={selectedDate}
+          allIncomes={allIncomes}
+          type={reportType}
+        />
       </ScrollView>
-      <ReportFilter {...{ handleReportByDay, handleReportByMonth, handleReportByYear }} />
+      <ReportFilter
+        {...{ handleReportByDay, handleReportByMonth, handleReportByYear }}
+      />
       <MonthYearSelector
-        data={reportType === 'Day' ? dayMonthYearList : (reportType === 'Month' ? monthYearList : (reportType === 'Year' && yearList))}
+        data={
+          reportType === "Day"
+            ? dayMonthYearList
+            : reportType === "Month"
+            ? monthYearList
+            : reportType === "Year" && yearList
+        }
         setSelectedDate={setSelectedDate}
         type={reportType}
       />
-
     </View>
   );
 }
