@@ -114,6 +114,9 @@ export default function ReportsScreen() {
   useEffect(() => {
     if (allExpenses && allIncomes) {
       setSelectedDate({});
+      setDayMonthYearList([]);
+      setMonthYearList([]);
+      setYearList([]);
     }
   }, [allExpenses, allIncomes]);
 
@@ -240,9 +243,9 @@ export default function ReportsScreen() {
       if (
         // checking if is at the end of dayMonthYearList
         selectedDate.day ===
-          dayMonthYearList[dayMonthYearList.length - 1].day &&
+        dayMonthYearList[dayMonthYearList.length - 1].day &&
         selectedDate.month ===
-          dayMonthYearList[dayMonthYearList.length - 1].month &&
+        dayMonthYearList[dayMonthYearList.length - 1].month &&
         selectedDate.year === dayMonthYearList[dayMonthYearList.length - 1].year
       ) {
         setSelectedDate({
@@ -307,21 +310,21 @@ export default function ReportsScreen() {
           <View style={styles.monthSelector}>
             <Text style={{ fontSize: 25, marginRight: 10, lineHeight: 25 }}>
               {reportType === "Day" &&
-              selectedDate.day !== undefined &&
-              selectedDate.month !== undefined &&
-              selectedDate.year !== undefined
+                selectedDate.day !== undefined &&
+                selectedDate.month !== undefined &&
+                selectedDate.year !== undefined
                 ? selectedDate.day +
-                  "/" +
-                  selectedDate.month +
-                  "/" +
-                  selectedDate.year
+                "/" +
+                selectedDate.month +
+                "/" +
+                selectedDate.year
                 : reportType === "Month" &&
                   selectedDate.month !== undefined &&
                   selectedDate.year !== undefined
-                ? selectedDate.month + "/" + selectedDate.year
-                : reportType === "Year" && selectedDate.year !== undefined
-                ? selectedDate.year
-                : "No Data"}
+                  ? selectedDate.month + "/" + selectedDate.year
+                  : reportType === "Year" && selectedDate.year !== undefined
+                    ? selectedDate.year
+                    : "No Data"}
             </Text>
             <AntDesign name="caretdown" size={20} color="black" />
           </View>
@@ -366,8 +369,8 @@ export default function ReportsScreen() {
           reportType === "Day"
             ? dayMonthYearList
             : reportType === "Month"
-            ? monthYearList
-            : reportType === "Year" && yearList
+              ? monthYearList
+              : reportType === "Year" && yearList
         }
         setSelectedDate={setSelectedDate}
         type={reportType}
