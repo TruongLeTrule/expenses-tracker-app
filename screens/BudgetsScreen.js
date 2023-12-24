@@ -11,6 +11,7 @@ export default function BudgetsScreen() {
   const modalVisible = useStore((state) => state.modalVisible);
   const time = useStore((state) => state.time);
   const isLoading = useStore((state) => state.isLoading);
+  const uid = useStore((state) => state.uid);
 
   {/* Fetch data from Firestore */ }
   const fetchDataFromFirestore = async () => {
@@ -28,11 +29,10 @@ export default function BudgetsScreen() {
         });
       });
 
-      // Sort data by custom order
-      const customOrder = ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"];
+      // Sort data by custom order  
       data.sort((a, b) => {
-        const orderA = customOrder.indexOf(a.timerange?.type);
-        const orderB = customOrder.indexOf(b.timerange?.type);
+        const orderA = time.indexOf(a.timerange?.type);
+        const orderB = time.indexOf(b.timerange?.type);
         return orderA - orderB;
       });
 
@@ -84,34 +84,31 @@ export default function BudgetsScreen() {
           <FlatList
             data={time}
             keyExtractor={(item) => item}
-            renderItem={({ item }) => (
-              <WhiteBox mt={"mt-4"}>
-                <View style={styles.boxContainer}>
-                  <View style={styles.box} >
-                    <View>
-                      <Text style={styles.boxText}>{item}</Text>
-                      <View style={styles.line} />
-                    </View>
-                    {
-                      data.map((budget) => {
-                        if (budget.timerange?.type === item) {
-                          return (
+            renderItem={({ item }) => {
+              const budgetsForTimeRange = data.filter(budget => budget.timerange?.type === item);
+                if (budgetsForTimeRange.length > 0) {
+                  return (
+                    <WhiteBox mt={"mt-4"}>
+                      <View style={styles.boxContainer}>
+                        <View style={styles.box}>
+                          <View>
+                            <Text style={styles.boxText}>{item}</Text>
+                            <View style={styles.line} />
+                          </View>
+                          {budgetsForTimeRange.map((budget) => (
                             <Budgets
                               key={budget.name}
                               name={budget.name}
                               value={budget.value}
                               category={budget.category}
                             />
-                          )
-                        }
-                      })
-                    }
-                  </View>
-                </View>
-              </WhiteBox>
-            )}
+                          ))}
+                        </View>
+                      </View>
+                    </WhiteBox>
+                  )}}}
             ListFooterComponent={
-              <TouchableOpacity style={styles.button} onPress={() => useStore.setState({ modalVisible: true })}>
+              <TouchableOpacity style={styles.button} onPress={() => {useStore.setState({ modalVisible: true })}}>
                 <Text style={styles.text}>Add Budget</Text>
               </TouchableOpacity>
             }
@@ -130,7 +127,7 @@ export default function BudgetsScreen() {
       ) : (
         <View style={styles.container}>
           <Text style={styles.text}>No budget yet</Text>
-          <TouchableOpacity style={styles.button} onPress={() => useStore.setState({ modalVisible: true })}>
+          <TouchableOpacity style={styles.button} onPress={() => {useStore.setState({ modalVisible: true })}}>
             <Text style={styles.text}>Add Budget</Text>
           </TouchableOpacity>
         </View>
