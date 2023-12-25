@@ -55,6 +55,11 @@ const AddTransactionModal = ({
 
   // Handle add expense button press
   const handleSubmit = async () => {
+    // Do nothing when value is 0
+    if (value === 0) {
+      return;
+    }
+
     setTransactionModalVisible(false);
     navigation.navigate("MainBottomTab");
 

@@ -65,6 +65,11 @@ const EditModal = () => {
 
   // Handle save button press
   const handleSaveBtnPress = () => {
+    // Do nothing when value is 0
+    if (value === 0) {
+      return;
+    }
+
     // Update expense
     if (editingTransaction.type === "out") {
       const newExpenses = [...allExpenses];
