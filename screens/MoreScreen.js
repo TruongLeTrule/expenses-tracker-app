@@ -12,12 +12,14 @@ export default function MoreScreen() {
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setAllIncomes = useStore((state) => state.setAllIncomes);
   const setFilteredList = useStore((state) => state.setFilteredList);
+  const setRenderList = useStore((state) => state.setRenderList);
 
   const handleSignOut = async () => {
     setUID(null);
     setAllExpenses(null);
     setAllIncomes(null);
     setFilteredList(null);
+    setRenderList(null);
     await removeLocalUID();
     await removeLocalExpenses();
     await removeLocalIncomes();

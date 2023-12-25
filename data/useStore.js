@@ -299,13 +299,12 @@ const useStore = create((set) => ({
   time: ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"],
   reportFilterVisible: true,
   setReportFilterVisible: (data) => {
-    set(() => ({ reportFilterVisible: data }))
+    set(() => ({ reportFilterVisible: data }));
   },
   selectedDate: {},
   setSelectedDate: (data) => {
-    set(() => ({ selectedDate: data }))
-  }
-
+    set(() => ({ selectedDate: data }));
+  },
 }));
 
 export default useStore;

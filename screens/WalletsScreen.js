@@ -31,6 +31,9 @@ export default function Wallets() {
   const isLoadingInWalletScreen = useStore(
     (state) => state.isLoadingInWalletScreen
   );
+  const setIsLoadingInWalletScreen = useStore(
+    (state) => state.setIsLoadingInWalletScreen
+  );
   const allExpenses = useStore((state) => state.allExpenses);
   const allIncomes = useStore((state) => state.allIncomes);
   const filteredList = useStore((state) => state.filteredList);
@@ -45,7 +48,9 @@ export default function Wallets() {
   const uid = useStore((state) => state.uid);
   const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
   const setSortDateIncomes = useStore((state) => state.setSortDateIncomes);
-  const setSortDateExpensesAndIncome = useStore((state) => state.setSortDateExpensesAndIncome)
+  const setSortDateExpensesAndIncome = useStore(
+    (state) => state.setSortDateExpensesAndIncome
+  );
 
   // Toggle list visible feature
   const [chevronType, setChevronType] = useState("chevron-up");
@@ -70,13 +75,18 @@ export default function Wallets() {
     height: `${height.value}%`,
   }));
 
+  // Get data from DB, then set loading state
+  const getDataFromDB = async () => {
+    setIsLoadingInWalletScreen(true);
+    await getAllExpenses(uid);
+    await getAllIncomes(uid);
+    setIsLoadingInWalletScreen(false);
+  };
+
   // If the is no expense or income in local, get them from db
   useEffect(() => {
-    if (!allExpenses) {
-      getAllExpenses(uid);
-    }
-    if (!allIncomes) {
-      getAllIncomes(uid);
+    if (!allExpenses && !allIncomes) {
+      getDataFromDB();
     }
   }, []);
 

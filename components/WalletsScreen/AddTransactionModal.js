@@ -29,6 +29,9 @@ const AddTransactionModal = ({
   const { setLocalExpenses, setLocalIncomes } = useLocal();
   const { addExpense, addIncome } = useFetch();
 
+  const setIsLoadingInWalletScreen = useStore(
+    (state) => state.setIsLoadingInWalletScreen
+  );
   const toggleCategoryModalVisible = useStore(
     (state) => state.toggleCategoryModalVisible
   );
@@ -65,6 +68,8 @@ const AddTransactionModal = ({
 
     // Create new expense
     if (type === "out") {
+      setIsLoadingInWalletScreen(true);
+
       // Get id created on db
       const createdExpense = {
         value: value,
@@ -82,9 +87,12 @@ const AddTransactionModal = ({
       setLocalExpenses([...newExpenses]);
 
       console.log("New expense created");
+      setIsLoadingInWalletScreen(false);
     }
     // Create new income
     else if (type === "in") {
+      setIsLoadingInWalletScreen(true);
+
       // Get id created on db
       const createdIncome = {
         value: value,
@@ -102,6 +110,7 @@ const AddTransactionModal = ({
       setLocalIncomes([...newIncomes]);
 
       console.log("New income created");
+      setIsLoadingInWalletScreen(false);
     } else {
       console.log("Cannot create new transaction");
     }

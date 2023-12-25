@@ -19,14 +19,11 @@ const useFetch = () => {
 
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setAllIncomes = useStore((state) => state.setAllIncomes);
-  const setIsLoadingInWalletScreen = useStore(
-    (state) => state.setIsLoadingInWalletScreen
-  );
 
   // Get all expenses from db
   const getAllExpenses = async (uid) => {
     try {
-      setIsLoadingInWalletScreen(true);
+      // setIsLoadingInWalletScreen(true);
 
       const expensesArr = [];
 
@@ -42,7 +39,7 @@ const useFetch = () => {
       setAllExpenses(expensesArr);
       setLocalExpenses(expensesArr);
 
-      setIsLoadingInWalletScreen(false);
+      // setIsLoadingInWalletScreen(false);
     } catch (error) {
       console.log(error);
     }
