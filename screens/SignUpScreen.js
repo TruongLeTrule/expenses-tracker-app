@@ -7,13 +7,13 @@ import {
   TextInput,
   Button,
   Alert,
+  TouchableOpacity
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 import { auth } from "../firebase";
 
-export default function LoginScreen() {
+export default function SignUpScreen() {
   const navigation = useNavigation();
 
   const [regEmail, setRegEmail] = useState("");

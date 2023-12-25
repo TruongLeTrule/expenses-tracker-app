@@ -7,8 +7,9 @@ import {
   TextInput,
   Button,
   Alert,
+  TouchableOpacity
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 import { auth } from "../firebase";
@@ -48,7 +49,7 @@ export default function LoginScreen() {
           uri: "https://static.vecteezy.com/system/resources/previews/000/287/227/original/wallet-vector-icon.jpg",
         }}
       />
-
+      <Text style={styles.text}>Log In</Text>
       {/* Input group */}
       <View style={{ marginTop: 10 }}>
         <View style={styles.sectionStyle}>
@@ -105,6 +106,19 @@ export default function LoginScreen() {
             }}
           >
             Create account
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ForgetPassword")}>
+          <Text
+            style={{
+              textAlign: 'center',
+              marginTop: 10,
+              color: 'white',
+              fontStyle: 'italic',
+              fontWeight: 'bold'
+            }}
+          >
+            Forget password?
           </Text>
         </TouchableOpacity>
       </View>

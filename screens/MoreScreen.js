@@ -1,5 +1,6 @@
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, Alert } from "react-native";
 import React from "react";
+import { auth } from "../firebase"
 
 import useStore from "../data/useStore";
 import useLocal from "../data/localData";
@@ -15,6 +16,9 @@ export default function MoreScreen() {
   const setRenderList = useStore((state) => state.setRenderList);
 
   const handleSignOut = async () => {
+    await auth.signOut()
+      .then(() => console.log("Signed out successfully"))
+      .catch((error) => Alert.alert(error.message))
     setUID(null);
     setAllExpenses(null);
     setAllIncomes(null);
