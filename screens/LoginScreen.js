@@ -35,7 +35,7 @@ export default function LoginScreen() {
         setUID(uid);
 
         console.log("Save uid into storage");
-        Alert.alert(`Welcome back ${userCredentials.user.email}`);
+        // Alert.alert(`Welcome back ${userCredentials.user.email}`);
       })
       .catch(() => Alert.alert("Invalid email or password!"));
   };
