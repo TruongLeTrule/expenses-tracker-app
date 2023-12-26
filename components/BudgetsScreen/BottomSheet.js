@@ -6,9 +6,10 @@ import TimeRangeBottomSheet from "./TimeRangeBottomSheet";
 import CustomBudgetButton from "./CustomBudgetButton";
 import useStore from "../../data/useStore";
 import CategoryScreen from "./CategoryScreen";
-import {getDocs,addDoc, collection} from 'firebase/firestore';
+import {addDoc, collection} from 'firebase/firestore';
 import {db} from "../../firebase";
 import BottomSheetTextInput from "./BottomSheetTextInput";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const BottomSheet = ({ onPress}) => {
   const [timeVisible, setTimeVisible] = useState(false);
@@ -27,28 +28,41 @@ const BottomSheet = ({ onPress}) => {
     {/* Get date */}
     const getDate = (interval) => {
       const currentDate = new Date();
-      const nextDate = new Date();
+      const firstDay = new Date(currentDate);
+      const lastDay = new Date(firstDay);
+
+      const setTime = (first, last) => {
+        first.setHours(0, 0, 0, 0);
+        last.setHours(23, 59, 59, 999);
+      };
       // Adjust the date based on the specified interval
       switch (interval) {
         case 'Weekly':
-          nextDate.setDate(nextDate.getDate() + 7);
+          firstDay.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+          lastDay.setDate(firstDay.getDate() + 6);
           break;
         case 'Monthly':
-          nextDate.setMonth(nextDate.getMonth() + 1);
-          break;
-        case 'Yearly':
-          nextDate.setFullYear(nextDate.getFullYear() + 1);
-          break;
-        case 'Half Yearly':
-          nextDate.setMonth(nextDate.getMonth() + 6);
+          firstDay.setMonth(currentDate.getMonth(), 1);
+          lastDay.setMonth(firstDay.getMonth() + 1, 0);
           break;
         case 'Quarterly':
-          nextDate.setMonth(nextDate.getMonth() + 3);
+          firstDay.setMonth(Math.floor(currentDate.getMonth() / 3) * 3 , 1);
+          lastDay.setMonth(firstDay.getMonth() + 3, 0);
+          break;
+        case 'Half Yearly':
+          firstDay.setMonth(currentDate.getMonth() < 6 ? 0 : 6, 1);
+          lastDay.setMonth(firstDay.getMonth() + 6, 0);
+          break;
+        case 'Yearly':
+          firstDay.setMonth(0, 1);
+          lastDay.setMonth(11, 31);
           break;
         default:
           // Default to weekly if no or invalid interval provided
-          nextDate.setDate(nextDate.getDate() + 7);
+          firstDay.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+          break;
       }
+      setTime(firstDay, lastDay);
       const options = {
         year: 'numeric',
         month: 'long',
@@ -60,13 +74,13 @@ const BottomSheet = ({ onPress}) => {
         timeZone: 'Asia/Ho_Chi_Minh',
       };
       const formatter = new Intl.DateTimeFormat('en-US', options);
-      const formattedCurrentDate = formatter.format(currentDate);
-      const formattedNextdate = formatter.format(nextDate);
+      const formattedFirstDay = formatter.format(firstDay);
+      const formattedLastDay = formatter.format(lastDay);
 
-      return [formattedCurrentDate, formattedNextdate];
+      return [formattedFirstDay, formattedLastDay];
     };
 
-    const [currentDate, nextDate] = getDate(budgetTime);
+    const [firstDay, lastDay] = getDate(budgetTime);
 
   {/* Update Category */}
   const updateCategoryTitle = (selectedText) => {
@@ -87,8 +101,8 @@ const BottomSheet = ({ onPress}) => {
             category: budgetCategory,
             uid: uid,
             timerange: {
-              start: currentDate,
-              end: nextDate,
+              start: firstDay,
+              end: lastDay,
               type: budgetTime,
             }
           });
@@ -100,8 +114,8 @@ const BottomSheet = ({ onPress}) => {
             category: budgetCategory,
             uid: uid,
             timerange: {
-              start: currentDate,
-              end: nextDate,
+              start: firstDay,
+              end: lastDay,
               type: budgetTime,
             }
           }];
@@ -133,7 +147,7 @@ const BottomSheet = ({ onPress}) => {
     <View style={styles.container}>
       <View style={styles.detailContainer}>
         <View style={styles.titleHeader}>
-          <Ionicon name="chevron-down-outline" size={30} color="black" style={styles.icon} onPress={onPress} />
+          <Ionicon name="chevron-down-outline" size={40} color="#4cb050" style={styles.icon} onPress={onPress} />
           <Text style={styles.titleText}>Create Budget</Text>
         </View>
         <View style={styles.content}>
@@ -182,9 +196,16 @@ const BottomSheet = ({ onPress}) => {
           <CategoryScreen onPress={updateCategoryTitle} />
         </Modal>
         
-        <TouchableOpacity style={styles.button} onPress={saveBudget}>
-          <Text style={styles.text}>Save</Text>
-        </TouchableOpacity>
+        {/* Submit */}
+        <View className="items-center mt-8">
+          <TouchableOpacity
+            className="w-36 h-14 rounded-full bg-primary flex-row justify-center items-center"
+            onPress={saveBudget}
+          >
+            <Ionicons name={"save"} size={30} color={"#fff"} />
+            <Text className="font-bold text-2xl text-[#fff] ml-2">Save</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -198,25 +219,29 @@ const styles = StyleSheet.create({
     },
     titleHeader: {
         flexDirection: "row",
-        padding:10,
+        alignItems: "center",
+        paddingVertical: 20,
         backgroundColor: "#fff",
         borderRadius: 10,
+    },
+    icon:{
+        position: "absolute",
+        left: 20
     },
     content:{
         marginHorizontal: 5,
         marginVertical: 20,
         backgroundColor: "#fff",
         borderRadius: 10,
-        borderWidth: 0.2,
     },
     titleText:{
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: "bold",
         color: "black",
-        marginLeft: 100,
+        marginLeft: 120,
     },
     detailContainer:{
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "#d1d1d1",
         borderRadius: 10,
         height: 500,
     },

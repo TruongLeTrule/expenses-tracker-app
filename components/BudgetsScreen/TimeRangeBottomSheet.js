@@ -9,7 +9,7 @@ const TimeRangeBottomSheet = ({onPress}) => {
         <View style={styles.container}>
             <View style={styles.detailContainer}>
                 <View style={styles.titleHeader}>
-                        <Ionicon name="chevron-down-outline" size={30} color="black" onPress={() => onPress(budgetTime)}/>
+                        <Ionicon name="chevron-down-outline" size={30} color="#4cb050" onPress={() => onPress(budgetTime)}/>
                         <Text style={styles.titleText}>Time Range</Text>
                 </View>
                 <View style={styles.content} >
