@@ -46,8 +46,8 @@ export default function Wallets() {
   const total = useStore((state) => state.total);
   const setTotal = useStore((state) => state.setTotal);
   const uid = useStore((state) => state.uid);
-  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
-  const setSortDateIncomes = useStore((state) => state.setSortDateIncomes);
+  // const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
+  // const setSortDateIncomes = useStore((state) => state.setSortDateIncomes);
   const setSortDateExpensesAndIncome = useStore(
     (state) => state.setSortDateExpensesAndIncome
   );
@@ -130,32 +130,32 @@ export default function Wallets() {
   useEffect(() => {
     if (allExpenses) {
       setTotalExpense(allExpenses);
-      setSortDateExpenses(
-        allExpenses.sort(function (a, b) {
-          // Convert the date strings to Date objects
-          let dateA = a.date.seconds;
-          let dateB = b.date.seconds;
+      // setSortDateExpenses(
+      //   allExpenses.sort(function (a, b) {
+      //     // Convert the date strings to Date objects
+      //     let dateA = a.date.seconds;
+      //     let dateB = b.date.seconds;
 
-          // Subtract the dates to get a value that is either negative, positive, or zero
-          return dateB - dateA;
-        })
-      );
+      //     // Subtract the dates to get a value that is either negative, positive, or zero
+      //     return dateB - dateA;
+      //   })
+      // );
     }
   }, [allExpenses]);
   // Set total income when all incomes have been changed
   useEffect(() => {
     if (allIncomes) {
       setTotalIncome(allIncomes);
-      setSortDateIncomes(
-        allIncomes.sort(function (a, b) {
-          // Convert the date strings to Date objects
-          let dateA = a.date.seconds;
-          let dateB = b.date.seconds;
+      // setSortDateIncomes(
+      //   allIncomes.sort(function (a, b) {
+      //     // Convert the date strings to Date objects
+      //     let dateA = a.date.seconds;
+      //     let dateB = b.date.seconds;
 
-          // Subtract the dates to get a value that is either negative, positive, or zero
-          return dateB - dateA;
-        })
-      );
+      //     // Subtract the dates to get a value that is either negative, positive, or zero
+      //     return dateB - dateA;
+      //   })
+      // );
     }
   }, [allIncomes]);
 

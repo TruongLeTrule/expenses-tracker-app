@@ -67,102 +67,102 @@ const useStore = create((set) => ({
   },
 
   // Expenses grouped by date
-  sortDateExpenses: null,
-  setSortDateExpenses: (data) => {
-    // Group list by date which date is title and data is a group of expense and income
-    const groupByDate = (list) => {
-      if (list) {
-        if (list.length) {
-          // Set last date to the last date of list
-          let lastDate = new Date(list[0].date.seconds * 1000);
-          let smallList = [list[0]];
-          let result = [];
+  // sortDateExpenses: null,
+  // setSortDateExpenses: (data) => {
+  //   // Group list by date which date is title and data is a group of expense and income
+  //   const groupByDate = (list) => {
+  //     if (list) {
+  //       if (list.length) {
+  //         // Set last date to the last date of list
+  //         let lastDate = new Date(list[0].date.seconds * 1000);
+  //         let smallList = [list[0]];
+  //         let result = [];
 
-          for (let i = 0; i < list.length; i++) {
-            const itemDate = new Date(list[i].date.seconds * 1000);
+  //         for (let i = 0; i < list.length; i++) {
+  //           const itemDate = new Date(list[i].date.seconds * 1000);
 
-            // Push small list into result if current item has different date
-            if (lastDate.toDateString() !== itemDate.toDateString()) {
-              result.push({
-                title: lastDate,
-                data: [...smallList],
-              });
+  //           // Push small list into result if current item has different date
+  //           if (lastDate.toDateString() !== itemDate.toDateString()) {
+  //             result.push({
+  //               title: lastDate,
+  //               data: [...smallList],
+  //             });
 
-              // Set last date to current item date and empty the array
-              lastDate = itemDate;
-              smallList = [];
-            }
+  //             // Set last date to current item date and empty the array
+  //             lastDate = itemDate;
+  //             smallList = [];
+  //           }
 
-            // Don't push into small list if this is the first element,
-            // cause is already pushed in the declaration
-            if (i !== 0) {
-              smallList.push(list[i]);
-            }
+  //           // Don't push into small list if this is the first element,
+  //           // cause is already pushed in the declaration
+  //           if (i !== 0) {
+  //             smallList.push(list[i]);
+  //           }
 
-            // Push small list into result if this is the last element
-            if (i === list.length - 1) {
-              result.push({
-                title: lastDate,
-                data: [...smallList],
-              });
-            }
-          }
+  //           // Push small list into result if this is the last element
+  //           if (i === list.length - 1) {
+  //             result.push({
+  //               title: lastDate,
+  //               data: [...smallList],
+  //             });
+  //           }
+  //         }
 
-          return result;
-        }
-      }
-    };
-    set((state) => ({ sortDateExpenses: groupByDate(data) }));
-  },
+  //         return result;
+  //       }
+  //     }
+  //   };
+  //   set((state) => ({ sortDateExpenses: groupByDate(data) }));
+  // },
 
-  // Incomes grouped by date
-  sortDateIncomes: null,
-  setSortDateIncomes: (data) => {
-    // Group list by date which date is title and data is a group of expense and income
-    const groupByDate = (list) => {
-      if (list) {
-        if (list.length) {
-          // Set last date to the last date of list
-          let lastDate = new Date(list[0].date.seconds * 1000);
-          let smallList = [list[0]];
-          let result = [];
+  // // Incomes grouped by date
+  // sortDateIncomes: null,
+  // setSortDateIncomes: (data) => {
+  //   // Group list by date which date is title and data is a group of expense and income
+  //   const groupByDate = (list) => {
+  //     if (list) {
+  //       if (list.length) {
+  //         // Set last date to the last date of list
+  //         let lastDate = new Date(list[0].date.seconds * 1000);
+  //         let smallList = [list[0]];
+  //         let result = [];
 
-          for (let i = 0; i < list.length; i++) {
-            const itemDate = new Date(list[i].date.seconds * 1000);
+  //         for (let i = 0; i < list.length; i++) {
+  //           const itemDate = new Date(list[i].date.seconds * 1000);
 
-            // Push small list into result if current item has different date
-            if (lastDate.toDateString() !== itemDate.toDateString()) {
-              result.push({
-                title: lastDate,
-                data: [...smallList],
-              });
+  //           // Push small list into result if current item has different date
+  //           if (lastDate.toDateString() !== itemDate.toDateString()) {
+  //             result.push({
+  //               title: lastDate,
+  //               data: [...smallList],
+  //             });
 
-              // Set last date to current item date and empty the array
-              lastDate = itemDate;
-              smallList = [];
-            }
+  //             // Set last date to current item date and empty the array
+  //             lastDate = itemDate;
+  //             smallList = [];
+  //           }
 
-            // Don't push into small list if this is the first element,
-            // cause is already pushed in the declaration
-            if (i !== 0) {
-              smallList.push(list[i]);
-            }
+  //           // Don't push into small list if this is the first element,
+  //           // cause is already pushed in the declaration
+  //           if (i !== 0) {
+  //             smallList.push(list[i]);
+  //           }
 
-            // Push small list into result if this is the last element
-            if (i === list.length - 1) {
-              result.push({
-                title: lastDate,
-                data: [...smallList],
-              });
-            }
-          }
+  //           // Push small list into result if this is the last element
+  //           if (i === list.length - 1) {
+  //             result.push({
+  //               title: lastDate,
+  //               data: [...smallList],
+  //             });
+  //           }
+  //         }
 
-          return result;
-        }
-      }
-    };
-    set((state) => ({ sortDateIncomes: groupByDate(data) }));
-  },
+  //         return result;
+  //       }
+  //     }
+  //   };
+  //   set((state) => ({ sortDateIncomes: groupByDate(data) }));
+  // },
 
   // All incomes array
   allIncomes: null,

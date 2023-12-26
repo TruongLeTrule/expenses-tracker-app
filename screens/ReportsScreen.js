@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import MonthYearSelector from "../components/ReportsScreen/monthYearSelector";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import ReportFilter from "../components/ReportsScreen/ReportFilter";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function ReportsScreen() {
   const [monthYearList, setMonthYearList] = useState([]);
@@ -20,6 +21,7 @@ export default function ReportsScreen() {
   const selectedDate = useStore((state) => state.selectedDate);
   const setSelectedDate = useStore((state) => state.setSelectedDate);
   const [reportType, setReportType] = useState("none");
+  const isFocused = useIsFocused()
   const toggleMonthYearModalVisible = useStore(
     (state) => state.toggleMonthYearModalVisible
   );
@@ -110,13 +112,19 @@ export default function ReportsScreen() {
     }
   }, [reportType, sortDateExpensesAndIncome]);
 
+  useEffect(() => {
+    if (reportType === 'none' && isFocused) {
+      setReportFilterVisible(true)
+    }
+  }, [isFocused])
   // If there are no data set selected date to {}
   useEffect(() => {
-    if (!allExpenses && !allIncomes) {
+    if (allExpenses?.length === 0 && allIncomes?.length === 0) {
+      setReportType('none')
       setSelectedDate({});
-      setDayMonthYearList([]);
-      setMonthYearList([]);
-      setYearList([]);
+      setDayMonthYearList(null);
+      setMonthYearList(null);
+      setYearList(null);
     }
   }, [allExpenses, allIncomes]);
 
@@ -243,9 +251,9 @@ export default function ReportsScreen() {
       if (
         // checking if is at the end of dayMonthYearList
         selectedDate.day ===
-          dayMonthYearList[dayMonthYearList.length - 1].day &&
+        dayMonthYearList[dayMonthYearList.length - 1].day &&
         selectedDate.month ===
-          dayMonthYearList[dayMonthYearList.length - 1].month &&
+        dayMonthYearList[dayMonthYearList.length - 1].month &&
         selectedDate.year === dayMonthYearList[dayMonthYearList.length - 1].year
       ) {
         setSelectedDate({
@@ -310,21 +318,21 @@ export default function ReportsScreen() {
           <View style={styles.monthSelector}>
             <Text style={{ fontSize: 25, marginRight: 10, lineHeight: 25 }}>
               {reportType === "Day" &&
-              selectedDate.day !== undefined &&
-              selectedDate.month !== undefined &&
-              selectedDate.year !== undefined
+                selectedDate.day !== undefined &&
+                selectedDate.month !== undefined &&
+                selectedDate.year !== undefined
                 ? selectedDate.day +
-                  "/" +
-                  selectedDate.month +
-                  "/" +
-                  selectedDate.year
+                "/" +
+                selectedDate.month +
+                "/" +
+                selectedDate.year
                 : reportType === "Month" &&
                   selectedDate.month !== undefined &&
                   selectedDate.year !== undefined
-                ? selectedDate.month + "/" + selectedDate.year
-                : reportType === "Year" && selectedDate.year !== undefined
-                ? selectedDate.year
-                : "No Data"}
+                  ? selectedDate.month + "/" + selectedDate.year
+                  : reportType === "Year" && selectedDate.year !== undefined
+                    ? selectedDate.year
+                    : "No Data"}
             </Text>
             <AntDesign name="caretdown" size={20} color="black" />
           </View>
@@ -369,8 +377,8 @@ export default function ReportsScreen() {
           reportType === "Day"
             ? dayMonthYearList
             : reportType === "Month"
-            ? monthYearList
-            : reportType === "Year" && yearList
+              ? monthYearList
+              : reportType === "Year" && yearList
         }
         setSelectedDate={setSelectedDate}
         type={reportType}
