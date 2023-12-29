@@ -1,14 +1,14 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert } from "react-native";
 import Modal  from "react-native-modal"
 import { useEffect } from "react";
 import BottomSheet from "../components/BudgetsScreen/BottomSheet";
 import Budgets from "../components/BudgetsScreen/Budgets";
-import { getDocs, collection, query, where } from "firebase/firestore";
-import { db } from "../firebase";
+import useFetch from "../data/fetchData";
 import useStore from "../data/useStore";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
+import AddButton from "../components/BudgetsScreen/AddButton";
 import { commafy } from "../components/formatCurrency";
-import { Ionicons } from "@expo/vector-icons";
+
 export default function BudgetsScreen() {
   const data = useStore((state) => state.data);
   const modalVisible = useStore((state) => state.modalVisible);
@@ -16,44 +16,11 @@ export default function BudgetsScreen() {
   const isLoading = useStore((state) => state.isLoading);
   const uid = useStore((state) => state.uid);
   const allExpenses = useStore((state) => state.allExpenses);
-
-  {/* Fetch data from Firestore */ }
-  const fetchDataFromFirestore = async () => {
-    try {
-      const data = [];
-      const budgetRef = collection(db, "Budget");
-      const q = query(budgetRef, where("uid", "==", uid));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const docData = doc.data();
-        data.push({
-          category: docData.category,
-          name: docData.name,
-          timerange: docData.timerange,
-          uid: docData.uid,
-          value: docData.value,
-        });
-      });
-
-      // Sort data by custom order  
-      data.sort((a, b) => {
-        const orderA = time.indexOf(a.timerange?.type);
-        const orderB = time.indexOf(b.timerange?.type);
-        return orderA - orderB;
-      });
-      console.log('Budgets fetched')
-      return data;
-    } catch (error) {
-      console.error("Error fetching data from Firestore:", error);
-      return [];
-    } finally {
-      useStore.setState({ isLoading: false });
-    }
-  };
+  const { getBudgets } = useFetch();
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchDataFromFirestore();
+      const data = await getBudgets(uid, time);
       useStore.setState({ data: data });
     }
     fetchData();
@@ -78,7 +45,6 @@ export default function BudgetsScreen() {
       </View>
     );
   }
-
 
   {/* Reset budget */ }
   const reset = () => {
@@ -134,7 +100,6 @@ export default function BudgetsScreen() {
                       </View>
                     </WhiteBox>
                   )}
-                  
                   else{
                     return null;
                   }
@@ -142,24 +107,15 @@ export default function BudgetsScreen() {
                 ListFooterComponent={
                   (data && data.length !== 0) && (
                   <View className="items-center mt-8">
-                    <TouchableOpacity
-                      className="w-70 h-14 rounded-full bg-primary flex-row items-center p-2"
-                      onPress={() => {useStore.setState({ modalVisible: true })}}
-                    >
-                      <Ionicons name={"add"} size={30} color={"#fff"} />
-                      <Text className="font-bold text-xl text-[#fff] ml-2">Add Budget</Text>
-                    </TouchableOpacity>
+                    <AddButton onPress={() => {useStore.setState({ modalVisible: true })}} />
                   </View>
                   )
                 }
           />
           {(!data || data.length === 0) && (
-            <View className=' flex-1'>
+            <View className="items-center mt-8 flex-1">
               <Text className='text-lg text-center mb-5'>You have not created any budget yet</Text>
-              <TouchableOpacity style={styles.button} onPress={() => { useStore.setState({ modalVisible: true })}}>
-                <Ionicons name={"add"} size={30} color={"#fff"} />
-                <Text className="font-bold text-xl text-[#fff] ml-2">Add Budget</Text>
-              </TouchableOpacity>
+              <AddButton onPress={() => {useStore.setState({ modalVisible: true })}} />
             </View>
           )}
           <Modal
@@ -194,13 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-
-  button: {
-    backgroundColor: "#4cb050",
-    width: 150,
-    alignSelf: "center",
-    borderRadius: 10,
-  },
   text: {
     fontSize: 25,
     fontWeight: "bold",
@@ -211,19 +160,6 @@ const styles = StyleSheet.create({
   modalContainer: {
     flexDirection: "column",
     justifyContent: "flex-end",
-  },
-  close: {
-    marginTop: 50,
-    backgroundColor: "#4cb050",
-    height: 50,
-    width: "50%",
-    alignSelf: "center",
-    borderRadius: 10,
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-    textAlign: "center",
-    marginTop: 10,
   },
   boxContainer: {
     flexDirection: "column",
