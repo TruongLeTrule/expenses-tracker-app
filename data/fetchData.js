@@ -132,6 +132,40 @@ const useFetch = () => {
     }
   };
 
+   // Get budgets from db
+  const getBudgets = async (uid, time) => {
+    try {
+      const data = [];
+      const budgetRef = collection(db, "Budget");
+      const q = query(budgetRef, where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const docData = doc.data();
+        data.push({
+          category: docData.category,
+          name: docData.name,
+          timerange: docData.timerange,
+          uid: docData.uid,
+          value: docData.value,
+        });
+      });
+
+      // Sort data by custom order  
+      data.sort((a, b) => {
+        const orderA = time.indexOf(a.timerange?.type);
+        const orderB = time.indexOf(b.timerange?.type);
+        return orderA - orderB;
+      });
+      console.log('Budgets fetched')
+      return data;
+    } catch (error) {
+      console.error("Error fetching data from Firestore:", error);
+      return [];
+    } finally {
+      useStore.setState({ isLoading: false });
+    }
+  };
+  
   return {
     getAllExpenses: getAllExpenses,
     updateExpense: updateExpense,
@@ -141,6 +175,7 @@ const useFetch = () => {
     addIncome: addIncome,
     updateIncome: updateIncome,
     deleteIncome: deleteIncome,
+    getBudgets: getBudgets
   };
 };
 
