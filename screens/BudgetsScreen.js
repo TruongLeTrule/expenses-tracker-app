@@ -8,7 +8,6 @@ import useStore from "../data/useStore";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
 import AddButton from "../components/BudgetsScreen/AddButton";
 import { commafy } from "../components/formatCurrency";
-import EditBudget from "../components/BudgetsScreen/EditBudget";
 
 export default function BudgetsScreen() {
   const editMode = useStore((state) => state.editMode);
