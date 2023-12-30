@@ -84,9 +84,20 @@ export default function LoginScreen() {
       </View>
 
       {/* Submit btn */}
-      <View style={styles.LogInButton}>
-        <Button title="LOG IN" color="darkgreen" onPress={handleLogin} />
-      </View>
+      <TouchableOpacity
+        onPress={handleLogin}
+        style={styles.LogInButton}>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: '#fff',
+            fontSize: 20,
+            fontWeight: 'bold'
+          }}
+        >
+          LOG IN
+        </Text>
+      </TouchableOpacity>
 
       {/* Navigate group */}
       <View style={{ marginTop: 25 }}>
@@ -159,9 +170,14 @@ const styles = StyleSheet.create({
   },
   LogInButton: {
     width: "75%",
-    marginTop: 15,
+    height: 50,
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: 'darkgreen',
+    marginTop: 10,
     marginLeft: "auto",
     marginRight: "auto",
+    borderRadius: 15
   },
   sectionStyle: {
     marginLeft: 50,
