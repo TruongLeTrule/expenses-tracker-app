@@ -9,7 +9,6 @@ import useLocal from "../data/localData";
 export default function MoreScreen({ navigation }) {
   const { removeLocalUID, removeLocalExpenses, removeLocalIncomes } =
     useLocal();
-  const [policyModalVisible, setPolicyModalVisible] = useState(false)
   const setUID = useStore((state) => state.setUID);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setAllIncomes = useStore((state) => state.setAllIncomes);
@@ -18,7 +17,7 @@ export default function MoreScreen({ navigation }) {
 
   const handleSignOut = async () => {
     await auth.signOut()
-      .then(() => console.log("Signed out successfully"))
+      .then(() => Alert.alert("Signed out successfully"))
       .catch((error) => Alert.alert(error.message))
     setUID(null);
     setAllExpenses(null);
@@ -39,9 +38,15 @@ export default function MoreScreen({ navigation }) {
       <Text style={styles.userNamePlaceHolder}>USERNAME</Text>
       <TouchableOpacity
         style={[styles.Btn, { backgroundColor: 'white', borderColor: 'rgb(40, 230, 40)', borderWidth: 1 }]}
-        onPress={() => navigation.navigate("ProfileScreen")}
+        onPress={() => navigation.navigate("Edit Profile")}
       >
         <Text style={[styles.signOut, { color: 'rgb(40, 230, 40)' }]}>Profile</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.Btn, { backgroundColor: 'white', borderColor: 'rgb(40, 230, 40)', borderWidth: 1 }]}
+        onPress={() => navigation.navigate("Change Password")}
+      >
+        <Text style={[styles.signOut, { color: 'rgb(40, 230, 40)' }]}>Change Password</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.Btn, { backgroundColor: 'white', borderColor: 'rgb(40, 230, 40)', borderWidth: 1 }]}

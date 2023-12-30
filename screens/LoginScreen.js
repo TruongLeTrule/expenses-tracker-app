@@ -9,7 +9,6 @@ import {
   Alert,
   TouchableOpacity
 } from "react-native";
-// import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { auth } from "../firebase";
