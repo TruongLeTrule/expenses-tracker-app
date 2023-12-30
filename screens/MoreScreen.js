@@ -50,7 +50,7 @@ export default function MoreScreen({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.Btn, { backgroundColor: 'white', borderColor: 'rgb(40, 230, 40)', borderWidth: 1 }]}
-        onPress={() => Alert.alert("Error getting policies")}
+        onPress={() => Alert.alert("Using this app for commercial purposes is not allowed")}
       >
         <Text style={[styles.signOut, { color: 'rgb(40, 230, 40)' }]}>Terms & Policies</Text>
       </TouchableOpacity><TouchableOpacity
@@ -58,7 +58,8 @@ export default function MoreScreen({ navigation }) {
         onPress={() => Alert.alert("This app is created by L.Q.Truong, P.M.Triet and N.Q.Vu of UIT")}
       >
         <Text style={[styles.signOut, { color: 'rgb(40, 230, 40)' }]}>About Us</Text>
-      </TouchableOpacity><TouchableOpacity
+      </TouchableOpacity>
+      <TouchableOpacity
         style={styles.Btn}
         onPress={handleSignOut}
       >

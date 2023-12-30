@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   textInput: {
-    borderWidth: 1,
+    borderColor: 'lightgray',
+    borderWidth: 2,
     borderRadius: 20,
     width: '70%',
     height: 40,
