@@ -1,14 +1,25 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 const CustomBudgetButton = ({onPress, title, icon}) => {
     return(
-        <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
-            <Image style={styles.image} source={{uri:icon}}/>
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>{title}</Text>
-                <View style={styles.line}/>
-            </View>
-        </TouchableOpacity>
+        <TouchableOpacity
+              className="flex-row justify-between items-center mt-4 pt-4 border-t border-grey-text"
+              onPress={onPress}
+            >
+              <View className="flex-row items-center gap-4">
+                <View className=" h-12 w-12 flex items-center justify-center">
+                  <Ionicons name={icon} size={27} />
+                </View>
+                <Text className="text-lg font-normal">{title}</Text>
+              </View>
+
+              <Ionicons
+                name="chevron-forward-outline"
+                size={27}
+                color={"#6d6d6d"}
+              />
+            </TouchableOpacity>
     )
 }
 export default CustomBudgetButton;

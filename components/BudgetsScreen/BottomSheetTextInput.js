@@ -1,16 +1,21 @@
 import {View, StyleSheet, TextInput, Image} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 export default function BottomSheetTextInput({placeholder,value,onChangeText, link, keyboardType}) {
   return(
-    <View style={styles.name}>
-        <Image style={styles.image} source={{ uri: link }} />
-        <View style={styles.titleContainer}>
+    <View className="flex-row items-center gap-4">
+        <View className="rounded-full h-12 w-12 flex items-center justify-center">
+            <Ionicons name="person" size={30} color="black" />
+        </View>
+        <View>
             <TextInput
-                style={styles.title}
+                className="text-lg font-normal flex-1"
                 value={value}
                 placeholder={placeholder}
+                placeholderTextColor={"black"}
                 onChangeText={onChangeText}
                 keyboardType={keyboardType}
+                numberOfLines={1}
             />
             <View style={styles.line} />
         </View>
@@ -31,14 +36,15 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     title:{
+        flex:1,
         fontSize: 20,
-        color: "gray",
+        color: "black",
         marginTop: 10,
     },
     line:{
         height: 1,
-        width: 350,
-        backgroundColor: '#ccc',
+        width: 300,
+        backgroundColor: '#424242',
         marginVertical: 12,
     },
 });

@@ -1,86 +1,37 @@
-import React, { useState,useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import Ionicon from "react-native-vector-icons/Ionicons";
-import { Modal } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity,TextInput, Alert } from "react-native";
+import Modal from "react-native-modal";
 import TimeRangeBottomSheet from "./TimeRangeBottomSheet";
 import CustomBudgetButton from "./CustomBudgetButton";
-import useStore from "../../data/useStore";
 import CategoryScreen from "./CategoryScreen";
-import {addDoc, collection} from 'firebase/firestore';
-import {db} from "../../firebase";
 import BottomSheetTextInput from "./BottomSheetTextInput";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import getDate from "./getDate";
+import useStore from "../../data/useStore";
+import {addDoc, collection, doc, updateDoc} from 'firebase/firestore';
+import {db} from "../../firebase";
+import { icons,titles } from "../template";
 
-const BottomSheet = ({ onPress}) => {
+const BottomSheet = ({ onPress, title}) => {
   const [timeVisible, setTimeVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const budgetId = useStore((state) => state.budgetId);
   const budgetName = useStore((state) => state.budgetName);
   const budgetAmount = useStore((state) => state.budgetAmount);
   const budgetTime = useStore((state) => state.budgetTime);
   const budgetCategory = useStore((state) => state.budgetCategory);
+  const editMode = useStore((state) => state.editMode);
   const time = useStore((state) => state.time);
   const uid = useStore((state) => state.uid);
+  const data = useStore((state) => state.data);
   const updateTimeRangeTitle = (selectedText) => {
     useStore.setState({ budgetTime: selectedText });
     setTimeVisible(false);
   };
 
     {/* Get date */}
-    const getDate = (interval) => {
-      const currentDate = new Date();
-      const firstDay = new Date(currentDate);
-      const lastDay = new Date(firstDay);
-
-      const setTime = (first, last) => {
-        first.setHours(0, 0, 0, 0);
-        last.setHours(23, 59, 59, 999);
-      };
-      // Adjust the date based on the specified interval
-      switch (interval) {
-        case 'Weekly':
-          firstDay.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-          lastDay.setDate(firstDay.getDate() + 6);
-          break;
-        case 'Monthly':
-          firstDay.setMonth(currentDate.getMonth(), 1);
-          lastDay.setMonth(firstDay.getMonth() + 1, 0);
-          break;
-        case 'Quarterly':
-          firstDay.setMonth(Math.floor(currentDate.getMonth() / 3) * 3 , 1);
-          lastDay.setMonth(firstDay.getMonth() + 3, 0);
-          break;
-        case 'Half Yearly':
-          firstDay.setMonth(currentDate.getMonth() < 6 ? 0 : 6, 1);
-          lastDay.setMonth(firstDay.getMonth() + 6, 0);
-          break;
-        case 'Yearly':
-          firstDay.setMonth(0, 1);
-          lastDay.setMonth(11, 31);
-          break;
-        default:
-          // Default to weekly if no or invalid interval provided
-          firstDay.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-          break;
-      }
-      setTime(firstDay, lastDay);
-      const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-        timeZone: 'Asia/Ho_Chi_Minh',
-      };
-      const formatter = new Intl.DateTimeFormat('en-US', options);
-      const formattedFirstDay = formatter.format(firstDay);
-      const formattedLastDay = formatter.format(lastDay);
-
-      return [formattedFirstDay, formattedLastDay];
-    };
-
-    const [firstDay, lastDay] = getDate(budgetTime);
+  const [firstDay, lastDay] = getDate(budgetTime);
 
   {/* Update Category */}
   const updateCategoryTitle = (selectedText) => {
@@ -90,88 +41,194 @@ const BottomSheet = ({ onPress}) => {
 
     {/* Save Budget */}
     const saveBudget = async () => {
-      if (budgetName === '' || budgetAmount === '' || budgetTime === 'Time Range' || budgetCategory === 'Categories') {
+      if (budgetName === '' || budgetAmount === '0' || budgetTime === 'Time Range' || budgetCategory === 'Categories') {
         Alert.alert('Please fill all the fields');
       } else {
         try {
           const queryData = collection(db, "Budget");
-          await addDoc(queryData, {
-            name: budgetName,
-            value: Number(budgetAmount),
-            category: budgetCategory,
-            uid: uid,
-            timerange: {
-              start: firstDay,
-              end: lastDay,
-              type: budgetTime,
-            }
-          });
-    
-          // Use the spread operator with the previous data
-          const newData = [...useStore.getState().data, {
-            name: budgetName,
-            value: Number(budgetAmount),
-            category: budgetCategory,
-            uid: uid,
-            timerange: {
-              start: firstDay,
-              end: lastDay,
-              type: budgetTime,
-            }
-          }];
-    
-          // Sort newData based on custom order
-          newData.sort((a, b) => {
-            const orderA = time.indexOf(a.timerange?.type);
-            const orderB = time.indexOf(b.timerange?.type);
-            return orderA - orderB;
-          });
+          if(editMode){
+            const budgetDocRef = doc(queryData, budgetId);
+            await updateDoc(budgetDocRef, {
+              name: budgetName,
+              value: Number(budgetAmount),
+              category: budgetCategory,
+              uid: uid,
+              timerange: {
+                start: firstDay,
+                end: lastDay,
+                type: budgetTime,
+              }
+            });
 
-          // Update the state using the setState function
-          useStore.setState({ data: newData, modalVisible: false });
-          useStore.setState({
-            budgetName: '',
-            budgetTime: 'Time Range',
-            budgetCategory: 'Categories',
-            budgetAmount: ''
-          });
-    
-          Alert.alert('Budget created successfully');
+            // Update the budget
+            const newData = [...useStore.getState().data];
+            const index = newData.findIndex((obj) => obj.id === budgetId);
+            newData[index] = {
+              id: budgetId,
+              name: budgetName,
+              value: Number(budgetAmount),
+              category: budgetCategory,
+              uid: uid,
+              timerange: {
+                start: firstDay,
+                end: lastDay,
+                type: budgetTime,
+              }
+            };
+            // Sort newData based on custom order
+            newData.sort((a, b) => {
+              const orderA = time.indexOf(a.timerange?.type);
+              const orderB = time.indexOf(b.timerange?.type);
+              return orderA - orderB;
+            });
+            useStore.setState({ data: newData, modalVisible: false });
+            useStore.setState({
+              budgetId: '',
+              budgetName: '',
+              budgetTime: 'Time Range',
+              budgetCategory: 'Categories',
+              budgetAmount: ''
+            });
+            Alert.alert('Budget updated successfully');
+            return;
+          }
+          else{
+            await addDoc(queryData, {
+              name: budgetName,
+              value: Number(budgetAmount),
+              category: budgetCategory,
+              uid: uid,
+              timerange: {
+                start: firstDay,
+                end: lastDay,
+                type: budgetTime,
+              }
+            });
+      
+            // Use the spread operator with the previous data
+            const newData = [...useStore.getState().data, {
+              name: budgetName,
+              value: Number(budgetAmount),
+              category: budgetCategory,
+              uid: uid,
+              timerange: {
+                start: firstDay,
+                end: lastDay,
+                type: budgetTime,
+              }
+            }];
+      
+            // Sort newData based on custom order
+            newData.sort((a, b) => {
+              const orderA = time.indexOf(a.timerange?.type);
+              const orderB = time.indexOf(b.timerange?.type);
+              return orderA - orderB;
+            });
+  
+            // Update the state using the setState function
+            useStore.setState({ data: newData, modalVisible: false });
+            useStore.setState({
+              budgetName: '',
+              budgetTime: 'Time Range',
+              budgetCategory: 'Categories',
+              budgetAmount: ''
+            });
+      
+            Alert.alert('Budget created successfully');
+          }
+          
         } catch (error) {
           console.error("Error adding document: ", error);
         }
       }
     };
 
+    const handleDeleteBtnPress = () => {
+      setAlertVisible(false);
+      Alert.alert('haha')
+    }
+
   return (
-    <View style={styles.container}>
+    <View className="bg-[#d1d1d1] rounded-t-xl h-3/4">
       <View style={styles.detailContainer}>
-        <View style={styles.titleHeader}>
-          <Ionicon name="chevron-down-outline" size={40} color="#4cb050" style={styles.icon} onPress={onPress} />
-          <Text style={styles.titleText}>Create Budget</Text>
+        <View className="bg-[#fff] rounded-t-xl flex-row justify-between items-center p-5">
+          <Ionicons name="chevron-down-outline" size={40} color="#4cb050" style={styles.icon} onPress={onPress} />
+          <Text style={styles.titleText}>{title}</Text>
+          {
+            editMode && (
+            <TouchableOpacity onPress={() => setAlertVisible(true)}>
+              <Ionicons name="trash-outline" size={30} color={"#eb3700"} />
+            </TouchableOpacity>    
+            )
+          } 
+           {/* Delete confirm alert */}
+           <Modal
+              isVisible={alertVisible}
+              onBackdropPress={() => setAlertVisible(false)}
+              animationIn={"fadeIn"}
+              animationOut={"fadeOut"}
+              className="flex-1 justify-center items-center"
+            >
+              <View className="bg-[#fff] justify-center items-center w-4/6 rounded-lg p-6">
+                {/* Title */}
+                <Text className="text-lg font-bold">
+                  Are you sure to delete?
+                </Text>
+                {/* Cancel button */}
+                <View className="flex-row justify-between w-4/5 mt-5">
+                  <TouchableOpacity
+                    className="bg-[#d1d1d1] rounded-lg p-2"
+                    onPress={() => setAlertVisible(false)}
+                  >
+                    <Text className="text-[#fff] font-bold">Cancel</Text>
+                  </TouchableOpacity>
+                  {/* Confirm button */}
+                  <TouchableOpacity
+                    className="bg-[#eb3700] rounded-lg p-2"
+                    onPress={handleDeleteBtnPress}
+                  >
+                    <Text className="text-[#fff] font-bold">Delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          
         </View>
-        <View style={styles.content}>
+        <View className="bg-[#fff] rounded-xl mt-16 p-6">
           <BottomSheetTextInput
-            link='https://icons.veryicon.com/png/o/internet--web/billion-square-cloud/rename-5.png'
+            //link='https://icons.veryicon.com/png/o/internet--web/billion-square-cloud/rename-5.png'
             placeholder="Budget Name"
             value={budgetName}
             onChangeText={(budgetName) => useStore.setState({ budgetName: budgetName })}
           />
-          <BottomSheetTextInput
-            link='https://cdn-icons-png.flaticon.com/512/94/94661.png'
-            placeholder={"Amount"}
-            value={String(budgetAmount)}
-            onChangeText={(text) => useStore.setState({budgetAmount: text.replace(/[^0-9]/g, "")})}
-            keyboardType={'numeric'}
-          />
+          {/* Expense input */}
+            <View className="flex-row items-center gap-4">
+              <View className="rounded-full h-12 w-12 flex items-center justify-center bg-dark-green">
+                <Ionicons name="cash" size={27} color={"#fff"} />
+              </View>
+              <View>
+                <Text className="text-base text-grey-text">Amount</Text>
+                <View className="flex-row">
+                  <TextInput
+                    className={`font-bold  text-2xl`}
+                    value={String(budgetAmount)}
+                    keyboardType="numeric"
+                    onChangeText={(text) => useStore.setState({budgetAmount: Number(text.replace(/[^0-9]/g, ""))})
+                    }
+                  />
+                  <Text className={`font-bold  text-2xl`}>₫</Text>
+                </View>
+              </View>
+            </View>
+            
           <CustomBudgetButton
             title={budgetTime}
-            icon='https://cdn-icons-png.flaticon.com/512/4781/4781427.png'
+            icon='today'
             onPress={() => {setTimeVisible(true)}}
           />
           <CustomBudgetButton
-            title={budgetCategory}
-            icon='https://cdn-icons-png.flaticon.com/512/2603/2603910.png'
+            title={budgetCategory === 'Categories' ? 'Categories' : titles[budgetCategory]}
+            icon= {budgetCategory === 'Categories' ? 'grid' : icons[budgetCategory]}
             onPress={() => {setCategoryVisible(true)}}
           />
         </View>
@@ -179,6 +236,7 @@ const BottomSheet = ({ onPress}) => {
           animationType="slide"
           transparent={true}
           visible={timeVisible}
+          className="flex-1 m-0 justify-end"
           onRequestClose={() => {
             setTimeVisible(!timeVisible);
           }}>
@@ -190,6 +248,7 @@ const BottomSheet = ({ onPress}) => {
           animationType="slide"
           transparent={true}
           visible={categoryVisible}
+          className="flex-1 m-0 justify-end"
           onRequestClose={() => {
             setCategoryVisible(!categoryVisible);
           }}>
@@ -217,50 +276,17 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
         backgroundColor: "rgba(0,0,0,0.5)",
     },
-    titleHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingVertical: 20,
-        backgroundColor: "#fff",
-        borderRadius: 10,
+    detailContainer:{
+      borderRadius: 10,
+    },
+    titleText:{
+      fontSize: 25,
+      fontWeight: "bold",
+      color: "black",
+      marginLeft: 120,
     },
     icon:{
         position: "absolute",
         left: 20
-    },
-    content:{
-        marginHorizontal: 5,
-        marginVertical: 20,
-        backgroundColor: "#fff",
-        borderRadius: 10,
-    },
-    titleText:{
-        fontSize: 25,
-        fontWeight: "bold",
-        color: "black",
-        marginLeft: 120,
-    },
-    detailContainer:{
-        backgroundColor: "#d1d1d1",
-        borderRadius: 10,
-        height: 500,
-    },
-    header: {
-        height: 50,
-    },
-    button:{
-        marginTop: 50,
-        backgroundColor: "#4cb050",
-        height: 50,
-        width: 150,
-        alignSelf: "center",
-        borderRadius: 30,
-    },
-    text:{
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-        textAlign: "center",
-        marginTop: 10,
     },
 });
