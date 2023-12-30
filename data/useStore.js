@@ -281,6 +281,12 @@ const useStore = create((set) => ({
   },
 
   //Budget state
+  editMode: false,
+  setEditMode: (editMode) => set({ editMode }),
+  
+  budgetId: '',
+  setBudgetId: (budgetId) => set({ budgetId }),
+  
   data: [],
   setData: (data) => set({ data }),
 
@@ -303,6 +309,7 @@ const useStore = create((set) => ({
   setIsLoading: (isLoading) => set({ isLoading }),
 
   time: ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"],
+  
   reportFilterVisible: true,
   setReportFilterVisible: (data) => {
     set(() => ({ reportFilterVisible: data }));
