@@ -10,7 +10,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { auth } from "../firebase";
 
 export default function SignUpScreen() {
@@ -49,11 +49,11 @@ export default function SignUpScreen() {
       {/* Input group */}
       <View style={{ marginVertical: 15 }}>
         <View style={styles.sectionStyle}>
-          <Image
-            source={{
-              uri: "https://th.bing.com/th/id/OIP.37SXOl1HMjafsfpow_NjhwHaFS?pid=ImgDet&rs=1",
-            }}
-            style={styles.iconStyle}
+          <Feather
+            name="mail"
+            size={30}
+            color="black"
+            style={{ paddingLeft: 10, paddingRight: 10 }}
           />
           <TextInput
             style={styles.textinput}
@@ -63,11 +63,11 @@ export default function SignUpScreen() {
           />
         </View>
         <View style={styles.sectionStyle}>
-          <Image
-            source={{
-              uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1",
-            }}
-            style={[styles.iconStyle, { height: 35, width: 30 }]}
+          <MaterialIcons
+            name="lock-outline"
+            size={30}
+            color="black"
+            style={{ paddingLeft: 10, paddingRight: 10 }}
           />
           <TextInput
             style={styles.textinput}
@@ -78,11 +78,11 @@ export default function SignUpScreen() {
           />
         </View>
         <View style={styles.sectionStyle}>
-          <Image
-            source={{
-              uri: "https://th.bing.com/th/id/OIP.D8nemBhgTZk6KzU-ZSvuJAHaI6?pid=ImgDet&rs=1",
-            }}
-            style={[styles.iconStyle, { height: 35, width: 30 }]}
+          <MaterialIcons
+            name="lock-outline"
+            size={30}
+            color="black"
+            style={{ paddingLeft: 10, paddingRight: 10 }}
           />
           <TextInput
             style={styles.textinput}
