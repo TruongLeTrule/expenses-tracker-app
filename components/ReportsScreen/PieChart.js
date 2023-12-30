@@ -17,6 +17,12 @@ function PieChartExpenses({ selectedDate, allExpenses, allIncomes, type }) {
   ] //this array contain data for drawing the pie chart
 
 
+  let ExpensesIncomes = ''
+  if (allExpenses)
+    ExpensesIncomes = 'Expenses'
+  else if (allIncomes)
+    ExpensesIncomes = 'Incomes'
+
   function conditionalGetter(date) {
     if (type === 'Day') {
       return selectedDate.day === date.getDate() &&
@@ -129,7 +135,7 @@ function PieChartExpenses({ selectedDate, allExpenses, allIncomes, type }) {
   }
   return (
     <View style={styles.pieChartContainer}>
-      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold', marginBottom: 15 }}>Expenses Pie Chart</Text>
+      <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold', marginBottom: 15 }}>{`${ExpensesIncomes}`} Pie Chart</Text>
       <PieChart
         showText
         data={data}
