@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert } from "react-native";
 import Modal  from "react-native-modal"
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import BottomSheet from "../components/BudgetsScreen/BottomSheet";
 import Budgets from "../components/BudgetsScreen/Budgets";
 import useFetch from "../data/fetchData";
@@ -8,8 +8,10 @@ import useStore from "../data/useStore";
 import WhiteBox from "../components/WalletsScreen/WhiteBox";
 import AddButton from "../components/BudgetsScreen/AddButton";
 import { commafy } from "../components/formatCurrency";
+import EditBudget from "../components/BudgetsScreen/EditBudget";
 
 export default function BudgetsScreen() {
+  const editMode = useStore((state) => state.editMode);
   const data = useStore((state) => state.data);
   const modalVisible = useStore((state) => state.modalVisible);
   const time = useStore((state) => state.time);
@@ -21,21 +23,40 @@ export default function BudgetsScreen() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getBudgets(uid, time);
+      console.log(data)
       useStore.setState({ data: data });
     }
     fetchData();
   }, []);
 
-    //Get expense
-  const getExpense = (category) => {
-    let totalExpense = 0;
-    allExpenses.map((expense) => {
-      if (category === expense.category) {
-        totalExpense += expense.value;
-      }
+  const handleItemClick = (item) => {
+    // Set the data of the clicked item in the store
+    useStore.setState({
+      budgetId: item.id,
+      budgetName: item.name,
+      budgetAmount: item.value.toString(),
+      budgetTime: item.timerange?.type || 'Time Range',
+      budgetCategory: item.category || 'Categories',
+      modalVisible: true,
+      editMode: true
     });
-    return totalExpense;
+    console.log(item)
   };
+
+    //Get expense
+    const getExpense = (category) => {
+      let totalExpense = 0;
+      if (allExpenses && Array.isArray(allExpenses)) {
+        allExpenses.map((expense) => {
+          if (category === expense.category) {
+            totalExpense += expense.value;
+          }
+        });
+      }
+    
+      return totalExpense;
+    };
+    
 
   {/* Loading screen */ }
   if (isLoading) {
@@ -49,8 +70,9 @@ export default function BudgetsScreen() {
   {/* Reset budget */ }
   const reset = () => {
     useStore.setState({
+      budgetId: '',
       budgetName: '',
-      budgetAmount: '',
+      budgetAmount: '0',
       budgetTime: 'Time Range',
       budgetCategory: 'Categories',
       modalVisible: false,
@@ -83,11 +105,11 @@ export default function BudgetsScreen() {
                           </View>
                           {budgetsForTimeRange.map((budget) => (
                             <Budgets
-                              key={budget.name}
+                              key={budget.id}
                               name={budget.name}
                               value={commafy(totalBudget(budget.value, budget.category))}
                               category={budget.category}
-                              onPress={() => {Alert.alert(budget.name,`budget value: ${budget.value}đ`)}}
+                              onPress={() => handleItemClick(budget)}
                               progress={
                                 totalBudget(budget.value, budget.category) < 0 
                                 ? 1 - (getExpense(budget.category) / 1000000) 
@@ -107,7 +129,7 @@ export default function BudgetsScreen() {
                 ListFooterComponent={
                   (data && data.length !== 0) && (
                   <View className="items-center mt-8">
-                    <AddButton onPress={() => {useStore.setState({ modalVisible: true })}} />
+                    <AddButton onPress={() => {useStore.setState({ modalVisible: true }),  useStore.setState({ editMode: false })}} />
                   </View>
                   )
                 }
@@ -115,14 +137,14 @@ export default function BudgetsScreen() {
           {(!data || data.length === 0) && (
             <View className="items-center mt-8 flex-1">
               <Text className='text-lg text-center mb-5'>You have not created any budget yet</Text>
-              <AddButton onPress={() => {useStore.setState({ modalVisible: true })}} />
+              <AddButton onPress={() => {useStore.setState({ modalVisible: true }),  useStore.setState({ editMode: false })}} />
             </View>
           )}
           <Modal
             swipeDirection="down"
             onBackdropPress={() => { useStore.setState({ modalVisible: false })}}
             onSwipeComplete={() => { useStore.setState({ modalVisible: false })}}
-            style={styles.modalContainer}
+            //style={styles.modalContainer}
             className="flex-1 m-0 justify-end"
             animationType="slide"
             transparent={true}
@@ -131,7 +153,11 @@ export default function BudgetsScreen() {
               useStore.setState({ modalVisible: false });
             }}
           >
-            <BottomSheet onPress={reset} />
+          {
+            editMode
+            ?<BottomSheet onPress={reset} title= "Edit Budget"/>
+            :<BottomSheet onPress={reset} title= "Add Budget" />
+          }
           </Modal>
         </View>
     </View>
