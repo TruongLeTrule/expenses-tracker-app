@@ -8,7 +8,10 @@ const AddButton = ({ onPress }) => (
         onPress={onPress}
     >
         <Ionicons name={"add"} size={30} color={"#fff"} />
-        <Text className="font-bold text-xl text-[#fff] ml-2">Add Budget</Text>
+        <Text
+            className="font-bold text-xl text-[#fff] ml-2"
+            style={{ paddingRight: 10 }}
+        >Add Budget</Text>
     </TouchableOpacity>
-    );
+);
 export default AddButton;
