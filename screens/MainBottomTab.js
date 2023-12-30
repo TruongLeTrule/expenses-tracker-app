@@ -6,8 +6,8 @@ import WalletsScreen from "./WalletsScreen";
 import BudgetsScreen from "./BudgetsScreen";
 import AddScreen from "./AddScreen";
 import ReportsScreen from "./ReportsScreen";
-import MoreScreen from "./MoreScreen";
 import { useNavigation } from "@react-navigation/native";
+import MoreScreenStack from "../components/MoreScreen/MoreScreenStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -80,7 +80,7 @@ export default function MainBottomTab() {
       />
       <Tab.Screen
         name="More"
-        component={MoreScreen}
+        component={MoreScreenStack}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="menu-outline" color={color} size={47} />
