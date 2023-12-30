@@ -163,14 +163,6 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
   },
-  iconStyle: {
-    height: 25,
-    width: 35,
-    padding: 10,
-    margin: 10,
-    resizeMode: "stretch",
-    alignItems: "center",
-  },
   sectionStyle: {
     marginLeft: 50,
     marginRight: 50,
