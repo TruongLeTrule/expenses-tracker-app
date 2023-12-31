@@ -8,7 +8,7 @@ import BottomSheetTextInput from "./BottomSheetTextInput";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import getDate from "./getDate";
 import useStore from "../../data/useStore";
-import {addDoc, collection, doc, updateDoc} from 'firebase/firestore';
+import {addDoc, collection, doc, updateDoc, deleteDoc} from 'firebase/firestore';
 import {db} from "../../firebase";
 import { icons,titles } from "../template";
 
@@ -93,7 +93,7 @@ const BottomSheet = ({ onPress, title}) => {
             return;
           }
           else{
-            await addDoc(queryData, {
+            const newBudgetDocRef = await addDoc(queryData, {
               name: budgetName,
               value: Number(budgetAmount),
               category: budgetCategory,
@@ -105,8 +105,10 @@ const BottomSheet = ({ onPress, title}) => {
               }
             });
       
+            const newId = newBudgetDocRef.id;
             // Use the spread operator with the previous data
             const newData = [...useStore.getState().data, {
+              id: newId,
               name: budgetName,
               value: Number(budgetAmount),
               category: budgetCategory,
@@ -143,9 +145,34 @@ const BottomSheet = ({ onPress, title}) => {
       }
     };
 
-    const handleDeleteBtnPress = () => {
-      setAlertVisible(false);
-      Alert.alert('haha')
+    const handleDeleteBtnPress = async() => {
+      const queryData = collection(db, "Budget");
+      try{
+        const budgetDocRef = doc(queryData, budgetId);
+            await deleteDoc(budgetDocRef);
+            // Update the budget
+            const newData = useStore.getState().data.filter(item => item.id !== budgetId);
+            useStore.setState({ data: newData });
+            // Sort newData based on custom order
+            newData.sort((a, b) => {
+              const orderA = time.indexOf(a.timerange?.type);
+              const orderB = time.indexOf(b.timerange?.type);
+              return orderA - orderB;
+            });
+            useStore.setState({ data: newData, modalVisible: false });
+            useStore.setState({
+              budgetId: '',
+              budgetName: '',
+              budgetTime: 'Time Range',
+              budgetCategory: 'Categories',
+              budgetAmount: ''
+            });
+            Alert.alert('Budget deleted successfully');
+            return;
+      }
+      catch(error){
+        console.error("Error adding document: ", error);
+      }
     }
 
   return (
