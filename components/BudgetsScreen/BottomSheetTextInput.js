@@ -4,7 +4,7 @@ import React from 'react';
 export default function BottomSheetTextInput({placeholder,value,onChangeText, link, keyboardType}) {
   return(
     <View className="flex-row items-center gap-4">
-        <View className="rounded-full h-12 w-12 flex items-center justify-center">
+        <View className="rounded-full h-12 w-12 flex items-center justify-center mb-6">
             <Ionicons name="person" size={30} color="black" />
         </View>
         <View>
@@ -43,8 +43,9 @@ const styles = StyleSheet.create({
     },
     line:{
         height: 1,
-        width: 300,
-        backgroundColor: '#424242',
+        width: 364,
+        backgroundColor: '#848484',
         marginVertical: 12,
+        right: 64
     },
 });
