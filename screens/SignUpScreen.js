@@ -126,7 +126,7 @@ export default function SignUpScreen() {
               textDecorationLine: "underline",
             }}
           >
-            Log in
+            LOG IN
           </Text>
         </TouchableOpacity>
       </View>

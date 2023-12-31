@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert } from "react-native";
-import Modal  from "react-native-modal"
-import { useEffect,useState } from "react";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import Modal from "react-native-modal"
+import { useEffect, useState } from "react";
 import BottomSheet from "../components/BudgetsScreen/BottomSheet";
 import Budgets from "../components/BudgetsScreen/Budgets";
 import useFetch from "../data/fetchData";
@@ -42,20 +42,20 @@ export default function BudgetsScreen() {
     console.log(item)
   };
 
-    //Get expense
-    const getExpense = (category) => {
-      let totalExpense = 0;
-      if (allExpenses && Array.isArray(allExpenses)) {
-        allExpenses.map((expense) => {
-          if (category === expense.category) {
-            totalExpense += expense.value;
-          }
-        });
-      }
-    
-      return totalExpense;
-    };
-    
+  //Get expense
+  const getExpense = (category) => {
+    let totalExpense = 0;
+    if (allExpenses && Array.isArray(allExpenses)) {
+      allExpenses.map((expense) => {
+        if (category === expense.category) {
+          totalExpense += expense.value;
+        }
+      });
+    }
+
+    return totalExpense;
+  };
+
 
   {/* Loading screen */ }
   if (isLoading) {
@@ -83,82 +83,82 @@ export default function BudgetsScreen() {
       <View style={styles.header}>
         <Text style={styles.text}>Budgets</Text>
       </View>
-        <View style={styles.container}>
-          <FlatList
-            data={time}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => {
-              const budgetsForTimeRange = data.filter(budget => budget.timerange?.type === item);
-              const totalBudget = (value, category) => {
-                let totalBudget = 0;
-                totalBudget = value - getExpense(category);
-                return totalBudget;
-              }
-                if (budgetsForTimeRange.length > 0) {
-                  return (
-                    <WhiteBox mt={"mt-4"}>
-                      <View style={styles.boxContainer}>
-                          <View>
-                            <Text style={styles.boxText}>{item}</Text>
-                            <View style={styles.line} />
-                          </View>
-                          {budgetsForTimeRange.map((budget) => (
-                            <Budgets
-                              key={budget.id}
-                              name={budget.name}
-                              value={commafy(totalBudget(budget.value, budget.category))}
-                              category={budget.category}
-                              onPress={() => handleItemClick(budget)}
-                              progress={
-                                totalBudget(budget.value, budget.category) < 0 
-                                ? 1 - (getExpense(budget.category) / 1000000) 
-                                : getExpense(budget.category) / budget.value
-                              }
-                              color={totalBudget(budget.value, budget.category) < 0 ? '#eb3700': '#4cb050'}
-                              unfilledColor={totalBudget(budget.value, budget.category) < 0 ? '#eb3700' : '#f2f2f2'} //Budget exceeded
-                            />
-                          ))}
-                      </View>
-                    </WhiteBox>
-                  )}
-                  else{
-                    return null;
-                  }
-                  }}
-                ListFooterComponent={
-                  (data && data.length !== 0) && (
-                  <View className="items-center mt-8">
-                    <AddButton onPress={() => {useStore.setState({ modalVisible: true }),  useStore.setState({ editMode: false })}} />
+      <View style={styles.container}>
+        <FlatList
+          data={time}
+          renderItem={({ item, index }) => {
+            const budgetsForTimeRange = data.filter(budget => budget.timerange?.type === item);
+            const totalBudget = (value, category) => {
+              let totalBudget = 0;
+              totalBudget = value - getExpense(category);
+              return totalBudget;
+            }
+            if (budgetsForTimeRange.length > 0) {
+              return (
+                <WhiteBox mt={"mt-4"} key={index}>
+                  <View style={styles.boxContainer}>
+                    <View>
+                      <Text style={styles.boxText}>{item}</Text>
+                      <View style={styles.line} />
+                    </View>
+                    {budgetsForTimeRange.map((budget) => (
+                      <Budgets
+                        key={budget.id}
+                        name={budget.name}
+                        value={commafy(totalBudget(budget.value, budget.category))}
+                        category={budget.category}
+                        onPress={() => handleItemClick(budget)}
+                        progress={
+                          totalBudget(budget.value, budget.category) < 0
+                            ? 1 - (getExpense(budget.category) / 1000000)
+                            : getExpense(budget.category) / budget.value
+                        }
+                        color={totalBudget(budget.value, budget.category) < 0 ? '#eb3700' : '#4cb050'}
+                        unfilledColor={totalBudget(budget.value, budget.category) < 0 ? '#eb3700' : '#f2f2f2'} //Budget exceeded
+                      />
+                    ))}
                   </View>
-                  )
-                }
-          />
-          {(!data || data.length === 0) && (
-            <View className="items-center mt-8 flex-1">
-              <Text className='text-lg text-center mb-5'>You have not created any budget yet</Text>
-              <AddButton onPress={() => {useStore.setState({ modalVisible: true }),  useStore.setState({ editMode: false })}} />
-            </View>
-          )}
-          <Modal
-            swipeDirection="down"
-            onBackdropPress={() => { useStore.setState({ modalVisible: false })}}
-            onSwipeComplete={() => { useStore.setState({ modalVisible: false })}}
-            //style={styles.modalContainer}
-            className="flex-1 m-0 justify-end"
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              useStore.setState({ modalVisible: false });
-            }}
-          >
+                </WhiteBox>
+              )
+            }
+            else {
+              return null;
+            }
+          }}
+          ListFooterComponent={
+            (data && data.length !== 0) && (
+              <View className="items-center mt-8">
+                <AddButton onPress={() => { useStore.setState({ modalVisible: true }), useStore.setState({ editMode: false }) }} />
+              </View>
+            )
+          }
+        />
+        {(!data || data.length === 0) && (
+          <View className="items-center mt-8 flex-1">
+            <Text className='text-lg text-center mb-5'>You have not created any budget yet</Text>
+            <AddButton onPress={() => { useStore.setState({ modalVisible: true }), useStore.setState({ editMode: false }) }} />
+          </View>
+        )}
+        <Modal
+          swipeDirection="down"
+          onBackdropPress={() => { useStore.setState({ modalVisible: false }) }}
+          onSwipeComplete={() => { useStore.setState({ modalVisible: false }) }}
+          //style={styles.modalContainer}
+          className="flex-1 m-0 justify-end"
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            useStore.setState({ modalVisible: false });
+          }}
+        >
           {
             editMode
-            ?<BottomSheet onPress={reset} title= "Edit Budget"/>
-            :<BottomSheet onPress={reset} title= "Add Budget" />
+              ? <BottomSheet onPress={reset} title="Edit Budget" />
+              : <BottomSheet onPress={reset} title="Add Budget" />
           }
-          </Modal>
-        </View>
+        </Modal>
+      </View>
     </View>
   );
 }

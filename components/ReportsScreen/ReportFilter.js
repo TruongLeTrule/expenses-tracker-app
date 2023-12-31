@@ -42,10 +42,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   filterButton: {
-    backgroundColor: 'green',
-    borderWidth: 1,
+    backgroundColor: 'rgb(40, 230, 40)',
     borderStyle: 'solid',
-    borderColor: 'green',
     padding: 20,
     borderRadius: 20,
     margin: 50,

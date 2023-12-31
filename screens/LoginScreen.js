@@ -115,7 +115,7 @@ export default function LoginScreen() {
               marginTop: 10,
             }}
           >
-            Create account
+            CREATE ACCOUNT
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("ForgetPassword")}>
@@ -125,7 +125,8 @@ export default function LoginScreen() {
               marginTop: 10,
               color: 'white',
               fontStyle: 'italic',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              fontSize: 17
             }}
           >
             Forget password?

@@ -53,9 +53,20 @@ function ForgetPassword({ navigation }) {
       </View>
 
       {/* Submit btn */}
-      <View style={styles.LogInButton}>
-        <Button title="RESET PASSWORD" color="darkgreen" onPress={handleReset} />
-      </View>
+      <TouchableOpacity
+        onPress={handleReset}
+        style={styles.LogInButton}>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: '#fff',
+            fontSize: 18,
+            fontWeight: 'bold'
+          }}
+        >
+          RESET PASSWORD
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -96,9 +107,14 @@ const styles = StyleSheet.create({
   },
   LogInButton: {
     width: "75%",
-    marginTop: 15,
+    height: 45,
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: 'darkgreen',
+    marginTop: 10,
     marginLeft: "auto",
     marginRight: "auto",
+    borderRadius: 15
   },
   iconStyle: {
     height: 25,

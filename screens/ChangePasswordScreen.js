@@ -16,7 +16,7 @@ export default function ChangePasswordScreen() {
 
   const handleSignOut = async () => {
     await auth.signOut()
-      .then(() => Alert.alert("Signed out successfully"))
+      .then(() => Alert.alert('Password updated successfully. Please log in again'))
       .catch((error) => Alert.alert(error.message))
     setUID(null);
     setAllExpenses(null);
@@ -56,12 +56,11 @@ export default function ChangePasswordScreen() {
       })
       .then(() => {
         // Password updated successfully
-        Alert.alert('Password updated successfully. Please log in again');
         handleSignOut()
       })
-      .catch((error) => {
+      .catch(() => {
         // Handle errors
-        Alert.alert(`Error changing password: ${error.message}`);
+        Alert.alert("Error: Wrong current password");
       });
   }
   const handleChangeInput = (type, text) => {

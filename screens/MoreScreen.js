@@ -17,7 +17,7 @@ export default function MoreScreen({ navigation }) {
 
   const handleSignOut = async () => {
     await auth.signOut()
-      .then(() => Alert.alert("Signed out successfully"))
+      .then(() => Alert.alert("Logged out successfully"))
       .catch((error) => Alert.alert(error.message))
     setUID(null);
     setAllExpenses(null);
@@ -63,7 +63,7 @@ export default function MoreScreen({ navigation }) {
         style={styles.Btn}
         onPress={handleSignOut}
       >
-        <Text style={styles.signOut}>SIGN OUT</Text>
+        <Text style={styles.signOut}>LOG OUT</Text>
       </TouchableOpacity>
     </View>
   );
