@@ -87,7 +87,7 @@ const BottomSheet = ({ onPress, title}) => {
               budgetName: '',
               budgetTime: 'Time Range',
               budgetCategory: 'Categories',
-              budgetAmount: ''
+              budgetAmount: '0'
             });
             Alert.alert('Budget updated successfully');
             return;
@@ -133,7 +133,7 @@ const BottomSheet = ({ onPress, title}) => {
               budgetName: '',
               budgetTime: 'Time Range',
               budgetCategory: 'Categories',
-              budgetAmount: ''
+              budgetAmount: '0'
             });
       
             Alert.alert('Budget created successfully');
@@ -165,7 +165,7 @@ const BottomSheet = ({ onPress, title}) => {
               budgetName: '',
               budgetTime: 'Time Range',
               budgetCategory: 'Categories',
-              budgetAmount: ''
+              budgetAmount: '0'
             });
             Alert.alert('Budget deleted successfully');
             return;
