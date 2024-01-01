@@ -142,6 +142,7 @@ const useFetch = () => {
       querySnapshot.forEach((doc) => {
         const docData = doc.data();
         data.push({
+          id: doc.id,
           category: docData.category,
           name: docData.name,
           timerange: docData.timerange,
