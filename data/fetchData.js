@@ -2,15 +2,15 @@ import {
   collection,
   getDocs,
   query,
-  orderBy,
   updateDoc,
   doc,
   where,
   addDoc,
   deleteDoc,
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import useStore from "./useStore";
 import useLocal from "./localData";
 
@@ -19,6 +19,8 @@ const useFetch = () => {
 
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setAllIncomes = useStore((state) => state.setAllIncomes);
+  const uid = useStore((state) => state.uid);
+  const setAvaURI = useStore((state) => state.setAvaURI);
 
   // Get all expenses from db
   const getAllExpenses = async (uid) => {
@@ -132,7 +134,7 @@ const useFetch = () => {
     }
   };
 
-   // Get budgets from db
+  // Get budgets from db
   const getBudgets = async (uid, time) => {
     try {
       const data = [];
@@ -151,13 +153,13 @@ const useFetch = () => {
         });
       });
 
-      // Sort data by custom order  
+      // Sort data by custom order
       data.sort((a, b) => {
         const orderA = time.indexOf(a.timerange?.type);
         const orderB = time.indexOf(b.timerange?.type);
         return orderA - orderB;
       });
-      console.log('Budgets fetched')
+      console.log("Budgets fetched");
       return data;
     } catch (error) {
       console.error("Error fetching data from Firestore:", error);
@@ -166,7 +168,57 @@ const useFetch = () => {
       useStore.setState({ isLoading: false });
     }
   };
-  
+
+  // Upload image to cloud storage
+  const getBlobFroUri = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    return blob;
+  };
+
+  const uploadAva = async (file) => {
+    let avaURL;
+    const fileBlob = await getBlobFroUri(file);
+    const storageRef = ref(storage, `images/avatar/${uid}.jpg`);
+    console.log("uploading file");
+    await uploadBytes(storageRef, fileBlob).then((snapShot) => {
+      console.log("Uploaded a file!");
+      avaURL = snapShot.ref.fullPath;
+    });
+    await getDownloadURL(ref(storage, avaURL))
+      .then((url) => {
+        avaURL = url;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return avaURL;
+  };
+
+  // Download image from cloud storage
+  const downloadAva = async () => {
+    let avaURL;
+    await getDownloadURL(ref(storage, `images/avatar/${uid}.jpg`))
+      .then((url) => {
+        avaURL = url;
+      })
+      .catch((err) => {
+        console.log("No image found");
+      });
+    return avaURL;
+  };
+
   return {
     getAllExpenses: getAllExpenses,
     updateExpense: updateExpense,
@@ -176,7 +228,9 @@ const useFetch = () => {
     addIncome: addIncome,
     updateIncome: updateIncome,
     deleteIncome: deleteIncome,
-    getBudgets: getBudgets
+    getBudgets: getBudgets,
+    uploadAva: uploadAva,
+    downloadAva: downloadAva,
   };
 };
 

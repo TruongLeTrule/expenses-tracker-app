@@ -22,7 +22,6 @@ export default function App() {
   const setUID = useStore((state) => state.setUID);
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setAllIncomes = useStore((state) => state.setAllIncomes);
-  const setSortDateExpenses = useStore((state) => state.setSortDateExpenses);
 
   // Get data from local storage
   const getDataFromLocal = async () => {

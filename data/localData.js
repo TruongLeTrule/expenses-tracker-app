@@ -96,16 +96,54 @@ const useLocal = () => {
     }
   };
 
+  // Set avatar to localStorage
+  const setLocalAva = async (uri) => {
+    try {
+      await AsyncStorage.setItem("avatar", uri);
+      console.log("Set avatar uri to local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Get avatar from localStorage
+  const getLocalAva = async () => {
+    try {
+      const uid = await AsyncStorage.getItem("avatar");
+      console.log("Get avatar uri from local");
+      return uid;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Remove avatar from localStorage
+  const removeLocalAva = async () => {
+    try {
+      await AsyncStorage.removeItem("avatar");
+      console.log("Remove avatar from local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeAllLocalData = async () => {
+    await removeLocalUID();
+    await removeLocalExpenses();
+    await removeLocalIncomes();
+    await removeLocalAva();
+  };
+
   return {
     getLocalUID: getLocalUID,
-    setLocalUID: setLocalUID,
-    removeLocalUID: removeLocalUID,
-    setLocalExpenses: setLocalExpenses,
     getLocalExpenses: getLocalExpenses,
-    removeLocalExpenses: removeLocalExpenses,
-    setLocalIncomes: setLocalIncomes,
     getLocalIncomes: getLocalIncomes,
-    removeLocalIncomes: removeLocalIncomes,
+    getLocalAva: getLocalAva,
+    setLocalUID: setLocalUID,
+    setLocalExpenses: setLocalExpenses,
+    setLocalIncomes: setLocalIncomes,
+    setLocalAva: setLocalAva,
+    removeAllLocalData: removeAllLocalData,
   };
 };
 
