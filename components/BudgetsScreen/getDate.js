@@ -35,20 +35,23 @@ export default getDate = (interval) => {
         break;
     }
     setTime(firstDay, lastDay);
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: true,
-      timeZone: 'Asia/Ho_Chi_Minh',
-    };
-    const formatter = new Intl.DateTimeFormat('en-US', options);
-    const formattedFirstDay = formatter.format(firstDay);
-    const formattedLastDay = formatter.format(lastDay);
+    // const options = {
+    //   year: 'numeric',
+    //   month: 'long',
+    //   day: 'numeric',
+    //   hour: 'numeric',
+    //   minute: 'numeric',
+    //   second: 'numeric',
+    //   hour12: true,
+    //   timeZone: 'Asia/Ho_Chi_Minh',
+    // };
+    // const formatter = new Intl.DateTimeFormat('en-US', options);
+    // const formattedFirstDay = formatter.format(firstDay);
+    // const formattedLastDay = formatter.format(lastDay);
 
-    return [formattedFirstDay, formattedLastDay];
+    firstDay.getTime();
+    lastDay.getTime();
+
+    return [firstDay, lastDay];
   };
 

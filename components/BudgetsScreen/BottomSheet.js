@@ -32,6 +32,8 @@ const BottomSheet = ({ onPress, title}) => {
 
     {/* Get date */}
   const [firstDay, lastDay] = getDate(budgetTime);
+  const firstDate = new Date(firstDay);
+  const lastDate = new Date(lastDay);
 
   {/* Update Category */}
   const updateCategoryTitle = (selectedText) => {
@@ -54,8 +56,8 @@ const BottomSheet = ({ onPress, title}) => {
               category: budgetCategory,
               uid: uid,
               timerange: {
-                start: firstDay,
-                end: lastDay,
+                start: firstDate,
+                end: lastDate,
                 type: budgetTime,
               }
             });
@@ -70,8 +72,8 @@ const BottomSheet = ({ onPress, title}) => {
               category: budgetCategory,
               uid: uid,
               timerange: {
-                start: firstDay,
-                end: lastDay,
+                start: firstDate,
+                end: lastDate,
                 type: budgetTime,
               }
             };
@@ -99,8 +101,8 @@ const BottomSheet = ({ onPress, title}) => {
               category: budgetCategory,
               uid: uid,
               timerange: {
-                start: firstDay,
-                end: lastDay,
+                start: firstDate,
+                end: lastDate,
                 type: budgetTime,
               }
             });
@@ -114,8 +116,8 @@ const BottomSheet = ({ onPress, title}) => {
               category: budgetCategory,
               uid: uid,
               timerange: {
-                start: firstDay,
-                end: lastDay,
+                start: firstDate,
+                end: lastDate,
                 type: budgetTime,
               }
             }];
