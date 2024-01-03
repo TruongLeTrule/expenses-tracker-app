@@ -4,152 +4,105 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import useStore from "../data/useStore";
+import useLocal from "../data/localData";
+import useFetch from "../data/fetchData";
 
 export default function EditProfile({ navigation }) {
-  // State for loading user info from database
+  const { setLocalUserInfo } = useLocal();
+
+  const { addUserInfoToDB } = useFetch();
+
   const userInfo = useStore((state) => state.userInfo);
   const setUserInfo = useStore((state) => state.setUserInfo);
-  const [tempUserInfo, setTempUserInfo] = useState(userInfo);
+  const uid = useStore((state) => state.uid);
 
-  //   const handleEditProfile = () => {
-  //     //functions to upload user's saved data to database
-  //     //setUserInfo(data)
-  //     navigation.goBack();
-  //   };
+  const [fullName, setFullName] = useState(userInfo?.fullName);
+  const [username, setUsername] = useState(userInfo?.username);
+  const [phone, setPhone] = useState(userInfo?.phone);
+  const [address, setAddress] = useState(userInfo?.address);
 
-  //   const handleTextChange = (type, text) => {
-  //     let newUserInfo = {};
-  //     if (type === "firstname" || type === "lastname") {
-  //       newUserInfo = {
-  //         ...tempUserInfo,
-  //         name: { ...tempUserInfo.name, [type]: text },
-  //       };
-  //       setTempUserInfo(newUserInfo);
-  //       return;
-  //     }
-  //     if (type === "number") {
-  //       newUserInfo = {
-  //         ...tempUserInfo,
-  //         address: {
-  //           ...tempUserInfo.address,
-  //           [type]: isNaN(parseInt(text)) ? "" : parseInt(text),
-  //         },
-  //       };
-  //       setTempUserInfo(newUserInfo);
-  //       return;
-  //     }
-  //     if (type === "street" || type === "city") {
-  //       newUserInfo = {
-  //         ...tempUserInfo,
-  //         address: { ...tempUserInfo.address, [type]: text },
-  //       };
-  //       setTempUserInfo(newUserInfo);
-  //     } else {
-  //       newUserInfo = { ...tempUserInfo, [type]: text };
-  //       setTempUserInfo(newUserInfo);
-  //     }
-  //   };
+  const handleEditProfile = () => {
+    if (!fullName || !username || !phone || !address) {
+      Alert.alert("Warning", "Please fill all fields");
+      return;
+    }
 
-  // UseEffect to make SAVE button update the latest state
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={() => handleEditProfile()}>
-          <Text
-            style={{
-              marginRight: 20,
-              fontSize: 17,
-              fontWeight: 500,
-              color: "blue",
-            }}
-          >
-            SAVE
-          </Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [tempUserInfo]);
+    navigation.navigate("Profile");
+    const newUserInfo = {
+      ...userInfo,
+      fullName,
+      username,
+      phone,
+      address,
+      uid,
+    };
+    setUserInfo(newUserInfo);
+    setLocalUserInfo(newUserInfo);
+    addUserInfoToDB(newUserInfo);
+  };
 
   return (
-    <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ flex: 1 }}>
-        <View style={styles.fullName}>
-          <View style={styles.firstName}>
-            <Text style={styles.title}>First Name:</Text>
-            <TextInput
-              //   value={tempUserInfo?.name.firstname}
-              style={styles.input}
-              //   onChangeText={(text) => handleTextChange("firstname", text)}
-            />
-          </View>
-          <View style={styles.lastName}>
-            <Text style={styles.title}>Last Name:</Text>
-            <TextInput
-              //   value={tempUserInfo?.name.lastname}
-              style={styles.input}
-              //   onChangeText={(text) => handleTextChange("lastname", text)}
-            />
-          </View>
-        </View>
+    <View style={styles.container}>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+      >
+        <Text style={styles.title}>Full Name</Text>
+        <TextInput
+          value={fullName}
+          style={styles.input}
+          onChangeText={(text) => setFullName(text)}
+        />
 
-        {/* <Text style={styles.title}>Username:</Text>
+        <Text style={styles.title}>Username</Text>
         <TextInput
-          value={tempUserInfo?.username}
+          value={username}
           style={styles.input}
-          onChangeText={(text) => handleTextChange("username", text)}
+          onChangeText={(text) => setUsername(text)}
         />
-        <Text style={styles.title}>Email:</Text>
+        <Text style={styles.title}>Phone Number</Text>
         <TextInput
-          value={tempUserInfo?.email}
+          value={phone}
           style={styles.input}
-          onChangeText={(text) => handleTextChange("email", text)}
+          onChangeText={(text) => setPhone(text)}
         />
-        <Text style={styles.title}>Phone Number:</Text>
+        <Text style={styles.title}>Address</Text>
         <TextInput
-          value={tempUserInfo?.phone}
+          value={address}
           style={styles.input}
-          onChangeText={(text) => handleTextChange("phone", text)}
+          onChangeText={(text) => setAddress(text)}
         />
-        <Text style={styles.title}>House Number:</Text>
-        <TextInput
-          value={tempUserInfo?.address.number.toString()}
-          style={styles.input}
-          onChangeText={(text) => handleTextChange("number", text)}
-        />
-        <Text style={styles.title}>Street:</Text>
-        <TextInput
-          value={tempUserInfo?.address.street}
-          style={styles.input}
-          onChangeText={(text) => handleTextChange("street", text)}
-        />
-        <Text style={styles.title}>City:</Text>
-        <TextInput
-          value={tempUserInfo?.address.city}
-          style={styles.input}
-          onChangeText={(text) => handleTextChange("city", text)}
-        />
-		*/}
-      </View>
-    </KeyboardAwareScrollView>
+        <TouchableOpacity
+          style={styles.editProfileButton}
+          onPress={handleEditProfile}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 20,
+              color: "white",
+              fontWeight: "bold",
+            }}
+          >
+            Save
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  fullName: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-  },
-  firstName: {
+  container: {
     flex: 1,
-  },
-  lastName: {
-    flex: 1,
+    paddingHorizontal: 25,
+    paddingTop: 40,
   },
   title: {
     marginTop: 20,
@@ -158,12 +111,23 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   input: {
-    fontSize: 17,
-    marginLeft: 10,
-    width: "90%",
+    marginTop: 5,
+    width: "100%",
+    fontSize: 18,
     borderWidth: 1,
     height: 50,
-    paddingLeft: 10,
+    paddingHorizontal: 16,
     borderRadius: 15,
+  },
+  editProfileButton: {
+    marginTop: 40,
+    backgroundColor: "#4cb050",
+    paddingVertical: 13,
+    paddingHorizontal: 30,
+    marginLeft: "auto",
+    marginRight: "auto",
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: 20,
   },
 });

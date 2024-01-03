@@ -15,12 +15,12 @@ import useStore from "./useStore";
 import useLocal from "./localData";
 
 const useFetch = () => {
-  const { setLocalExpenses, setLocalIncomes } = useLocal();
+  const { setLocalExpenses, setLocalIncomes, setLocalUserInfo } = useLocal();
 
   const setAllExpenses = useStore((state) => state.setAllExpenses);
   const setAllIncomes = useStore((state) => state.setAllIncomes);
   const uid = useStore((state) => state.uid);
-  const setAvaURI = useStore((state) => state.setAvaURI);
+  const setUserInfo = useStore((state) => state.setUserInfo);
 
   // Get all expenses from db
   const getAllExpenses = async (uid) => {
@@ -219,6 +219,38 @@ const useFetch = () => {
     return avaURL;
   };
 
+  // Get user info from db
+  const getUserInfoFroDB = async (uid) => {
+    try {
+      let userInfo;
+
+      const expenseRef = collection(db, "user");
+      const q = query(expenseRef, where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        userInfo = doc.data();
+      });
+
+      setUserInfo(userInfo);
+      setLocalUserInfo(userInfo);
+      console.log(`Get user info from db`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Add user info
+  const addUserInfoToDB = async (info) => {
+    try {
+      const docRef = await addDoc(collection(db, "user"), info);
+      console.log("Add user info to db");
+      return docRef.id;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getAllExpenses: getAllExpenses,
     updateExpense: updateExpense,
@@ -231,6 +263,8 @@ const useFetch = () => {
     getBudgets: getBudgets,
     uploadAva: uploadAva,
     downloadAva: downloadAva,
+    addUserInfoToDB: addUserInfoToDB,
+    getUserInfoFroDB: getUserInfoFroDB,
   };
 };
 

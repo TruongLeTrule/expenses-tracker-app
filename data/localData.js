@@ -127,11 +127,44 @@ const useLocal = () => {
     }
   };
 
+  // Set user info to local storage
+  const setLocalUserInfo = async (expenses) => {
+    try {
+      const jsonValue = JSON.stringify(expenses);
+      await AsyncStorage.setItem("userInfo", jsonValue);
+      console.log("Set user info in local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Get user info from local storage
+  const getLocalUserInfo = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("userInfo");
+      console.log("Get user info from local");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Remove user info from localStorage
+  const removeLocalUserInfo = async () => {
+    try {
+      await AsyncStorage.removeItem("userInfo");
+      console.log("Remove user info from local");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const removeAllLocalData = async () => {
     await removeLocalUID();
     await removeLocalExpenses();
     await removeLocalIncomes();
     await removeLocalAva();
+    await removeLocalUserInfo();
   };
 
   return {
@@ -139,10 +172,12 @@ const useLocal = () => {
     getLocalExpenses: getLocalExpenses,
     getLocalIncomes: getLocalIncomes,
     getLocalAva: getLocalAva,
+    getLocalUserInfo: getLocalUserInfo,
     setLocalUID: setLocalUID,
     setLocalExpenses: setLocalExpenses,
     setLocalIncomes: setLocalIncomes,
     setLocalAva: setLocalAva,
+    setLocalUserInfo: setLocalUserInfo,
     removeAllLocalData: removeAllLocalData,
   };
 };
