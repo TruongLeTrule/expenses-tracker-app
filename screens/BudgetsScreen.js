@@ -22,7 +22,6 @@ export default function BudgetsScreen() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getBudgets(uid, time);
-      console.log(data)
       useStore.setState({ data: data });
     }
     fetchData();
@@ -43,11 +42,11 @@ export default function BudgetsScreen() {
   };
 
   //Get expense
-  const getExpense = (category) => {
+  const getExpense = (category, start, end) => {
     let totalExpense = 0;
     if (allExpenses && Array.isArray(allExpenses)) {
       allExpenses.map((expense) => {
-        if (category === expense.category) {
+        if (category === expense.category  && expense.date?.seconds*1000 >= start*1000 && expense.date?.seconds*1000 <= end*1000) {
           totalExpense += expense.value;
         }
       });
@@ -88,9 +87,9 @@ export default function BudgetsScreen() {
           data={time}
           renderItem={({ item, index }) => {
             const budgetsForTimeRange = data.filter(budget => budget.timerange?.type === item);
-            const totalBudget = (value, category) => {
+            const totalBudget = (value, category, start, end) => {
               let totalBudget = 0;
-              totalBudget = value - getExpense(category);
+              totalBudget = value - getExpense(category, start, end);
               return totalBudget;
             }
             if (budgetsForTimeRange.length > 0) {
@@ -105,16 +104,16 @@ export default function BudgetsScreen() {
                       <Budgets
                         key={budget.id}
                         name={budget.name}
-                        value={commafy(totalBudget(budget.value, budget.category))}
+                        value={commafy(totalBudget(budget.value, budget.category, budget.timerange?.start.seconds, budget.timerange?.end.seconds))}
                         category={budget.category}
                         onPress={() => handleItemClick(budget)}
                         progress={
-                          totalBudget(budget.value, budget.category) < 0
-                            ? 1 - (getExpense(budget.category) / 1000000)
-                            : getExpense(budget.category) / budget.value
+                          totalBudget(budget.value, budget.category, budget.timerange?.start.seconds, budget.timerange?.end.seconds) < 0
+                            ? 1 - (getExpense(budget.category, budget.timerange?.start.seconds, budget.timerange?.end.seconds) / 1000000)
+                            : getExpense(budget.category, budget.timerange?.start.seconds, budget.timerange?.end.seconds) / budget.value
                         }
-                        color={totalBudget(budget.value, budget.category) < 0 ? '#eb3700' : '#4cb050'}
-                        unfilledColor={totalBudget(budget.value, budget.category) < 0 ? '#eb3700' : '#f2f2f2'} //Budget exceeded
+                        color={totalBudget(budget.value, budget.category, budget.timerange?.start.seconds, budget.timerange?.end.seconds) < 0 ? '#eb3700' : '#4cb050'}
+                        unfilledColor={totalBudget(budget.value, budget.category, budget.timerange?.start.seconds, budget.timerange?.end.seconds) < 0 ? '#eb3700' : '#f2f2f2'} //Budget exceeded
                       />
                     ))}
                   </View>
