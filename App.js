@@ -80,21 +80,21 @@ export default function App() {
   }
 
   return (
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {!uid ? (
-            <Stack.Screen name="LogSignStack" component={LogSignStack} />
-          ) : (
-            <>
-              <Stack.Group>
-                <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
-              </Stack.Group>
-              <Stack.Group screenOptions={{ presentation: "modal" }}>
-                <Stack.Screen name="AddModal" component={AddScreen} />
-              </Stack.Group>
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!uid ? (
+          <Stack.Screen name="LogSignStack" component={LogSignStack} />
+        ) : (
+          <>
+            <Stack.Group>
+              <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
+            </Stack.Group>
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+              <Stack.Screen name="AddModal" component={AddScreen} />
+            </Stack.Group>
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

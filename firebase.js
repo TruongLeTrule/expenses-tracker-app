@@ -1,10 +1,7 @@
-// Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,5 +23,6 @@ if (firebase.apps.length === 0) {
 
 const db = getFirestore(app);
 const auth = firebase.auth();
-const EmailAuthProvider = firebase.auth.EmailAuthProvider
+const EmailAuthProvider = firebase.auth.EmailAuthProvider;
+
 export { auth, db, EmailAuthProvider };
