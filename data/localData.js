@@ -109,9 +109,9 @@ const useLocal = () => {
   // Get avatar from localStorage
   const getLocalAva = async () => {
     try {
-      const uid = await AsyncStorage.getItem("avatar");
+      const avatarURI = await AsyncStorage.getItem("avatar");
       console.log("Get avatar uri from local");
-      return uid;
+      return avatarURI;
     } catch (error) {
       console.log(error);
     }

@@ -38,12 +38,12 @@ export default function MoreScreen({ navigation }) {
         const localAvatar = await getLocalAva();
         // If no URL in local, get from db
         if (localAvatar) {
-          setAvaURI(avatar);
+          setAvaURI(localAvatar);
         } else {
-          const avatar = await downloadAva();
-          if (avatar) {
-            setAvaURI(avatar);
-            setLocalAva(avatar);
+          const cloudAvatar = await downloadAva();
+          if (cloudAvatar) {
+            setAvaURI(cloudAvatar);
+            setLocalAva(cloudAvatar);
           }
         }
       }
@@ -57,6 +57,7 @@ export default function MoreScreen({ navigation }) {
     setFilteredList(null);
     setRenderList(null);
     setAvaURI(null);
+    setUserInfo(null);
   };
 
   const handleSignOut = async () => {
@@ -85,8 +86,10 @@ export default function MoreScreen({ navigation }) {
 
     if (!result.canceled) {
       const imgURL = await uploadAva(result.assets[0].uri);
-      setAvaURI(imgURL);
-      setLocalAva(imgURL);
+      if (imgURL) {
+        setAvaURI(imgURL);
+        setLocalAva(imgURL);
+      }
     }
   };
 
@@ -105,8 +108,8 @@ export default function MoreScreen({ navigation }) {
       </Pressable>
 
       {/*Insert user's username */}
-      {/* <Text style={styles.userNamePlaceHolder}>
-        {userInfo.username ? userInfo.username : "Username"}
+      <Text style={styles.userNamePlaceHolder}>
+        {userInfo?.username ? userInfo?.username : "Username"}
       </Text>
       <TouchableOpacity
         style={[
@@ -174,7 +177,7 @@ export default function MoreScreen({ navigation }) {
           About Us
         </Text>
       </TouchableOpacity>
-       */}
+
       <TouchableOpacity style={styles.Btn} onPress={handleSignOut}>
         <Text style={styles.signOut}>LOG OUT</Text>
       </TouchableOpacity>
