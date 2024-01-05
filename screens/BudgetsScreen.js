@@ -33,7 +33,7 @@ export default function BudgetsScreen() {
 			setForceUpdate((prev) => !prev);
 		};
 		fetchData();
-	}, [allExpenses]);
+	}, [forceUpdate]);
 
 	const handleItemClick = (item) => {
 		// Set the data of the clicked item in the store
