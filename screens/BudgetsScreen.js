@@ -16,7 +16,6 @@ import AddButton from "../components/BudgetsScreen/AddButton";
 import { commafy } from "../components/formatCurrency";
 
 export default function BudgetsScreen() {
-	const [forceUpdate, setForceUpdate] = useState(false);
 	const editMode = useStore((state) => state.editMode);
 	const data = useStore((state) => state.data);
 	const modalVisible = useStore((state) => state.modalVisible);
@@ -24,16 +23,22 @@ export default function BudgetsScreen() {
 	const isLoading = useStore((state) => state.isLoading);
 	const uid = useStore((state) => state.uid);
 	const allExpenses = useStore((state) => state.allExpenses);
+	const renderCount = useStore((state) => state.renderCount);
 	const { getBudgets } = useFetch();
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const data = await getBudgets(uid, time);
-			useStore.setState({ data: data });
-			setForceUpdate((prev) => !prev);
-		};
-		fetchData();
-	}, [forceUpdate]);
+	    const fetchData = async () => {
+	      const data = await getBudgets(uid, time);
+	      useStore.setState({ data: data });
+	      if (renderCount === 1) {
+	        const timeoutId = setTimeout(() => {
+	          useStore.setState({renderCount: (prevCount) => prevCount + 1});
+	        }, 1000);
+	        return () => clearTimeout(timeoutId);
+	      }
+	    }
+	    fetchData();
+	  }, [renderCount]);
 
 	const handleItemClick = (item) => {
 		// Set the data of the clicked item in the store
