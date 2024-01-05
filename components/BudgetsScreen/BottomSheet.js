@@ -38,6 +38,7 @@ const BottomSheet = ({ onPress, title }) => {
 	const time = useStore((state) => state.time);
 	const uid = useStore((state) => state.uid);
 	const data = useStore((state) => state.data);
+	const renderCount = useStore((state) => state.renderCount);
 	const updateTimeRangeTitle = (selectedText) => {
 		useStore.setState({ budgetTime: selectedText });
 		setTimeVisible(false);
@@ -115,6 +116,7 @@ const BottomSheet = ({ onPress, title }) => {
 						budgetCategory: "Categories",
 						budgetAmount: "0",
 					});
+					useStore.setState({ renderCount: renderCount + 1 });
 					Alert.alert("Budget updated successfully");
 					return;
 				} else {
