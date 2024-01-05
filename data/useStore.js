@@ -210,6 +210,9 @@ const useStore = create((set) => ({
 	isLoading: true,
 	setIsLoading: (isLoading) => set({ isLoading }),
 
+	renderCount: 0,
+  	setRenderCount: (renderCount) => set({ renderCount }),
+	
 	time: ["Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"],
 
 	reportFilterVisible: true,
