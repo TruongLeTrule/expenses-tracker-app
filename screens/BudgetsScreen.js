@@ -129,7 +129,7 @@ export default function BudgetsScreen() {
 										</View>
 										{budgetsForTimeRange.map((budget) => (
 											<Budgets
-												key={budget.id}
+												key={budget.name}
 												name={budget.name}
 												value={commafy(
 													totalBudget(
