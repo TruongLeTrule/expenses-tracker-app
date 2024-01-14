@@ -1,4 +1,4 @@
-# Expenses-traker-app
+# Expenses-tracker-app
 
 ## Getting Started
 
